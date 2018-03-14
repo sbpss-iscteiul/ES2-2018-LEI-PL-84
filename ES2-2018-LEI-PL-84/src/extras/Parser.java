@@ -15,15 +15,28 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 
 public class Parser {
 	
-	Document doc;
-	Element rootElement;
-	Element variables;
-	Element paths;
-	int variaveis;
+	private Document doc;
+	//Elements (Strutcture Nodes)
+	private Element rootElement;
+	private Element variables;
+	private Element paths;
+	private Element limitations;
+	private Element	emails;
+	private Element descriptions;
+	private Element algorithms;
+	private Element waiting_times;
+	//counter de variaveis
+	private int variable_count;
+	//unique email, unique description
+	private boolean e_Mail = false;
+	private boolean problem_description = false;
+	private boolean wating_time = false;
+	private boolean chosen_algorithm = false;
 	
 	public Parser() {
 		try {
@@ -33,52 +46,83 @@ public class Parser {
 			doc = docBuilder.newDocument();
 			rootElement = doc.createElement("Caracterização");
 			doc.appendChild(rootElement);
-			//-----Main Node 1 Creation-----//
-			variables = doc.createElement("Variables");
-			rootElement.appendChild(variables);
-			//-----Main Node 2 Creation-----//
-			paths = doc.createElement("Paths");
-			rootElement.appendChild(paths);
+			//-----Variables Node Creation-----//
+				variables = doc.createElement("Variables");
+				rootElement.appendChild(variables);
+			//-----Paths Node Creation-----//
+				paths = doc.createElement("Paths");
+				rootElement.appendChild(paths);
+			//-----Limitations Node Creation-----//
+				limitations = doc.createElement("Limitations");
+				rootElement.appendChild(limitations);
+			//-----Emails Node Creation-----//
+				 emails = doc.createElement("Emails");
+				 rootElement.appendChild(emails);
+			//-----Descriptions Node Creation-----//
+				 descriptions = doc.createElement("Descriptions");
+				 rootElement.appendChild(descriptions);
+			//-----Algorithms Node Creation-----//
+				 algorithms = doc.createElement("Algorithms");
+				 rootElement.appendChild(algorithms);
+			//-----Algorithms Node Creation-----//
+				 waiting_times = doc.createElement("Waiting_Times");
+				 rootElement.appendChild(waiting_times);
+				 
+			variable_count=0;
 		} catch (ParserConfigurationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
-	
-	//ALTERAR INFOPESSOAL E INFOPROBLEMA PARA ROOTELEMENT
-	
-	//-----Adds Pessoais-----//
-	
 	public void addEmail(String e_mail) {
-		Element email = doc.createElement("Email");
-		email.appendChild(doc.createTextNode(e_mail));
-		rootElement.appendChild(email);
+		if(e_Mail== false) {
+			Element email = doc.createElement("Email");
+			email.appendChild(doc.createTextNode(e_mail));
+			emails.appendChild(email);
+			e_Mail = true;
+		}else {
+			Node tmp = rootElement.getChildNodes().item(3).getChildNodes().item(0);
+			System.out.println("Email Alterado de '"+tmp.getTextContent()+"' para '"+e_mail+"'");
+			tmp.setTextContent(e_mail);
+		}
 	}
 	
 	public void addDescription(String Description) {
-		Element description = doc.createElement("Descrição");
-		description.appendChild(doc.createTextNode(Description));
-		rootElement.appendChild(description);
+		if(problem_description== false) {
+			Element description = doc.createElement("Descrição");
+			description.appendChild(doc.createTextNode(Description));
+			descriptions.appendChild(description);
+			problem_description = true;
+		}else {
+			Node tmp = rootElement.getChildNodes().item(4).getChildNodes().item(0);
+			System.out.println("Description Alterado de '"+tmp.getTextContent()+"' para '"+Description+"'");
+			tmp.setTextContent(Description);
+		}
 	}
-	
-	//-----Adds Problema-----//
-	
+
 	public void addWaitingTime(String time) {
-		Element waitingTime = doc.createElement("Tempo_de_Espera");
-		waitingTime.appendChild(doc.createTextNode(time));
-		rootElement.appendChild(waitingTime);
+		if(wating_time==false) {
+			Element waitingTime = doc.createElement("Tempo_de_Espera");
+			waitingTime.appendChild(doc.createTextNode(time));
+			waiting_times.appendChild(waitingTime);
+			wating_time = true;
+		}else {
+			Node tmp = rootElement.getChildNodes().item(6).getChildNodes().item(0);
+			System.out.println("Tempo de Espera Alterado de "+tmp.getTextContent()+" para "+time);
+			tmp.setTextContent(time);		
+		}
 	}
 	
 	public void addLimitations(String Limitation) {
-		Element limitations = doc.createElement("Limitações");
-		limitations.appendChild(doc.createTextNode(Limitation));
-		rootElement.appendChild(limitations);
+		Element Limitations = doc.createElement("Limitações");
+		Limitations.appendChild(doc.createTextNode(Limitation));
+		limitations.appendChild(Limitations);
 	}
 	
-	public void addVariables(int Id, String Name, String Type, String LimInf, String LimSup) {
+	public void addVariables(String Name, String Type, String LimInf, String LimSup) {
 		Element variable = doc.createElement("Variavel");
-		variable.setAttribute("id", ""+Id);
+		variable.setAttribute("id", ""+variable_count);
 		variables.appendChild(variable);
 			
 			Element name = doc.createElement("Name");
@@ -96,6 +140,8 @@ public class Parser {
 			Element limSup = doc.createElement("Limite_Superior");
 			limSup.appendChild(doc.createTextNode(""+LimSup));
 			variable.appendChild(limSup);
+			
+		variable_count++;
 	}
 	
 	public void addPaths(int variableID , String Path) {
@@ -110,16 +156,23 @@ public class Parser {
 	}
 	
 	public void addChosenAlgorithm(int number, String algorithmName) {
-		Element chosenAlgorithm = doc.createElement("Variavel");
-		chosenAlgorithm.setAttribute("id", ""+number);
-		rootElement.appendChild(chosenAlgorithm);
+		if(chosen_algorithm==false) {
+			Element chosenAlgorithm = doc.createElement("Algorithm");
+			chosenAlgorithm.setAttribute("id", ""+number);
+			algorithms.appendChild(chosenAlgorithm);
+				
+			Element name = doc.createElement("Name");
+			name.appendChild(doc.createTextNode(algorithmName));
+			chosenAlgorithm.appendChild(name);
 			
-		Element name = doc.createElement("Name");
-		name.appendChild(doc.createTextNode(algorithmName));
-		chosenAlgorithm.appendChild(name);
+			chosen_algorithm = true;
+		}else {
+			Node tmp = rootElement.getChildNodes().item(5).getChildNodes().item(0);
+			System.out.println("Algoritmo Selecionado Alterado de "+tmp.getTextContent()+" para "+algorithmName);
+			tmp.setTextContent(algorithmName);
+		}
 	}
 	
-	//-----------------------//
 	
 	public void write_XML() {
 		try {
@@ -134,10 +187,22 @@ public class Parser {
 			StreamResult result = new StreamResult(new File("C:\\Users\\Sergio-PC\\Desktop\\Test\\"+fileName));
 			//-------//
 			transformer.transform(source, result);
-			System.out.println("File saved!");
+			System.out.println("File saved! "+dateFormat.format(date));
 		} catch (TransformerException tfe) {
 				tfe.printStackTrace();
 		}
 	}
+	
+	/*Notes
+	 * 
+	
+	//Notes
+	/*
+	 * Alterar Path dentro do metodo write_XML, para pasta onde vao ser depositados os ficheiros XML
+	 * Criar JUnit Tests
+	 * 
+	 * Adicionar atributo nome ao elemento Path
+	 * 
+	 * */
 	
 }
