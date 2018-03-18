@@ -16,6 +16,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 
 public class Parser {
@@ -192,6 +193,30 @@ public class Parser {
 		} catch (TransformerException tfe) {
 				tfe.printStackTrace();
 		}
+	}
+	public void read_XML() {
+		try {
+			File fXML = new File("/Users/mohammadmudassir/Desktop/Problem_Name 2018-03-18 18-17-09.xml");
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			Document doc = dBuilder.parse(fXML);
+			NodeList nodeList = doc.getDocumentElement().getChildNodes();
+			for(int i=0;i<nodeList.getLength();i++) {
+				Node node = nodeList.item(i); 
+				System.out.println(node.getNodeName());
+				NodeList nodeList2 = node.getChildNodes();
+				for(int i2=0;i2<nodeList2.getLength();i2++) {
+					Node node2 = nodeList2.item(i2);
+					System.out.println("              "+node2.getTextContent());
+				}
+			}
+		}
+		catch(Exception e) {
+			
+		}
+		
+			
+		
 	}
 	
 	/*Notes

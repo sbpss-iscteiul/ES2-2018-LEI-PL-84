@@ -92,7 +92,7 @@ public class ParserConfig {
 				NodeList nodeList2 = node.getChildNodes();
 				for(int i2=0;i2<nodeList2.getLength();i2++) {
 					Node node2 = nodeList2.item(i2);
-					System.out.println(node2.getTextContent());
+					System.out.println("              "+node2.getTextContent());
 				}
 		
 				
