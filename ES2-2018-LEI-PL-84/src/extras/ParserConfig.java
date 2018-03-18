@@ -40,7 +40,7 @@ public class ParserConfig {
 			e.printStackTrace();
 		}
 	}
-	     
+	
 	public void add_Content(String admin_Name, String admin_Email, String[] algorithms) {
 		Element admin = doc.createElement("Admin");
 		rootElement.appendChild(admin);
