@@ -100,7 +100,8 @@ public class Parser {
 			tmp.setTextContent(Description);
 		}
 	}
-
+	    
+	
 	public void addWaitingTime(String time) {
 		if(wating_time==false) {
 			Element waitingTime = doc.createElement("Tempo_de_Espera");
