@@ -44,7 +44,7 @@ public class Parser {
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder docBuilder = docFactory.newDocumentBuilder(); 
 			doc = docBuilder.newDocument();
-			rootElement = doc.createElement("Caracterização");
+			rootElement = doc.createElement("Caracterizacao");
 			doc.appendChild(rootElement);
 			//-----Variables Node Creation-----//
 				variables = doc.createElement("Variables");
@@ -90,7 +90,7 @@ public class Parser {
 	
 	public void addDescription(String Description) {
 		if(problem_description== false) {
-			Element description = doc.createElement("Descrição");
+			Element description = doc.createElement("Descricao");
 			description.appendChild(doc.createTextNode(Description));
 			descriptions.appendChild(description);
 			problem_description = true;
@@ -115,7 +115,7 @@ public class Parser {
 	}
 	
 	public void addLimitations(String Limitation) {
-		Element Limitations = doc.createElement("Limitações");
+		Element Limitations = doc.createElement("Limitacoes");
 		Limitations.appendChild(doc.createTextNode(Limitation));
 		limitations.appendChild(Limitations);
 	}
@@ -184,7 +184,7 @@ public class Parser {
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
 			Date date = new Date();
 			String fileName = "Problem_Name "+dateFormat.format(date)+".xml";
-			StreamResult result = new StreamResult(new File("C:\\Users\\Sergio-PC\\Desktop\\Test\\"+fileName));
+			StreamResult result = new StreamResult(new File("/Users/mohammadmudassir/Desktop/"+fileName));
 			//-------//
 			transformer.transform(source, result);
 			System.out.println("File saved! "+dateFormat.format(date));
