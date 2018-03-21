@@ -16,6 +16,7 @@ import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -24,8 +25,8 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
-
 import extras.Parser;
+import extras.Email;
 import objects.Variable;
 
 public class Interface {
@@ -68,6 +69,7 @@ public class Interface {
 		frame = new JFrame("ES2 Project");
 		screenResolution = Toolkit.getDefaultToolkit().getScreenSize();
 		centerLeftPanel = new JPanel(new GridLayout(4,1));
+		FAQButton = new JButton("F.A.Q");
 		loadButton = new JButton("Load Problem");
 		saveButton = new JButton("Save Problem");
 		addVarButton = new JButton("Add Variable");
@@ -79,6 +81,7 @@ public class Interface {
 		varTable = new JTable(varTableModel);
 		varTableColumn = varTable.getColumnModel().getColumn(1);
 		critTable = new JTable(critTableModel);
+		sendEmailButton = new JButton("Send E-mail");
 		addListeners();
 	}
 	
@@ -90,7 +93,7 @@ public class Interface {
 		frame.setDefaultCloseOperation(frame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 	}
-	
+
 	
 	public void addContent() {
 		addNorthPanel();
@@ -102,7 +105,6 @@ public class Interface {
 		frame.add(centerPanel, BorderLayout.CENTER);
 		
 	}
-	
 	
 	public void addNorthPanel() {
 		northPanel = new JPanel();
@@ -117,8 +119,6 @@ public class Interface {
 		emailLabel = new JLabel("E-mail");
 		emailField = new JTextField("",20);
 		runButton = new JButton("RUN");
-		sendEmailButton = new JButton("Send E-mail");
-		FAQButton = new JButton("F.A.Q");
 		
 		northLeftPanel.add(emailLabel); northLeftPanel.add(emailField);
 		northRightPanel.add(runButton); northRightPanel.add(sendEmailButton);
@@ -203,7 +203,30 @@ public class Interface {
 	
 	public void addListeners() {
 		
+
+		sendEmailButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				Email email= new Email();
+				email.createMessage();
+				String to=emailField.getText();
+				if(to.isEmpty()) {
+					System.out.println("o email não foi preenchido");
+					JOptionPane.showMessageDialog(new JPanel(),"o email não foi preenchido","Erro mail", JOptionPane.ERROR_MESSAGE);
+				}else {
+					email.adddestination("sbpss@iscte-iul.pt");
+					email.adddestination(to);
+					email.send();
+				}
+			}
+		});
 		
+		FAQButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				createFAQFrame();
+			}
+		});
 		loadButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -276,6 +299,31 @@ public class Interface {
 					critTableModel.removeRow(critTable.getSelectedRow());
 			}
 		});
+	}
+	
+	public void createFAQFrame() {
+		JFrame FAQframe = new JFrame("F.A.Q");
+		FAQframe.setDefaultCloseOperation(frame.DISPOSE_ON_CLOSE);
+		FAQframe.setLayout(new GridLayout(10, 0));
+		JLabel faq1 = new JLabel("Que informação será enviada por e-mail?");
+		JLabel faq2 = new JLabel("Frequently asked question 2");
+		JLabel faq3 = new JLabel("Frequently asked question 3");
+		JLabel faq4 = new JLabel("Frequently asked question 4");
+		JTextArea faq1Text = new JTextArea(); faq1Text.setEditable(false);
+		JTextArea faq2Text = new JTextArea(); faq2Text.setEditable(false);
+		JTextArea faq3Text = new JTextArea(); faq3Text.setEditable(false);
+		JTextArea faq4Text = new JTextArea(); faq4Text.setEditable(false);
+		faq1Text.setText("Resposta para a pergunta 1");
+		faq2Text.setText("Resposta para a pergunta 2");
+		faq3Text.setText("Resposta para a pergunta 3");
+		faq4Text.setText("Resposta para a pergunta 4");
+		FAQframe.add(faq1); FAQframe.add(faq1Text);
+		FAQframe.add(faq2); FAQframe.add(faq2Text);
+		FAQframe.add(faq3); FAQframe.add(faq3Text);
+		FAQframe.add(faq4); FAQframe.add(faq4Text);
+		FAQframe.setSize(1000, 500);
+		FAQframe.setResizable(false);
+		FAQframe.setVisible(true);
 	}
 	
 	public Variable getVariable(int row) {

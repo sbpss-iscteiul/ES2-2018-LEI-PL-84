@@ -1,5 +1,6 @@
 package extras;
 
+
 import java.util.Properties;
 
 import javax.mail.Message;
@@ -10,7 +11,6 @@ import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import javax.swing.Spring;
 
 public class Email {
 	
@@ -46,10 +46,10 @@ public class Email {
 	
 	
 	        // Set Subject: header field
-	        message.setSubject("O sergio é merda");
+	        message.setSubject("ES2 Primeira Entrega");
 	
 	        // Now set the actual message
-	        message.setText("o duarte tambem");
+	        message.setText("Esta é a mensagem da primeira entrega");
         }catch (MessagingException mex) {
         	mex.printStackTrace();
         }
