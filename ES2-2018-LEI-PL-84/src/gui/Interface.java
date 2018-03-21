@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
+import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
@@ -21,12 +22,17 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+
+import objects.Variable;
 
 public class Interface {
 	
 	private JFrame frame;
 	private Dimension screenResolution;
 	private Border border = BorderFactory.createLineBorder(Color.LIGHT_GRAY);
+	private JPanel northPanel ;
+	private JPanel centerPanel;
 	private JPanel centerLeftPanel;
 	private JButton loadButton;
 	private JButton saveButton;
@@ -37,8 +43,22 @@ public class Interface {
 	private DefaultTableModel varTableModel;
 	private DefaultTableModel critTableModel;
 	private JTable varTable;
+	private TableColumn varTableColumn;
 	private JTable critTable;
-	
+	private JLabel emailLabel;
+	private JTextField emailField;
+	private JButton runButton;
+	private JButton sendEmailButton;
+	private JButton FAQButton;
+	private JLabel nameLabel;
+	private JTextField nameText;
+	private JLabel descLabel;
+	private JTextArea descText;
+	private JTextField varField;
+	private JComboBox opBox;
+	private JComboBox typeBox;
+	private JTextField valueField;
+	private JScrollPane critPane;
 	
 	public Interface() {
 		frame = new JFrame("ES2 Project");
@@ -53,6 +73,7 @@ public class Interface {
 		varTableModel = new DefaultTableModel(new Object[][] {}, new Object[] {"Name","Type"});
 		critTableModel = new DefaultTableModel(new Object[][] {}, new Object[] {"Name","PATH"});
 		varTable = new JTable(varTableModel);
+		varTableColumn = varTable.getColumnModel().getColumn(1);
 		critTable = new JTable(critTableModel);
 		addListeners();
 	}
@@ -65,10 +86,22 @@ public class Interface {
 		frame.setDefaultCloseOperation(frame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 	}
-
+	
+	
 	public void addContent() {
-		/////////////// NORTH PANEL /////////////////
-		JPanel northPanel = new JPanel();
+		addNorthPanel();
+		frame.add(northPanel, BorderLayout.NORTH);
+		centerPanel = new JPanel();
+		centerPanel.setLayout(new GridLayout(1,2));
+		addCenterLeftPanel();
+		addCenterRightPanel();
+		frame.add(centerPanel, BorderLayout.CENTER);
+		
+	}
+	
+	
+	public void addNorthPanel() {
+		northPanel = new JPanel();
 		northPanel.setLayout(new GridLayout(1,2));
 		northPanel.setBorder(border);
 		JPanel northLeftPanel = new JPanel();
@@ -77,11 +110,11 @@ public class Interface {
 		JPanel northRightPanel = new JPanel();
 		northRightPanel.setLayout(new FlowLayout());
 		northRightPanel.setBorder(border);
-		JLabel emailLabel = new JLabel("E-mail");
-		JTextField emailField = new JTextField("",20);
-		JButton runButton = new JButton("RUN");
-		JButton sendEmailButton = new JButton("Send E-mail");
-		JButton FAQButton = new JButton("F.A.Q");
+		emailLabel = new JLabel("E-mail");
+		emailField = new JTextField("",20);
+		runButton = new JButton("RUN");
+		sendEmailButton = new JButton("Send E-mail");
+		FAQButton = new JButton("F.A.Q");
 		
 		northLeftPanel.add(emailLabel); northLeftPanel.add(emailField);
 		northRightPanel.add(runButton); northRightPanel.add(sendEmailButton);
@@ -89,21 +122,18 @@ public class Interface {
 		northPanel.add(northLeftPanel, BorderLayout.WEST);
 		northPanel.add(northRightPanel, BorderLayout.EAST);
 		northPanel.add(northRightPanel, BorderLayout.WEST);
-		frame.add(northPanel, BorderLayout.NORTH);
-		
-		JPanel centerPanel = new JPanel();
-		centerPanel.setLayout(new GridLayout(1,2));
-		
-		/////////////// CENTER LEFT PANEL ////////////////////
+	}
+	
+	public void addCenterLeftPanel() {
 		JPanel centerLeftPanel = new JPanel(new GridLayout(4,1));
 		centerLeftPanel.setBorder(border);
 		JPanel problemNamePanel = new JPanel(new FlowLayout());
 		JPanel problemDescPanel = new JPanel(new BorderLayout());
 		JPanel problemOptionPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		JLabel nameLabel = new JLabel("Name");
-		JTextField nameText = new JTextField("", 20);
-		JLabel descLabel = new JLabel("Description");
-		JTextArea descText = new JTextArea(); descText.setBorder(border);
+		nameLabel = new JLabel("Name");
+		nameText = new JTextField("", 20);
+		descLabel = new JLabel("Description");
+		descText = new JTextArea(); descText.setBorder(border);
 		
 		
 		problemNamePanel.add(nameLabel);
@@ -115,27 +145,34 @@ public class Interface {
 		centerLeftPanel.add(problemDescPanel);
 		problemOptionPanel.add(loadButton); problemOptionPanel.add(saveButton);
 		centerLeftPanel.add(problemOptionPanel);
+		centerPanel.add(centerLeftPanel);
+	}
+	
+	public void addCenterRightPanel() {
 		
-		/////////////// CENTER RIGHT PANEL ///////////////////
+		typeBox = new JComboBox();
+        typeBox.addItem("Snowboarding");
+		
 		JPanel centerRightPanel = new JPanel();
 		centerRightPanel.setLayout(new GridLayout(4,1)); 
 		centerRightPanel.setBorder(border);
 		JPanel rightOptionsPanel = new JPanel(new FlowLayout());
 		JPanel varTablePanel = new JPanel(new BorderLayout());
 		JPanel varOptionPanel = new JPanel(new GridLayout(2,1));
+		varTableColumn.setCellEditor(new DefaultCellEditor(typeBox));
 		JScrollPane tablePane = new JScrollPane(varTable);
 		JPanel restPanel = new JPanel(new GridLayout(2,3));
 		restPanel.add(new JLabel("Variable"));  restPanel.add(new JLabel("Operation")); restPanel.add(new JLabel("Value"));
-		JTextField varField = new JTextField();
+		varField = new JTextField();
 		restPanel.add(varField);
 		String[] opArray = {"=","!=",">","<"};
-		JComboBox opBox = new JComboBox(opArray);
+		opBox = new JComboBox(opArray);
 		restPanel.add(opBox);
-		JTextField valueField = new JTextField();
+		valueField = new JTextField();
 		restPanel.add(valueField);
 		JPanel critPanel = new JPanel(new BorderLayout());
 		JPanel critOptionPanel = new JPanel(new GridLayout(2,1));
-		JScrollPane critPane = new JScrollPane(critTable);
+		critPane = new JScrollPane(critTable);
 		
 		critPanel.add(new JLabel("Criteria"), BorderLayout.NORTH);
 		critOptionPanel.add(addCritButton, BorderLayout.EAST);
@@ -155,13 +192,11 @@ public class Interface {
 		centerRightPanel.add(varTablePanel);
 		centerRightPanel.add(restPanel);
 		centerRightPanel.add(critPanel);
-		centerPanel.add(centerLeftPanel);
 		centerPanel.add(centerRightPanel, BorderLayout.EAST);
-		frame.add(centerPanel, BorderLayout.CENTER);
-		
 	}
 	
 	public void addListeners() {
+		
 		loadButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -202,6 +237,11 @@ public class Interface {
 					critTableModel.removeRow(critTable.getSelectedRow());
 			}
 		});
+	}
+	
+	public Variable getVariable(int row) {
+		Variable var = new Variable(varTableModel.getValueAt(row, 0).toString(), varTableModel.getValueAt(row, 1).toString());
+		return var;
 	}
 	
 	public static void main(String[] args) {
