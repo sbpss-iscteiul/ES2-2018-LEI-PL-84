@@ -12,6 +12,7 @@ import javax.swing.BorderFactory;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -24,6 +25,7 @@ import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
+import extras.Parser;
 import objects.Variable;
 
 public class Interface {
@@ -59,6 +61,8 @@ public class Interface {
 	private JComboBox typeBox;
 	private JTextField valueField;
 	private JScrollPane critPane;
+	private JTextField maxTimeField;
+	private JTextField maxVarField;
 	
 	public Interface() {
 		frame = new JFrame("ES2 Project");
@@ -151,7 +155,7 @@ public class Interface {
 	public void addCenterRightPanel() {
 		
 		typeBox = new JComboBox();
-        typeBox.addItem("Snowboarding");
+        typeBox.addItem("String");
 		
 		JPanel centerRightPanel = new JPanel();
 		centerRightPanel.setLayout(new GridLayout(4,1)); 
@@ -185,9 +189,11 @@ public class Interface {
 		varTablePanel.add(varOptionPanel, BorderLayout.EAST);
 		varTablePanel.add(tablePane);
 		rightOptionsPanel.add(new JLabel("Max. Time"));
-		rightOptionsPanel.add(new JTextField("",5));
+		maxTimeField = new JTextField("",5);
+		rightOptionsPanel.add(maxTimeField);
 		rightOptionsPanel.add(new JLabel("Max. Variables"));
-		rightOptionsPanel.add(new JTextField("",5));
+		maxVarField = new JTextField("",5);
+		rightOptionsPanel.add(maxVarField);
 		centerRightPanel.add(rightOptionsPanel);
 		centerRightPanel.add(varTablePanel);
 		centerRightPanel.add(restPanel);
@@ -196,6 +202,7 @@ public class Interface {
 	}
 	
 	public void addListeners() {
+		
 		
 		loadButton.addActionListener(new ActionListener() {
 			@Override
@@ -209,6 +216,38 @@ public class Interface {
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser save = new JFileChooser();
 				int open = save.showSaveDialog(centerLeftPanel);
+				if (!nameText.getText().isEmpty()) {
+					Parser parser = new Parser();
+					if(!sendEmailButton.getText().isEmpty()) {
+						parser.addEmail(sendEmailButton.getText());
+					}
+					if(!descText.getText().isEmpty()) {
+						parser.addDescription(descText.getText());
+					}
+					if(!maxTimeField.getText().isEmpty()) {
+						parser.addWaitingTime(maxTimeField.getText());
+					}
+					if(varTableModel.getRowCount()>0) {
+						Variable tmp=null;
+						for (int i = 0; i < varTableModel.getRowCount(); i++) {
+							tmp=getVariable(i);
+							parser.addVariables(tmp.getName(), tmp.getType(), ""+((int)Math.random()*10), ""+(10+((int)Math.random()*10)));
+						}
+					}
+					if(!varField.getText().isEmpty()&& !valueField.getText().isEmpty()) {
+						parser.addLimitations(varField+" "+opBox.getItemAt(opBox.getSelectedIndex())+" "+valueField);
+					}
+//					if(critTableModel.getRowCount()>0) {
+//						for (int i = 0; i < varTableModel.getRowCount(); i++) {
+//							parser.addPaths(i, critTableModel.getValueAt(i, 1).toString());
+//							System.out.println("crit");
+//							System.out.println("	"+i);
+//						}
+//					}
+					parser.write_XML(nameText.getText());
+				}else {
+					System.out.println("Erro");
+				}
 			}
 		});
 		addVarButton.addActionListener(new ActionListener() {			

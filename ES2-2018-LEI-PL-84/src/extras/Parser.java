@@ -101,8 +101,7 @@ public class Parser {
 			tmp.setTextContent(Description);
 		}
 	}
-	    
-	
+
 	public void addWaitingTime(String time) {
 		if(wating_time==false) {
 			Element waitingTime = doc.createElement("Tempo_de_Espera");
@@ -176,7 +175,7 @@ public class Parser {
 	}
 	
 	
-	public void write_XML() {
+	public void write_XML(String problemName) {
 		try {
 			// write the content into xml file
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -185,8 +184,8 @@ public class Parser {
 			//-------//
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
 			Date date = new Date();
-			String fileName = "Problem_Name "+dateFormat.format(date)+".xml";
-			StreamResult result = new StreamResult(new File("/Users/mohammadmudassir/Desktop/"+fileName));
+			String fileName = problemName+" "+dateFormat.format(date)+".xml";
+			StreamResult result = new StreamResult(new File("C:\\Users\\Sergio-PC\\Desktop\\Test\\"+fileName));
 			//-------//
 			transformer.transform(source, result);
 			System.out.println("File saved! "+dateFormat.format(date));
