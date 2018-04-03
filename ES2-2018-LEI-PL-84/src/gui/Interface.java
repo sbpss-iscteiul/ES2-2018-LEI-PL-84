@@ -258,15 +258,13 @@ public class Interface {
 						}
 					}
 					if(!varField.getText().isEmpty()&& !valueField.getText().isEmpty()) {
-						parser.addLimitations(varField+" "+opBox.getItemAt(opBox.getSelectedIndex())+" "+valueField);
+						parser.addLimitations(varField.getText()+" "+opBox.getItemAt(opBox.getSelectedIndex())+" "+valueField.getText());
 					}
-//					if(critTableModel.getRowCount()>0) {
-//						for (int i = 0; i < varTableModel.getRowCount(); i++) {
-//							parser.addPaths(i, critTableModel.getValueAt(i, 1).toString());
-//							System.out.println("crit");
-//							System.out.println("	"+i);
-//						}
-//					}
+					if(critTableModel.getRowCount()>0) {
+						for (int i = 0; i < varTableModel.getRowCount(); i++) {
+							parser.addPaths(i, critTableModel.getValueAt(i, 0).toString());
+						}
+					}
 					parser.write_XML(nameText.getText());
 				}else {
 					System.out.println("Erro");

@@ -185,7 +185,7 @@ public class Parser {
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
 			Date date = new Date();
 			String fileName = problemName+" "+dateFormat.format(date)+".xml";
-			StreamResult result = new StreamResult(new File("C:\\Users\\Sergio-PC\\Desktop\\Test\\"+fileName));
+			StreamResult result = new StreamResult(new File("C:\\Users\\duart\\Desktop\\teste\\"+fileName));
 			//-------//
 			transformer.transform(source, result);
 			System.out.println("File saved! "+dateFormat.format(date));
