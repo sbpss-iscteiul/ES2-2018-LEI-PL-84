@@ -175,7 +175,8 @@ public class Parser {
 	}
 	
 	
-	public void write_XML(String problemName) {
+	public void write_XML(String problemName, String dir) {
+		System.out.println(dir);
 		try {
 			// write the content into xml file
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -185,7 +186,7 @@ public class Parser {
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
 			Date date = new Date();
 			String fileName = problemName+" "+dateFormat.format(date)+".xml";
-			StreamResult result = new StreamResult(new File("C:\\Users\\duart\\Desktop\\teste\\"+fileName));
+			StreamResult result = new StreamResult(new File(dir+fileName));
 			//-------//
 			transformer.transform(source, result);
 			System.out.println("File saved! "+dateFormat.format(date));
@@ -193,9 +194,9 @@ public class Parser {
 				tfe.printStackTrace();
 		}
 	}
-	public void read_XML() {
+	public void read_XML(String dir) {
 		try {
-			File fXML = new File("/Users/mohammadmudassir/Desktop/Problem_Name 2018-03-18 18-17-09.xml");
+			File fXML = new File(dir);
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			Document doc = dBuilder.parse(fXML);

@@ -211,8 +211,8 @@ public class Interface {
 				email.createMessage();
 				String to=emailField.getText();
 				if(to.isEmpty()) {
-					System.out.println("o email não foi preenchido");
-					JOptionPane.showMessageDialog(new JPanel(),"o email não foi preenchido","Erro mail", JOptionPane.ERROR_MESSAGE);
+					System.out.println("o email nï¿½o foi preenchido");
+					JOptionPane.showMessageDialog(new JPanel(),"o email nï¿½o foi preenchido","Erro mail", JOptionPane.ERROR_MESSAGE);
 				}else {
 					email.adddestination("sbpss@iscte-iul.pt");
 					email.adddestination(to);
@@ -232,6 +232,10 @@ public class Interface {
 			public void actionPerformed(ActionEvent arg0) {
 				JFileChooser load = new JFileChooser();
 				int open = load.showOpenDialog(centerLeftPanel);
+				Parser  parser = new Parser();
+				System.out.println(load.getSelectedFile().toString());
+				parser.read_XML(load.getSelectedFile().toString());
+				
 			}
 		});
 		saveButton.addActionListener(new ActionListener() {			
@@ -265,7 +269,7 @@ public class Interface {
 							parser.addPaths(i, critTableModel.getValueAt(i, 0).toString());
 						}
 					}
-					parser.write_XML(nameText.getText());
+					parser.write_XML(nameText.getText(),save.getSelectedFile().toString());
 				}else {
 					System.out.println("Erro");
 				}
@@ -303,7 +307,7 @@ public class Interface {
 		JFrame FAQframe = new JFrame("F.A.Q");
 		FAQframe.setDefaultCloseOperation(frame.DISPOSE_ON_CLOSE);
 		FAQframe.setLayout(new GridLayout(10, 0));
-		JLabel faq1 = new JLabel("Que informação será enviada por e-mail?");
+		JLabel faq1 = new JLabel("Que informaï¿½ï¿½o serï¿½ enviada por e-mail?");
 		JLabel faq2 = new JLabel("Frequently asked question 2");
 		JLabel faq3 = new JLabel("Frequently asked question 3");
 		JLabel faq4 = new JLabel("Frequently asked question 4");
