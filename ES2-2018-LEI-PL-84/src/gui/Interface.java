@@ -246,7 +246,7 @@ public class Interface {
 				if (!nameText.getText().isEmpty()) {
 					Parser parser = new Parser();
 					if(!sendEmailButton.getText().isEmpty()) {
-						parser.addEmail(sendEmailButton.getText());
+						parser.addEmail(emailField.getText());
 					}
 					if(!descText.getText().isEmpty()) {
 						parser.addDescription(descText.getText());

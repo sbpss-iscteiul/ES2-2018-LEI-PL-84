@@ -1,7 +1,9 @@
 package extras;
 import java.io.File;
+import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -195,6 +197,9 @@ public class Parser {
 		}
 	}
 	public void read_XML(String dir) {
+		String email="";
+		ArrayList<String[]> variaveis= new ArrayList<String[]>();
+		String descricao="";
 		try {
 			File fXML = new File(dir);
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -207,9 +212,34 @@ public class Parser {
 				NodeList nodeList2 = node.getChildNodes();
 				for(int i2=0;i2<nodeList2.getLength();i2++) {
 					Node node2 = nodeList2.item(i2);
-					System.out.println("              "+node2.getTextContent());
+					if(node2.getNodeName().equals("Email")) {
+						email=node2.getTextContent();
+					}
+					else if(node2.getNodeName().equals("Descricao")) {
+						descricao=node2.getTextContent();
+					}
+					else if(node2.getNodeName().equals("Variavel")) {
+						NodeList nList =node2.getChildNodes();
+						String[] variable= new String[4];
+						for(int i3=0;i3<nList.getLength();i3++) {
+							if(nList.item(i3).getNodeName().equals("Name")){
+								variable[0]=nList.item(i3).getTextContent();
+							}
+							else if(nList.item(i3).getNodeName().equals("Type")){
+								variable[1]=nList.item(i3).getTextContent();
+							}
+							else if(nList.item(i3).getNodeName().equals("Limite_Superior")){
+								variable[2]=nList.item(i3).getTextContent();
+							}
+							else if(nList.item(i3).getNodeName().equals("Limite_Inferior")){
+								variable[3]=nList.item(i3).getTextContent();
+							}
+						}
+						variaveis.add(variable);
+					}
 				}
 			}
+					
 		}
 		catch(Exception e) {
 			
