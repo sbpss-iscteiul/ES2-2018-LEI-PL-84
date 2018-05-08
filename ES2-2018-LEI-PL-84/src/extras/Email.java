@@ -1,22 +1,30 @@
 package extras;
 
 
+import java.io.File;
 import java.util.Properties;
 
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.util.ByteArrayDataSource;
 
 public class Email {
 	
 
 	private Session session;
 	private MimeMessage message;
+	private Multipart multipart;
 
 	public Email(){
 	      // Get system properties
@@ -25,7 +33,7 @@ public class Email {
 	        props.put("mail.smtp.auth", "true");
 	        props.put("mail.smtp.host", "smtp.gmail.com");
 	        props.put("mail.smtp.port", "587");
-
+	        multipart= new MimeMultipart();
 	      // Get the default Session object.
         	session = Session.getInstance(props,
              new javax.mail.Authenticator() {
@@ -35,24 +43,25 @@ public class Email {
              });
 	}
 	
-	public void createMessage() {
+	public void createMessage(String x, String p) {
 		
         // Create a default MimeMessage object.
         message = new MimeMessage(session);
-         
+        MimeBodyPart messagePart = new MimeBodyPart(); 
         try {
 	        // Set From: header field of the header.
 	        message.setFrom(new InternetAddress("ES2.iscte.84.2018@gmail.com"));
 	
 	
-	        // Set Subject: header field
-	        message.setSubject("ES2 Primeira Entrega");
-	
+	        // Set Subject: header field assunto
+	        message.setSubject(x);
 	        // Now set the actual message
-	        message.setText("Esta é a mensagem da primeira entrega");
+	        messagePart.setText(p);
+	        multipart.addBodyPart(messagePart);
         }catch (MessagingException mex) {
         	mex.printStackTrace();
         }
+        
 	}
 	
 	public void adddestination(String to) {
@@ -64,10 +73,35 @@ public class Email {
 			e.printStackTrace();
 		}
 	}
+	
+	public void CC(String to) {
+		 try {
+			message.addRecipient(Message.RecipientType.CC, new InternetAddress(to));
+		} catch (AddressException e) {
+			e.printStackTrace();
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}
+	}
 
+	public void anexo(String file) {
+		MimeBodyPart attachPart = new MimeBodyPart(); 
+		FileDataSource data= new FileDataSource(file);
+		try {
+			attachPart.setDataHandler(new DataHandler(data));
+			attachPart.setFileName(data.getName());
+			multipart.addBodyPart(attachPart);
+		} catch (MessagingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+		
 	public void send() {
 		try {
+			message.setContent(multipart);
 			Transport.send(message);
+			System.out.println("Sent message successfully....");
 		} catch (MessagingException e) {
 			e.printStackTrace();
 		}
