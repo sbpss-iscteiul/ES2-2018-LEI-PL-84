@@ -199,7 +199,11 @@ public class Parser {
 	public void read_XML(String dir) {
 		String email="";
 		ArrayList<String[]> variaveis= new ArrayList<String[]>();
+		ArrayList<String[]> algoritmos= new ArrayList<String[]>();
+		
 		String descricao="";
+		String paths="";
+		String tempoDeEspera="";
 		try {
 			File fXML = new File(dir);
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -236,6 +240,25 @@ public class Parser {
 							}
 						}
 						variaveis.add(variable);
+					}
+					else if(node2.getNodeName().equals("Paths")) {
+						paths= node2.getTextContent();
+					}
+					else if(node2.getNodeName().equals("Tempo_de_Espera")) {
+						tempoDeEspera = node2.getTextContent();
+					}
+					else if(node2.getNodeName().equals("Algorithm")) {
+						NodeList nList =node2.getChildNodes();
+						String[] algorithm= new String[4];
+						for(int i3=0;i3<nList.getLength();i3++) {
+							if(nList.item(i3).getNodeName().equals("Name")){
+								algorithm[0]=nList.item(i3).getTextContent();
+							}
+						}
+						algoritmos.add(algorithm);
+					}	
+					else if(node2.getNodeName().equals("Limitacoes")) {
+						//limitacoes
 					}
 				}
 			}
