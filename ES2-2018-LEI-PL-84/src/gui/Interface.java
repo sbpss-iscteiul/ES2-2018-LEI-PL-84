@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
@@ -49,7 +50,7 @@ public class Interface {
 	private JButton deleteVarButton;
 	private JButton addCritButton;
 	private JButton deleteCritButton;
-	private DefaultTableModel varTableModel;
+	private MyTableModel varTableModel;
 	private DefaultTableModel critTableModel;
 	private JTable varTable;
 	private TableColumn varTableColumn;
@@ -70,6 +71,8 @@ public class Interface {
 	private JScrollPane critPane;
 	private JTextField maxTimeField;
 	private JTextField maxVarField;
+	private ArrayList<Variable> varList;
+	private ArrayList<String> varNameList;
 	
 	public Interface() {
 		frame = new JFrame("ES2 Project");
@@ -84,12 +87,14 @@ public class Interface {
 		deleteVarButton = new JButton("Delete Variable");
 		addCritButton = new JButton("Add Criterium");
 		deleteCritButton = new JButton("Delete Criterium");
-		varTableModel = new DefaultTableModel(new Object[][] {}, new Object[] {"Name","Type"});
+		varTableModel = new MyTableModel(new Object[][] {}, new Object[] {"Name","Type", "Minimum Value", "Maximum Value"});
 		critTableModel = new DefaultTableModel(new Object[][] {}, new Object[] {"Name","PATH"});
 		varTable = new JTable(varTableModel);
 		varTableColumn = varTable.getColumnModel().getColumn(1);
 		critTable = new JTable(critTableModel);
 		sendEmailButton = new JButton("Send E-mail");
+		varList = new ArrayList<Variable>();
+		varNameList = new ArrayList<String>();
 		addListeners();
 	}
 	
@@ -165,7 +170,7 @@ public class Interface {
 		rightConfigPanel.setBorder(border);
 		
 		typeBox = new JComboBox();
-        typeBox.addItem("String");
+        typeBox.addItem("Integer"); typeBox.addItem("Decimal"); typeBox.addItem("Binary");
 		JPanel optionsPanel = new JPanel(new FlowLayout());
 		/////////////// VARIABLES /////////////////
 		JPanel varTablePanel = new JPanel(new BorderLayout());
@@ -282,7 +287,8 @@ public class Interface {
 		addVarButton.addActionListener(new ActionListener() {			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				varTableModel.addRow(new Object[][] {});	
+				varTable.clearSelection();
+				varTableModel.addRow(new Object[][] {});
 			}
 		});
 		addCritButton.addActionListener(new ActionListener() {			
@@ -295,7 +301,16 @@ public class Interface {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(varTable.getSelectedRow() != -1) {
-					varTableModel.removeRow(varTable.getSelectedRow());
+					String varName = (String) varTableModel.getValueAt(varTable.getSelectedRow(), 0);
+					varNameList.remove(varName);
+					if(varTable.getSelectedRow() > 0) {
+						varTable.setRowSelectionInterval(varTable.getSelectedRow()-1, varTable.getSelectedRow()-1);
+						varTableModel.removeRow(varTable.getSelectedRow()+1);
+						varTable.clearSelection();
+					}else {
+						varTable.clearSelection();
+						varTableModel.removeRow(0);
+					}
 				}
 			}
 		});
@@ -307,11 +322,39 @@ public class Interface {
 			}
 		});
 		varTableModel.addTableModelListener(new TableModelListener() {
-			@SuppressWarnings("unchecked")
+			@SuppressWarnings({ "unchecked", "rawtypes" })
 			@Override
 			public void tableChanged(TableModelEvent e) {
-				if(varTableModel.getValueAt(e.getLastRow(), 0) != null)
-					varBox.addItem(varTableModel.getValueAt(e.getLastRow(), 0));
+				String varType = null;
+				if(varTable.getSelectedRowCount()>0){
+					if(varTable.getValueAt(varTable.getSelectedRow(), varTable.getSelectedColumn())!=null) {
+						if(varTable.getSelectedColumn() == 0) {
+							String varName = (String) varTableModel.getValueAt(varTable.getSelectedRow(), 0);
+							if(!varNameList.contains(varName)) 
+//								varNameList.set(varNameList.indexOf(varName), element)
+//								JOptionPane.showMessageDialog(frame, "Warning: Variable already exists!");
+//							}else 
+								varNameList.add(varName);
+						}
+						if(varTable.getSelectedColumn() == 1) {
+							varType = (String) varTableModel.getValueAt(varTable.getSelectedRow(),  1);
+							Class tmp = null;
+							if(varType.equals("Integer"))
+								tmp=Integer.class;
+							else if(varType.equals("Decimal"))
+								tmp=Double.class;
+							else 
+								tmp=String.class;
+							
+							varTableModel.setCellDataType(tmp, frame);
+							varTableModel.getColumnClass(2);
+							varTableModel.getColumnClass(3);
+						}
+					}
+				}
+				varBox.removeAllItems();
+				for(String i : varNameList)
+					varBox.addItem(i);
 			}
 		});
 	}
@@ -342,8 +385,12 @@ public class Interface {
 	}
 	
 	public Variable getVariable(int row) {
-		Variable var = new Variable(varTableModel.getValueAt(row, 0).toString(), varTableModel.getValueAt(row, 1).toString());
+		Variable var = new Variable(varTableModel.getValueAt(row, 0).toString(), varTableModel.getValueAt(row, 1).toString(), varTableModel.getValueAt(row, 2), varTableModel.getValueAt(row, 3));
 		return var;
+	}
+	
+	public void insertVar(String name, String type) {
+		varTableModel.addRow(new Object[] {name, type});
 	}
 	
 	public static void main(String[] args) {
