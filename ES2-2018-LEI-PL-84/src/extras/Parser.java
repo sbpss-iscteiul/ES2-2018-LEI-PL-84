@@ -20,6 +20,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import objects.Problem;
+import objects.Variable;
+
 
 public class Parser {
 	
@@ -196,14 +199,8 @@ public class Parser {
 				tfe.printStackTrace();
 		}
 	}
-	public void read_XML(String dir) {
-		String email="";
-		ArrayList<String[]> variaveis= new ArrayList<String[]>();
-		ArrayList<String[]> algoritmos= new ArrayList<String[]>();
-		
-		String descricao="";
-		String paths="";
-		String tempoDeEspera="";
+	public Problem read_XML(String dir) {
+		Problem problem = new Problem();
 		try {
 			File fXML = new File(dir);
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -212,50 +209,48 @@ public class Parser {
 			NodeList nodeList = doc.getDocumentElement().getChildNodes();
 			for(int i=0;i<nodeList.getLength();i++) {
 				Node node = nodeList.item(i); 
-				System.out.println(node.getNodeName());
 				NodeList nodeList2 = node.getChildNodes();
 				for(int i2=0;i2<nodeList2.getLength();i2++) {
 					Node node2 = nodeList2.item(i2);
 					if(node2.getNodeName().equals("Email")) {
-						email=node2.getTextContent();
+						problem.setEmail(node2.getTextContent());
 					}
 					else if(node2.getNodeName().equals("Descricao")) {
-						descricao=node2.getTextContent();
+						problem.setDescription(node2.getTextContent());
 					}
 					else if(node2.getNodeName().equals("Variavel")) {
 						NodeList nList =node2.getChildNodes();
-						String[] variable= new String[4];
+						Variable variable = new Variable(null, null, null, null);
 						for(int i3=0;i3<nList.getLength();i3++) {
 							if(nList.item(i3).getNodeName().equals("Name")){
-								variable[0]=nList.item(i3).getTextContent();
+								variable.setName(nList.item(i3).getTextContent());
 							}
 							else if(nList.item(i3).getNodeName().equals("Type")){
-								variable[1]=nList.item(i3).getTextContent();
+								variable.setType(nList.item(i3).getTextContent());
 							}
 							else if(nList.item(i3).getNodeName().equals("Limite_Superior")){
-								variable[2]=nList.item(i3).getTextContent();
+								variable.setMaxValue(nList.item(i3).getTextContent());
 							}
 							else if(nList.item(i3).getNodeName().equals("Limite_Inferior")){
-								variable[3]=nList.item(i3).getTextContent();
+								variable.setMinValue(nList.item(i3).getTextContent());
 							}
 						}
-						variaveis.add(variable);
+						problem.getVars().add(variable);
 					}
 					else if(node2.getNodeName().equals("Paths")) {
-						paths= node2.getTextContent();
+						problem.getPaths().add(node2.getTextContent());
 					}
 					else if(node2.getNodeName().equals("Tempo_de_Espera")) {
-						tempoDeEspera = node2.getTextContent();
+						problem.setTempoDeEspera(node2.getTextContent());
 					}
 					else if(node2.getNodeName().equals("Algorithm")) {
 						NodeList nList =node2.getChildNodes();
-						String[] algorithm= new String[4];
 						for(int i3=0;i3<nList.getLength();i3++) {
 							if(nList.item(i3).getNodeName().equals("Name")){
-								algorithm[0]=nList.item(i3).getTextContent();
+								problem.setAlgotihm(nList.item(i3).getTextContent());
+								break;
 							}
 						}
-						algoritmos.add(algorithm);
 					}	
 					else if(node2.getNodeName().equals("Limitacoes")) {
 						//limitacoes
@@ -269,7 +264,7 @@ public class Parser {
 		}
 		
 			
-		
+		return problem;
 	}
 	
 	/*Notes

@@ -48,6 +48,6 @@ public class Variable {
 	
 	@Override
 	public String toString() {
-		return getName()+" "+getType();
+		return "Variable [name=" + name + ", type=" + type + ", minValue=" + minValue + ", maxValue=" + maxValue + "]";
 	}
 }
