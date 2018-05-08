@@ -7,7 +7,10 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultCellEditor;
@@ -60,6 +63,7 @@ public class Interface {
 	private JButton sendEmailButton;
 	private JButton FAQButton;
 	private JLabel nameLabel;
+	private JButton Send;
 	private JTextField nameText;
 	private JLabel descLabel;
 	private JTextArea descText;
@@ -70,6 +74,7 @@ public class Interface {
 	private JScrollPane critPane;
 	private JTextField maxTimeField;
 	private JTextField maxVarField;
+	private String path;
 	
 	public Interface() {
 		frame = new JFrame("ES2 Project");
@@ -84,12 +89,14 @@ public class Interface {
 		deleteVarButton = new JButton("Delete Variable");
 		addCritButton = new JButton("Add Criterium");
 		deleteCritButton = new JButton("Delete Criterium");
-		varTableModel = new DefaultTableModel(new Object[][] {}, new Object[] {"Name","Type"});
+		varTableModel = new DefaultTableModel(new Object[][] {}, new Object[] {"Name","Type","Limite inferior", "Limite Superior"});
 		critTableModel = new DefaultTableModel(new Object[][] {}, new Object[] {"Name","PATH"});
 		varTable = new JTable(varTableModel);
 		varTableColumn = varTable.getColumnModel().getColumn(1);
 		critTable = new JTable(critTableModel);
 		sendEmailButton = new JButton("Send E-mail");
+		runButton = new JButton("RUN");
+		Send = new JButton("Send E-mail");
 		addListeners();
 	}
 	
@@ -123,7 +130,7 @@ public class Interface {
 		JPanel northRightPanel = new JPanel();
 		northRightPanel.setLayout(new FlowLayout());
 		northRightPanel.setBorder(border);
-		runButton = new JButton("RUN");
+		
 		
 		northRightPanel.add(runButton); northRightPanel.add(sendEmailButton);
 		northRightPanel.add(FAQButton);
@@ -165,7 +172,9 @@ public class Interface {
 		rightConfigPanel.setBorder(border);
 		
 		typeBox = new JComboBox();
-        typeBox.addItem("String");
+        typeBox.addItem("Inteiro");
+        typeBox.addItem("Decimal");
+        typeBox.addItem("Binario");
 		JPanel optionsPanel = new JPanel(new FlowLayout());
 		/////////////// VARIABLES /////////////////
 		JPanel varTablePanel = new JPanel(new BorderLayout());
@@ -212,23 +221,47 @@ public class Interface {
 	}
 	
 	public void addListeners() {
-
-		sendEmailButton.addActionListener(new ActionListener() {
+		
+		runButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				Email email= new Email();
-				email.createMessage();
+				String mensagem= new String("Muito obrigado por usar esta plataforma de otimização. Será informado por email sobre o progresso do processo de otimização, quando o processo de otimização tiver atingido 25%, 50%, 75% do total do (número de avaliações ou) tempo estimado, e também quando o processo tiver terminado, com sucesso ou devido à ocorrência de erros.");
+				email.createMessage("Optimização em curso:" + nameText.getText() + " " + Calendar.getInstance().getTime() , mensagem);
 				String to=emailField.getText();
 				if(to.isEmpty()) {
 					System.out.println("o email não foi preenchido");
 					JOptionPane.showMessageDialog(new JPanel(),"o email não foi preenchido","Erro mail", JOptionPane.ERROR_MESSAGE);
 				}else {
-					email.adddestination("sbpss@iscte-iul.pt");
 					email.adddestination(to);
+					//inserir o mail do admin em vez do raoma
+					email.CC("raoma@iscte-iul.pt");
+					String file=new String(path);
+					email.anexo(file);
 					email.send();
 				}
 			}
 		});
+		
+		sendEmailButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				createEmailFrame();
+
+			}
+		});
+		
+		Send.addActionListener(new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			Email email= new Email();
+			email.createMessage(nameText.getText(),descText.getText());
+			//inserir o mail do admin em vez do raoma
+			email.adddestination("raoma@iscte-iul.pt");
+			email.send();
+		}
+	});
+		
 		FAQButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -236,13 +269,16 @@ public class Interface {
 				System.out.println(varBox.getSelectedItem().toString());
 			}
 		});
+		
 		loadButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				JFileChooser load = new JFileChooser();
 				int open = load.showOpenDialog(problemPanel);
+				path= load.getSelectedFile().getAbsolutePath();
 			}
 		});
+		
 		saveButton.addActionListener(new ActionListener() {			
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -278,20 +314,24 @@ public class Interface {
 				}else {
 					System.out.println("Erro");
 				}
+				path= save.getSelectedFile().getAbsolutePath() + ".xml";
 			}
 		});
+		
 		addVarButton.addActionListener(new ActionListener() {			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				varTableModel.addRow(new Object[][] {});	
 			}
 		});
+		
 		addCritButton.addActionListener(new ActionListener() {			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				critTableModel.addRow(new Object[][] {});
 			}
 		});
+		
 		deleteVarButton.addActionListener(new ActionListener() {			
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -300,6 +340,7 @@ public class Interface {
 				}
 			}
 		});
+		
 		deleteCritButton.addActionListener(new ActionListener() {			
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -307,6 +348,7 @@ public class Interface {
 					critTableModel.removeRow(critTable.getSelectedRow());
 			}
 		});
+		
 		varTableModel.addTableModelListener(new TableModelListener() {
 			@SuppressWarnings("unchecked")
 			@Override
@@ -340,6 +382,30 @@ public class Interface {
 		FAQframe.setSize(1000, 500);
 		FAQframe.setResizable(false);
 		FAQframe.setVisible(true);
+	}
+	
+	public void createEmailFrame() {
+		JFrame Emailframe = new JFrame("Email");
+		JPanel problemNamePanel = new JPanel(new FlowLayout());
+		JPanel problemDescPanel = new JPanel(new BorderLayout());
+		JPanel problemOptionPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		Emailframe.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		Emailframe.setLayout(new GridLayout(10, 0));	
+		nameLabel = new JLabel("Assunto");
+		nameText = new JTextField("", 20);
+		descLabel = new JLabel("Description");
+		descText = new JTextArea(); descText.setBorder(border);		
+		problemNamePanel.add(nameLabel);
+		problemNamePanel.add(nameText);
+		Emailframe.add(problemNamePanel);
+		problemDescPanel.add(descLabel, BorderLayout.NORTH);
+		problemDescPanel.add(descText);	
+		Emailframe.add(problemDescPanel);
+		problemOptionPanel.add(Send);
+		Emailframe.add(problemOptionPanel);
+		Emailframe.setSize(1000, 500);
+		Emailframe.setResizable(false);
+		Emailframe.setVisible(true);
 	}
 	
 	public Variable getVariable(int row) {
