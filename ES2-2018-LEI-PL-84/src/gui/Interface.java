@@ -12,6 +12,10 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import java.util.ArrayList;
+
+
+import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
@@ -52,7 +56,7 @@ public class Interface {
 	private JButton deleteVarButton;
 	private JButton addCritButton;
 	private JButton deleteCritButton;
-	private DefaultTableModel varTableModel;
+	private MyTableModel varTableModel;
 	private DefaultTableModel critTableModel;
 	private JTable varTable;
 	private TableColumn varTableColumn;
@@ -75,6 +79,9 @@ public class Interface {
 	private JTextField maxTimeField;
 	private JTextField maxVarField;
 	private String path;
+	private ArrayList<Variable> varList;
+	private ArrayList<String> varNameList;
+
 	
 	public Interface() {
 		frame = new JFrame("ES2 Project");
@@ -89,7 +96,7 @@ public class Interface {
 		deleteVarButton = new JButton("Delete Variable");
 		addCritButton = new JButton("Add Criterium");
 		deleteCritButton = new JButton("Delete Criterium");
-		varTableModel = new DefaultTableModel(new Object[][] {}, new Object[] {"Name","Type","Limite inferior", "Limite Superior"});
+		varTableModel = new MyTableModel(new Object[][] {}, new Object[] {"Name","Type", "Minimum Value", "Maximum Value"});
 		critTableModel = new DefaultTableModel(new Object[][] {}, new Object[] {"Name","PATH"});
 		varTable = new JTable(varTableModel);
 		varTableColumn = varTable.getColumnModel().getColumn(1);
@@ -97,6 +104,8 @@ public class Interface {
 		sendEmailButton = new JButton("Send E-mail");
 		runButton = new JButton("RUN");
 		Send = new JButton("Send E-mail");
+		varList = new ArrayList<Variable>();
+		varNameList = new ArrayList<String>();
 		addListeners();
 	}
 	
@@ -130,8 +139,6 @@ public class Interface {
 		JPanel northRightPanel = new JPanel();
 		northRightPanel.setLayout(new FlowLayout());
 		northRightPanel.setBorder(border);
-		
-		
 		northRightPanel.add(runButton); northRightPanel.add(sendEmailButton);
 		northRightPanel.add(FAQButton);
 		northPanel.add(northLeftPanel, BorderLayout.WEST);
@@ -169,12 +176,9 @@ public class Interface {
 		JPanel leftConfigPanel = new JPanel(new GridLayout(4,1));
 		leftConfigPanel.setBorder(border);
 		JPanel rightConfigPanel = new JPanel(new BorderLayout());
-		rightConfigPanel.setBorder(border);
-		
+		rightConfigPanel.setBorder(border);		
 		typeBox = new JComboBox();
-        typeBox.addItem("Inteiro");
-        typeBox.addItem("Decimal");
-        typeBox.addItem("Binario");
+        typeBox.addItem("Integer"); typeBox.addItem("Decimal"); typeBox.addItem("Binary");
 		JPanel optionsPanel = new JPanel(new FlowLayout());
 		/////////////// VARIABLES /////////////////
 		JPanel varTablePanel = new JPanel(new BorderLayout());
@@ -221,6 +225,7 @@ public class Interface {
 	}
 	
 	public void addListeners() {
+
 		
 		runButton.addActionListener(new ActionListener() {
 			@Override
@@ -230,8 +235,8 @@ public class Interface {
 				email.createMessage("Optimização em curso:" + nameText.getText() + " " + Calendar.getInstance().getTime() , mensagem);
 				String to=emailField.getText();
 				if(to.isEmpty()) {
-					System.out.println("o email nï¿½o foi preenchido");
-					JOptionPane.showMessageDialog(new JPanel(),"o email nï¿½o foi preenchido","Erro mail", JOptionPane.ERROR_MESSAGE);
+					System.out.println("o email não foi preenchido");
+					JOptionPane.showMessageDialog(new JPanel(),"o email não foi preenchido","Erro mail", JOptionPane.ERROR_MESSAGE);
 				}else {
 					email.adddestination(to);
 					//inserir o mail do admin em vez do raoma
@@ -242,6 +247,7 @@ public class Interface {
 				}
 			}
 		});
+
 		
 		sendEmailButton.addActionListener(new ActionListener() {
 			@Override
@@ -262,6 +268,7 @@ public class Interface {
 		}
 	});
 		
+
 		FAQButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -269,16 +276,16 @@ public class Interface {
 				System.out.println(varBox.getSelectedItem().toString());
 			}
 		});
-		
+
 		loadButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				JFileChooser load = new JFileChooser();
-
 				int open = load.showOpenDialog(problemPanel);
-				Parser  parser = new Parser();
-				System.out.println(load.getSelectedFile().toString());
-				parser.read_XML(load.getSelectedFile().toString());
+//				DISCUTIR GRUPO
+//				Parser  parser = new Parser();
+//				System.out.println(load.getSelectedFile().toString());
+//				parser.read_XML(load.getSelectedFile().toString());
 				path= load.getSelectedFile().getAbsolutePath();
 
 			}
@@ -292,7 +299,7 @@ public class Interface {
 				if (!nameText.getText().isEmpty()) {
 					Parser parser = new Parser();
 					if(!sendEmailButton.getText().isEmpty()) {
-						parser.addEmail(sendEmailButton.getText());
+						parser.addEmail(emailField.getText());
 					}
 					if(!descText.getText().isEmpty()) {
 						parser.addDescription(descText.getText());
@@ -315,7 +322,7 @@ public class Interface {
 							parser.addPaths(i, critTableModel.getValueAt(i, 0).toString());
 						}
 					}
-					parser.write_XML(nameText.getText(),save.getSelectedFile().toString());
+//					parser.write_XML(nameText.getText());
 				}else {
 					System.out.println("Erro");
 				}
@@ -326,7 +333,8 @@ public class Interface {
 		addVarButton.addActionListener(new ActionListener() {			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				varTableModel.addRow(new Object[][] {});	
+				varTable.clearSelection();
+				varTableModel.addRow(new Object[][] {});
 			}
 		});
 		
@@ -341,7 +349,16 @@ public class Interface {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(varTable.getSelectedRow() != -1) {
-					varTableModel.removeRow(varTable.getSelectedRow());
+					String varName = (String) varTableModel.getValueAt(varTable.getSelectedRow(), 0);
+					varNameList.remove(varName);
+					if(varTable.getSelectedRow() > 0) {
+						varTable.setRowSelectionInterval(varTable.getSelectedRow()-1, varTable.getSelectedRow()-1);
+						varTableModel.removeRow(varTable.getSelectedRow()+1);
+						varTable.clearSelection();
+					}else {
+						varTable.clearSelection();
+						varTableModel.removeRow(0);
+					}
 				}
 			}
 		});
@@ -353,13 +370,40 @@ public class Interface {
 					critTableModel.removeRow(critTable.getSelectedRow());
 			}
 		});
-		
 		varTableModel.addTableModelListener(new TableModelListener() {
-			@SuppressWarnings("unchecked")
+			@SuppressWarnings({ "unchecked", "rawtypes" })
 			@Override
 			public void tableChanged(TableModelEvent e) {
-				if(varTableModel.getValueAt(e.getLastRow(), 0) != null)
-					varBox.addItem(varTableModel.getValueAt(e.getLastRow(), 0));
+				String varType = null;
+				if(varTable.getSelectedRowCount()>0){
+					if(varTable.getValueAt(varTable.getSelectedRow(), varTable.getSelectedColumn())!=null) {
+						if(varTable.getSelectedColumn() == 0) {
+							String varName = (String) varTableModel.getValueAt(varTable.getSelectedRow(), 0);
+							if(!varNameList.contains(varName)) 
+//								varNameList.set(varNameList.indexOf(varName), element)
+//								JOptionPane.showMessageDialog(frame, "Warning: Variable already exists!");
+//							}else 
+								varNameList.add(varName);
+						}
+						if(varTable.getSelectedColumn() == 1) {
+							varType = (String) varTableModel.getValueAt(varTable.getSelectedRow(),  1);
+							Class tmp = null;
+							if(varType.equals("Integer"))
+								tmp=Integer.class;
+							else if(varType.equals("Decimal"))
+								tmp=Double.class;
+							else 
+								tmp=String.class;
+							
+							varTableModel.setCellDataType(tmp, frame);
+							varTableModel.getColumnClass(2);
+							varTableModel.getColumnClass(3);
+						}
+					}
+				}
+				varBox.removeAllItems();
+				for(String i : varNameList)
+					varBox.addItem(i);
 			}
 		});
 	}
@@ -368,7 +412,7 @@ public class Interface {
 		JFrame FAQframe = new JFrame("F.A.Q");
 		FAQframe.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		FAQframe.setLayout(new GridLayout(10, 0));
-		JLabel faq1 = new JLabel("Que informaï¿½ï¿½o serï¿½ enviada por e-mail?");
+		JLabel faq1 = new JLabel("Que informação será enviada por e-mail?");
 		JLabel faq2 = new JLabel("Frequently asked question 2");
 		JLabel faq3 = new JLabel("Frequently asked question 3");
 		JLabel faq4 = new JLabel("Frequently asked question 4");
@@ -414,8 +458,12 @@ public class Interface {
 	}
 	
 	public Variable getVariable(int row) {
-		Variable var = new Variable(varTableModel.getValueAt(row, 0).toString(), varTableModel.getValueAt(row, 1).toString());
+		Variable var = new Variable(varTableModel.getValueAt(row, 0).toString(), varTableModel.getValueAt(row, 1).toString(), varTableModel.getValueAt(row, 2), varTableModel.getValueAt(row, 3));
 		return var;
+	}
+	
+	public void insertVar(String name, String type) {
+		varTableModel.addRow(new Object[] {name, type});
 	}
 	
 	public static void main(String[] args) {

@@ -1,7 +1,9 @@
 package extras;
 import java.io.File;
+import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -17,6 +19,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import objects.Problem;
+import objects.Variable;
 
 
 public class Parser {
@@ -194,7 +199,8 @@ public class Parser {
 				tfe.printStackTrace();
 		}
 	}
-	public void read_XML(String dir) {
+	public Problem read_XML(String dir) {
+		Problem problem = new Problem();
 		try {
 			File fXML = new File(dir);
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -203,20 +209,62 @@ public class Parser {
 			NodeList nodeList = doc.getDocumentElement().getChildNodes();
 			for(int i=0;i<nodeList.getLength();i++) {
 				Node node = nodeList.item(i); 
-				System.out.println(node.getNodeName());
 				NodeList nodeList2 = node.getChildNodes();
 				for(int i2=0;i2<nodeList2.getLength();i2++) {
 					Node node2 = nodeList2.item(i2);
-					System.out.println("              "+node2.getTextContent());
+					if(node2.getNodeName().equals("Email")) {
+						problem.setEmail(node2.getTextContent());
+					}
+					else if(node2.getNodeName().equals("Descricao")) {
+						problem.setDescription(node2.getTextContent());
+					}
+					else if(node2.getNodeName().equals("Variavel")) {
+						NodeList nList =node2.getChildNodes();
+						Variable variable = new Variable(null, null, null, null);
+						for(int i3=0;i3<nList.getLength();i3++) {
+							if(nList.item(i3).getNodeName().equals("Name")){
+								variable.setName(nList.item(i3).getTextContent());
+							}
+							else if(nList.item(i3).getNodeName().equals("Type")){
+								variable.setType(nList.item(i3).getTextContent());
+							}
+							else if(nList.item(i3).getNodeName().equals("Limite_Superior")){
+								variable.setMaxValue(nList.item(i3).getTextContent());
+							}
+							else if(nList.item(i3).getNodeName().equals("Limite_Inferior")){
+								variable.setMinValue(nList.item(i3).getTextContent());
+							}
+						}
+						problem.getVars().add(variable);
+					}
+					else if(node2.getNodeName().equals("Paths")) {
+						problem.getPaths().add(node2.getTextContent());
+					}
+					else if(node2.getNodeName().equals("Tempo_de_Espera")) {
+						problem.setTempoDeEspera(node2.getTextContent());
+					}
+					else if(node2.getNodeName().equals("Algorithm")) {
+						NodeList nList =node2.getChildNodes();
+						for(int i3=0;i3<nList.getLength();i3++) {
+							if(nList.item(i3).getNodeName().equals("Name")){
+								problem.setAlgotihm(nList.item(i3).getTextContent());
+								break;
+							}
+						}
+					}	
+					else if(node2.getNodeName().equals("Limitacoes")) {
+						//limitacoes
+					}
 				}
 			}
+					
 		}
 		catch(Exception e) {
 			
 		}
 		
 			
-		
+		return problem;
 	}
 	
 	/*Notes
