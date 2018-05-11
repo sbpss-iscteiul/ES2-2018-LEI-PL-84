@@ -30,6 +30,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import javax.swing.border.Border;
 import javax.swing.event.TableModelEvent;
@@ -39,6 +40,7 @@ import javax.swing.table.TableColumn;
 
 import extras.Email;
 import extras.Parser;
+import objects.Problem;
 import objects.Variable;
 
 public class Interface {
@@ -124,7 +126,7 @@ public class Interface {
 		addProblemPanel();
 		addConfigPanel();
 		tabs.addTab("Problema", problemPanel);
-		tabs.addTab("Configuração", configPanel);
+		tabs.addTab("Configuraï¿½ï¿½o", configPanel);
 		frame.add(tabs);
 		
 	}
@@ -223,7 +225,26 @@ public class Interface {
 		configPanel.add(leftConfigPanel, BorderLayout.WEST);
 		configPanel.add(rightConfigPanel, BorderLayout.EAST);
 	}
-	
+	public void loadProblem(Problem problem) {
+		SwingUtilities.invokeLater(new Runnable() {
+			
+			@Override
+			public void run() {
+				nameText.setText(problem.getProblemName());
+				sendEmailButton.setText(problem.getEmail());
+				descText.setText(problem.getDescription());
+				maxTimeField.setText(problem.getTempoDeEspera());
+				System.out.println(problem);
+				
+				//missing implementation:
+				//var table
+				//limitations
+				//paths
+				
+			}
+		});
+		
+	}
 	public void addListeners() {
 
 		
@@ -231,12 +252,12 @@ public class Interface {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				Email email= new Email();
-				String mensagem= new String("Muito obrigado por usar esta plataforma de otimização. Será informado por email sobre o progresso do processo de otimização, quando o processo de otimização tiver atingido 25%, 50%, 75% do total do (número de avaliações ou) tempo estimado, e também quando o processo tiver terminado, com sucesso ou devido à ocorrência de erros.");
-				email.createMessage("Optimização em curso:" + nameText.getText() + " " + Calendar.getInstance().getTime() , mensagem);
+				String mensagem= new String("Muito obrigado por usar esta plataforma de otimizaï¿½ï¿½o. Serï¿½ informado por email sobre o progresso do processo de otimizaï¿½ï¿½o, quando o processo de otimizaï¿½ï¿½o tiver atingido 25%, 50%, 75% do total do (nï¿½mero de avaliaï¿½ï¿½es ou) tempo estimado, e tambï¿½m quando o processo tiver terminado, com sucesso ou devido ï¿½ ocorrï¿½ncia de erros.");
+				email.createMessage("Optimizaï¿½ï¿½o em curso:" + nameText.getText() + " " + Calendar.getInstance().getTime() , mensagem);
 				String to=emailField.getText();
 				if(to.isEmpty()) {
-					System.out.println("o email não foi preenchido");
-					JOptionPane.showMessageDialog(new JPanel(),"o email não foi preenchido","Erro mail", JOptionPane.ERROR_MESSAGE);
+					System.out.println("o email nï¿½o foi preenchido");
+					JOptionPane.showMessageDialog(new JPanel(),"o email nï¿½o foi preenchido","Erro mail", JOptionPane.ERROR_MESSAGE);
 				}else {
 					email.adddestination(to);
 					//inserir o mail do admin em vez do raoma
@@ -282,12 +303,15 @@ public class Interface {
 			public void actionPerformed(ActionEvent arg0) {
 				JFileChooser load = new JFileChooser();
 				int open = load.showOpenDialog(problemPanel);
-//				DISCUTIR GRUPO
-//				Parser  parser = new Parser();
-//				System.out.println(load.getSelectedFile().toString());
-//				parser.read_XML(load.getSelectedFile().toString());
 				path= load.getSelectedFile().getAbsolutePath();
-
+				Problem problem = Parser.read_XML(load.getSelectedFile().toString());
+				loadProblem(problem);
+				//missing implementation:
+				//var table
+				//limitations
+				//paths
+				
+				
 			}
 		});
 		
@@ -311,7 +335,7 @@ public class Interface {
 						Variable tmp=null;
 						for (int i = 0; i < varTableModel.getRowCount(); i++) {
 							tmp=getVariable(i);
-							parser.addVariables(tmp.getName(), tmp.getType(), ""+((int)Math.random()*10), ""+(10+((int)Math.random()*10)));
+							parser.addVariables(tmp.getName(), tmp.getType(), ""+tmp.getMinValue(), ""+tmp.getMaxValue());
 						}
 					}
 					if(!varBox.getSelectedItem().toString().isEmpty()&& !valueField.getText().isEmpty()) {
@@ -322,7 +346,7 @@ public class Interface {
 							parser.addPaths(i, critTableModel.getValueAt(i, 0).toString());
 						}
 					}
-//					parser.write_XML(nameText.getText());
+				parser.write_XML(nameText.getText(),save.getSelectedFile().toString());
 				}else {
 					System.out.println("Erro");
 				}
@@ -412,7 +436,7 @@ public class Interface {
 		JFrame FAQframe = new JFrame("F.A.Q");
 		FAQframe.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		FAQframe.setLayout(new GridLayout(10, 0));
-		JLabel faq1 = new JLabel("Que informação será enviada por e-mail?");
+		JLabel faq1 = new JLabel("Que informaï¿½ï¿½o serï¿½ enviada por e-mail?");
 		JLabel faq2 = new JLabel("Frequently asked question 2");
 		JLabel faq3 = new JLabel("Frequently asked question 3");
 		JLabel faq4 = new JLabel("Frequently asked question 4");

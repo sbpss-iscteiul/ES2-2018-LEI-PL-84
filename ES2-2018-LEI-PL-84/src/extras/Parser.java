@@ -199,7 +199,7 @@ public class Parser {
 				tfe.printStackTrace();
 		}
 	}
-	public Problem read_XML(String dir) {
+	public static Problem read_XML(String dir) {
 		Problem problem = new Problem();
 		try {
 			File fXML = new File(dir);
