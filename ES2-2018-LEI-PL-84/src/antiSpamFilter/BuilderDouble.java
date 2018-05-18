@@ -18,13 +18,15 @@ import org.uma.jmetal.problem.DoubleProblem;
 import org.uma.jmetal.solution.DoubleSolution;
 import org.uma.jmetal.util.experiment.util.ExperimentProblem;
 
-public class BuilderDouble extends Builder<DoubleSolution> {
+public class BuilderDouble {
 
-	public BuilderDouble(ExperimentProblem<DoubleSolution> experimentProblem,int mE) {
-		super(experimentProblem,mE);
+	protected ExperimentProblem<DoubleSolution> experimentProblem;
+	protected int maxEvaluations;
+	
+	public BuilderDouble(int mE) {
+		this.maxEvaluations=mE;
 	}
-
-	@Override
+	
 	public Algorithm<List<DoubleSolution>> getAlgorithm(int i) {
 		if(i>0&&i<9) {
 			Algorithm<List<DoubleSolution>> algorithm=null;
@@ -58,6 +60,10 @@ public class BuilderDouble extends Builder<DoubleSolution> {
 		return null;
 	}
 
+	public void setExperimentProblem(ExperimentProblem<DoubleSolution> eP) {
+		this.experimentProblem = eP;
+	}
+	
 	private Algorithm<List<DoubleSolution>> getter_RandomSearch() {
 		Algorithm<List<DoubleSolution>> algorithm = new RandomSearchBuilder<DoubleSolution>(
 				(DoubleProblem) experimentProblem.getProblem())

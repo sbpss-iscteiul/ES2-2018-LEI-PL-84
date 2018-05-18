@@ -20,13 +20,15 @@ import org.uma.jmetal.solution.BinarySolution;
 import org.uma.jmetal.util.evaluator.impl.SequentialSolutionListEvaluator;
 import org.uma.jmetal.util.experiment.util.ExperimentProblem;
 
-public class BuilderBinary extends Builder<BinarySolution> {
-
-	public BuilderBinary(ExperimentProblem<BinarySolution> experimentProblem,int mE) {
-		super(experimentProblem,mE);
+public class BuilderBinary {
+	
+	protected ExperimentProblem<BinarySolution> experimentProblem;
+	protected int maxEvaluations;
+	
+	public BuilderBinary(int mE) {
+		this.maxEvaluations=mE;
 	}
 
-	@Override
 	public Algorithm<List<BinarySolution>> getAlgorithm(int i) {
 		if(i>0&&i<8) {
 			Algorithm<List<BinarySolution>> algorithm=null;
@@ -57,6 +59,10 @@ public class BuilderBinary extends Builder<BinarySolution> {
 		return null;
 	}
 	
+	public void setExperimentProblem(ExperimentProblem<BinarySolution> eP) {
+		this.experimentProblem = eP;
+	}
+	
 	private Algorithm<List<BinarySolution>> getter_SPEA2() {
 		 Algorithm<List<BinarySolution>> algorithm = new SPEA2Builder<BinarySolution>(
 				 (BinaryProblem) experimentProblem.getProblem(),
@@ -67,9 +73,6 @@ public class BuilderBinary extends Builder<BinarySolution> {
 		return algorithm;
 	}
 
-	/*
-	*Provavelmente temos de invocar (GenericBinaryProblem) antes do experimentProblem.getProblem 
-	*/
 	private Algorithm<List<BinarySolution>> getter_RandomSearch() {
 		Algorithm<List<BinarySolution>> algorithm = new RandomSearchBuilder<BinarySolution>(
 				(BinaryProblem) experimentProblem.getProblem())

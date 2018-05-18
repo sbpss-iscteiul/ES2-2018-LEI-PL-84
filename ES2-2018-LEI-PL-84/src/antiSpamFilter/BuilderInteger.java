@@ -14,13 +14,15 @@ import org.uma.jmetal.problem.IntegerProblem;
 import org.uma.jmetal.solution.IntegerSolution;
 import org.uma.jmetal.util.experiment.util.ExperimentProblem;
 
-public class BuilderInteger extends Builder<IntegerSolution> {
-
-	public BuilderInteger(ExperimentProblem<IntegerSolution> experimentProblem,int mE) {
-		super(experimentProblem,mE);
+public class BuilderInteger {
+	
+	protected ExperimentProblem<IntegerSolution> experimentProblem;
+	protected int maxEvaluations;
+	
+	public BuilderInteger(int mE) {
+		this.maxEvaluations=mE;
 	}
 	
-	@Override
 	public Algorithm<List<IntegerSolution>> getAlgorithm(int i) {
 		if(i>1&&i<6) {
 			Algorithm<List<IntegerSolution>> algorithm=null;
@@ -45,6 +47,10 @@ public class BuilderInteger extends Builder<IntegerSolution> {
 		return null;
 	}
 
+	public void setExperimentProblem(ExperimentProblem<IntegerSolution> eP) {
+		this.experimentProblem = eP;
+	}
+	
 	private Algorithm<List<IntegerSolution>> getter_RandomSearch() {
 		Algorithm<List<IntegerSolution>> algorithm = new RandomSearchBuilder<IntegerSolution>(
 				(IntegerProblem) experimentProblem.getProblem())
