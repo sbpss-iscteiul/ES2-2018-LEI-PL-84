@@ -7,10 +7,16 @@ import org.uma.jmetal.problem.ConstrainedProblem;
 import org.uma.jmetal.problem.impl.AbstractDoubleProblem;
 import org.uma.jmetal.solution.DoubleSolution;
 
-public class GenericProblem extends AbstractDoubleProblem implements ConstrainedProblem<DoubleSolution>{
+public class GenericDoubleProblem extends AbstractDoubleProblem implements ConstrainedProblem<DoubleSolution>{
 	
 	
-	public GenericProblem(int numberOfVariables,int numberOfObjectives,int numberOfConstraints,String problemName) {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+
+	public GenericDoubleProblem(int numberOfVariables,int numberOfObjectives,int numberOfConstraints,String problemName) {
 	    setNumberOfVariables(numberOfVariables);
 	    setNumberOfObjectives(numberOfObjectives);
 	    setNumberOfConstraints(numberOfConstraints);
