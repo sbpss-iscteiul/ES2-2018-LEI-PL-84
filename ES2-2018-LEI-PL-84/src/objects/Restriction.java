@@ -3,12 +3,12 @@ package objects;
 public class Restriction {
 	private String varName;
 	private String operation;
-	private String value;
+	private Object value;
 	@Override
 	public String toString() {
 		return "Restriction ["+varName + operation + value + "]" ;
 	}
-	public Restriction(String varName, String operation, String value) {
+	public Restriction(String varName, String operation, Object value) {
 		super();
 		this.varName = varName;
 		this.operation = operation;
@@ -26,10 +26,10 @@ public class Restriction {
 	public void setOperation(String operation) {
 		this.operation = operation;
 	}
-	public String getValue() {
+	public Object getValue() {
 		return value;
 	}
-	public void setValue(String value) {
+	public void setValue(Object value) {
 		this.value = value;
 	}
 }

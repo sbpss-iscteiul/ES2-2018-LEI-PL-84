@@ -191,7 +191,7 @@ public class Parser {
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
 			Date date = new Date();
 			String fileName = problemName+" "+dateFormat.format(date)+".xml";
-			StreamResult result = new StreamResult(new File(dir+fileName));
+			StreamResult result = new StreamResult(new File(dir+"_"+fileName));
 			//-------//
 			transformer.transform(source, result);
 			System.out.println("File saved! "+dateFormat.format(date));
@@ -234,7 +234,8 @@ public class Parser {
 							else if(nList.item(i3).getNodeName().equals("Limite_Inferior")){
 								variable.setMinValue(nList.item(i3).getTextContent());
 							}
-						}
+						}						
+						System.out.println("Variable "+i+": "+variable.getName()+", "+variable.getType()+", "+variable.getMinValue()+", "+variable.getMaxValue());
 						problem.getVars().add(variable);
 					}
 					else if(node2.getNodeName().equals("Paths")) {

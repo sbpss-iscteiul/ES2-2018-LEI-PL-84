@@ -10,8 +10,8 @@ public class MyTableModel extends DefaultTableModel{
 	
 	public MyTableModel(Object[][] rowNames, Object columnNames[]) {
 		super(rowNames, columnNames);
-	}
-	
+	}	
+
 	@Override
 	public Class getColumnClass(int col) {
 		if(super.getValueAt(0, 0)!=null)
@@ -25,21 +25,8 @@ public class MyTableModel extends DefaultTableModel{
 		else return String.class;
 	}
 	
-	@Override
-	public boolean isCellEditable(int rowIndex, int columnIndex) {
-		switch(columnIndex) {
-		case 2: return false;
-		case 3: return false;
-		}
-		return true;
-	}
-	
-	public void setCellDataType(Class type, JFrame frame) {
+	public void setCellDataType(Class type) {
 		this.dataType = type;
-	}
-	
-	public void setDataType(Class dataType) {
-		this.dataType=dataType;
 	}
 
 }
