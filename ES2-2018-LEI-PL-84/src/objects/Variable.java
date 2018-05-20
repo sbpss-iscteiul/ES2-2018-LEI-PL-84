@@ -13,6 +13,9 @@ public class Variable {
 		this.minValue = minValue;
 		this.maxValue = maxValue;
 	}
+	public Variable() {
+		
+	}
 	
 	public String getName() {
 		return name;

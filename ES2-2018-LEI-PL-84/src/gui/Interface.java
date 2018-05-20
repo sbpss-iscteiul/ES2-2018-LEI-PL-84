@@ -1,29 +1,31 @@
 package gui;
 import java.awt.BorderLayout;
+import java.awt.Checkbox;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.nio.file.Paths;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import java.util.ArrayList;
-
-
-import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultCellEditor;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -31,13 +33,20 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ListCellRenderer;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import javax.swing.border.Border;
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import javax.swing.plaf.synth.SynthSeparatorUI;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+
+import org.uma.jmetal.algorithm.Algorithm;
 
 import extras.Email;
 import extras.Parser;
@@ -63,7 +72,6 @@ public class Interface {
 	private MyTableModel varTableModel;
 	private DefaultTableModel critTableModel;
 	private JTable varTable;
-	private TableColumn varTableColumn;
 	private MyTableModel resTableModel;
 	private JTable resTable;
 	private JTable critTable;
@@ -79,7 +87,6 @@ public class Interface {
 	private JTextArea descText;
 	private JComboBox varBox;
 	private JComboBox opBox;
-	private JTextField valueField;
 	private JButton addResButton;
 	private JButton deleteResButton;
 	private JScrollPane critPane;
@@ -87,9 +94,15 @@ public class Interface {
 	private JTextField maxVarField;
 	private String path;
 	private ArrayList<Variable> varList;
-	private ArrayList<String> varNameList;
-	private JComboBox algorithms;
-	
+	private JList<CheckBoxItem> algorithmList;
+	private DefaultListModel<CheckBoxItem> algorithmListModel;
+	private JCheckBox intBox;
+	private JCheckBox doubleBox;
+	private JCheckBox binaryBox;
+	private ArrayList<String> intAlgorithms;
+	private ArrayList<String> doubleAlgorithms;
+	private ArrayList<String> binaryAlgorithms;
+	private ArrayList<String> checkedAlgorithms;
 	
 	public Interface() {
 		frame = new JFrame("ES2 Project");
@@ -109,7 +122,6 @@ public class Interface {
 		varTableModel = new MyTableModel(new Object[][] {}, new Object[] {"Name","Type", "Minimum Value", "Maximum Value"});
 		critTableModel = new DefaultTableModel(new Object[][] {}, new Object[] {"Name","PATH"});
 		varTable = new JTable(varTableModel);
-		varTableColumn = varTable.getColumnModel().getColumn(1);
 		insertVar("tmp_2018_var_a_b_c", "Integer", 0, 0);
 		varTableModel.removeRow(0);
 		resTableModel = new MyTableModel(new Object[][] {},  new Object[] {"Variable", "Operation", "Value"});
@@ -119,18 +131,24 @@ public class Interface {
 		runButton = new JButton("RUN");
 		Send = new JButton("Send E-mail");
 		varList = new ArrayList<Variable>();
-		varNameList = new ArrayList<String>();
-		algorithms = new JComboBox();
-		algorithms.addItem("Integer"); algorithms.addItem("Double"); algorithms.addItem("Binary");
+		intBox = new JCheckBox("Integer");
+		doubleBox = new JCheckBox("Double");
+		binaryBox = new JCheckBox("Binary");
+		algorithmListModel = new DefaultListModel<>();
+		algorithmList = new JList<CheckBoxItem>(algorithmListModel);
+		checkedAlgorithms = new ArrayList<String>();
+		initAlgorithmLists();
+		addCheckListeners();
+		setAlgorithmList();
 		addListeners();
 	}
 	
 	public void open() {
 		frame.setLayout(new BorderLayout());
 		addContent();
-		frame.setSize((int)screenResolution.getWidth()/2+200, (int)screenResolution.getHeight()/2+200);
+		frame.setSize((int)screenResolution.getWidth()/2+200, (int)screenResolution.getHeight()-50);
 		frame.setResizable(false);
-		frame.setDefaultCloseOperation(frame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 	}
 
@@ -188,23 +206,20 @@ public class Interface {
 	}
 	
 	public void addConfigPanel() {
-		JPanel leftConfigPanel = new JPanel(new GridLayout(5,1));
+		JPanel leftConfigPanel = new JPanel(new GridLayout(6,1));
 		leftConfigPanel.setBorder(border);
 		JPanel rightConfigPanel = new JPanel(new BorderLayout());
 		rightConfigPanel.setBorder(border);		
-//		typeBox = new JComboBox();
-//       typeBox.addItem("Integer"); typeBox.addItem("Decimal"); typeBox.addItem("Binary");
 		JPanel optionsPanel = new JPanel(new FlowLayout());
 		/////////////// ALGORITHMS /////////////////
-		JPanel algorithmsPanel = new JPanel(new FlowLayout());
+		JPanel algorithmsPanel = new JPanel(new BorderLayout());
+		JPanel algTypePanel = new JPanel(new FlowLayout());
 		algorithmsPanel.setBorder(border);
-		algorithmsPanel.add(new JLabel("Algorithms"));
-		algorithmsPanel.add(new JLabel("           "));
-		algorithmsPanel.add(algorithms);
+		algTypePanel.add(intBox); algTypePanel.add(doubleBox); algTypePanel.add(binaryBox);
+		algorithmsPanel.add(new JScrollPane(algorithmList), BorderLayout.NORTH);
 		/////////////// VARIABLES /////////////////
 		JPanel varTablePanel = new JPanel(new BorderLayout());
 		JPanel varOptionPanel = new JPanel(new GridLayout(2,1));
-//		varTableColumn.setCellEditor(new DefaultCellEditor(typeBox));
 		JScrollPane tablePane = new JScrollPane(varTable);
 		///////////////// RESTRICTIONS ////////////////
 		JPanel resPanel = new JPanel(new BorderLayout());
@@ -244,6 +259,7 @@ public class Interface {
 		maxVarField = new JTextField("",5);
 		optionsPanel.add(maxVarField);
 		leftConfigPanel.add(optionsPanel);
+		leftConfigPanel.add(algTypePanel);
 		leftConfigPanel.add(algorithmsPanel);
 		leftConfigPanel.add(varTablePanel);
 		leftConfigPanel.add(resPanel);
@@ -267,7 +283,6 @@ public class Interface {
 					String type = problem.getVars().get(i).getType();
 					Object minValue = problem.getVars().get(i).getMinValue();
 					Object maxValue = problem.getVars().get(i).getMaxValue();
-					System.out.println("Variable "+i+": "+name+", "+type+", "+minValue+", "+maxValue);
 					insertVar(name, type, minValue, maxValue);
 				}
 				resTableModel.setRowCount(0);
@@ -275,7 +290,6 @@ public class Interface {
 					String name = problem.getRestrictions().get(i).getVarName();
 					String op = problem.getRestrictions().get(i).getOperation();
 					Object value = problem.getRestrictions().get(i).getValue();
-					System.out.println("Restriction "+i+": "+name+", "+op+", "+value);
 					insertRes(name, op, value);
 				}
 				
@@ -287,6 +301,70 @@ public class Interface {
 			}
 		});
 		
+	}
+	
+	public void addCheckListeners() {
+		intBox.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(intBox.isSelected()) {
+					doubleBox.setEnabled(false);
+					binaryBox.setEnabled(false);
+				}else {
+					doubleBox.setEnabled(true);
+					binaryBox.setEnabled(true);
+				}
+				algorithmListModel.clear();
+				checkedAlgorithms.clear();
+				for(String i : intAlgorithms)
+					algorithmListModel.addElement(new CheckBoxItem(i));
+			}
+		});
+		doubleBox.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(doubleBox.isSelected()) {
+					intBox.setEnabled(false);
+					binaryBox.setEnabled(false);
+				}else {
+					intBox.setEnabled(true);
+					binaryBox.setEnabled(true);
+				}
+				algorithmListModel.clear();
+				checkedAlgorithms.clear();
+				for(String i : doubleAlgorithms)
+					algorithmListModel.addElement(new CheckBoxItem(i));
+			}
+		});
+		binaryBox.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(binaryBox.isSelected()) {
+					intBox.setEnabled(false);
+					doubleBox.setEnabled(false);
+				}else {
+					intBox.setEnabled(true);
+					doubleBox.setEnabled(true);
+				}
+				algorithmListModel.clear();
+				checkedAlgorithms.clear();
+				for(String i : binaryAlgorithms)
+					algorithmListModel.addElement(new CheckBoxItem(i));
+			}
+		});
+	
+		algorithmList.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				JList list = (JList) e.getSource();
+				int index = list.locationToIndex(e.getPoint());
+				CheckBoxItem item = (CheckBoxItem) list.getModel().getElementAt(index);
+				if(!item.isSelected())
+					checkedAlgorithms.add(item.getName());
+				else
+					checkedAlgorithms.remove(item.getName());
+			}
+		});
 	}
 	
 	public void addListeners() {
@@ -400,7 +478,14 @@ public class Interface {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				varTable.clearSelection();
-				String varType = (String) algorithms.getSelectedItem();
+				String varType = "String";
+				if(intBox.isSelected())
+					varType = "Integer";
+				else if(doubleBox.isSelected())
+					varType = "Double";
+				else
+					varType = "String";
+					
 				varTableModel.addRow(new Object[] {null, varType, null, null});
 				Class tmp = null;
 				if(varType.equals("Integer"))
@@ -493,7 +578,6 @@ public class Interface {
 			@Override
 			public void tableChanged(TableModelEvent e) {
 				for(int i=0; i<varTable.getRowCount(); i++) {
-					System.out.println(varTable.getValueAt(i, 0));
 					if(resTable.getSelectedRow()!=-1) {
 					if(!resTable.getValueAt(resTable.getSelectedRow(), 0).equals(null)) {
 						try {
@@ -567,6 +651,72 @@ public class Interface {
 		Emailframe.setVisible(true);
 	}
 	
+	public void createAlgorithmFrame() {
+		JFrame algFrame = new JFrame("Algorithms");
+		JPanel typePanel = new JPanel();
+		JPanel listPanel = new JPanel();
+		typePanel.setLayout(new GridLayout(3, 1));
+		typePanel.setBorder(border);
+		listPanel.setLayout(new BorderLayout());
+		listPanel.setBorder(border);
+		algFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		algFrame.setLayout(new GridLayout(1, 2));
+		JCheckBox intCheck = new JCheckBox("Integer");
+		JCheckBox doubleCheck = new JCheckBox("Double");
+		JCheckBox binaryCheck = new JCheckBox("Binary");
+		intCheck.setEnabled(false);
+		typePanel.add(intCheck); typePanel.add(doubleCheck); typePanel.add(binaryCheck);
+		listPanel.add(algorithmList);
+		algFrame.add(typePanel);
+		algFrame.add(listPanel);
+		algFrame.setSize(500, 500);
+		algFrame.setResizable(false);
+		algFrame.setVisible(true);
+	}
+	
+	private void initAlgorithmLists() {
+		intAlgorithms = new ArrayList<String>();
+		doubleAlgorithms = new ArrayList<String>();
+		binaryAlgorithms = new ArrayList<String>();
+		
+		intAlgorithms.add("NSGAII");
+		intAlgorithms.add("SMSEMOA");
+		intAlgorithms.add("MOCell");
+		intAlgorithms.add("PAES");
+		intAlgorithms.add("RandomSearch");
+		
+		doubleAlgorithms.add("NSGAII");
+		doubleAlgorithms.add("SMSEMOA");
+		doubleAlgorithms.add("GDE3");
+		doubleAlgorithms.add("IBEA");
+		doubleAlgorithms.add("MOCell");
+		doubleAlgorithms.add("MOAED");
+		doubleAlgorithms.add("PAES");
+		doubleAlgorithms.add("RandomSearch");
+		
+		binaryAlgorithms.add("NSGAII");
+		binaryAlgorithms.add("SMSEMOA");
+		binaryAlgorithms.add("MOCell");
+		binaryAlgorithms.add("MOCH");
+		binaryAlgorithms.add("PAES");
+		binaryAlgorithms.add("RandomSearch");
+		binaryAlgorithms.add("SPEA2");
+	}
+	
+	private void setAlgorithmList() {
+		algorithmList.setCellRenderer(new CheckBoxListRenderer());
+		algorithmList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		algorithmList.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				JList list = (JList) e.getSource();
+				int index = list.locationToIndex(e.getPoint());
+				CheckBoxItem item = (CheckBoxItem) list.getModel().getElementAt(index);
+				item.setSelected(!item.isSelected());
+				list.repaint(list.getCellBounds(index, index));
+			}
+		});
+	}
+	
 	public Variable getVariable(int row) {
 		Variable var = new Variable(varTableModel.getValueAt(row, 0).toString(), varTableModel.getValueAt(row, 1).toString(), varTableModel.getValueAt(row, 2), varTableModel.getValueAt(row, 3));
 		return var;
@@ -636,6 +786,9 @@ public class Interface {
 			}
 	}
 
+	public ArrayList<String> getCheckedAlgorithms() {
+		  return checkedAlgorithms;
+	}
 	
 	public static void main(String[] args) {
 		Interface i = new Interface();
