@@ -158,7 +158,7 @@ public class Interface {
 		addProblemPanel();
 		addConfigPanel();
 		tabs.addTab("Problema", problemPanel);
-		tabs.addTab("Configuraï¿½ï¿½o", configPanel);
+		tabs.addTab("Configuração", configPanel);
 		frame.add(tabs);
 		
 	}
@@ -437,31 +437,30 @@ public class Interface {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser save = new JFileChooser();
-				Problem problem = new Problem();
 				int open = save.showSaveDialog(problemPanel);
 				if (!nameText.getText().isEmpty()) {
 					Parser parser = new Parser();
 					if(!sendEmailButton.getText().isEmpty()) {
-						problem.setEmail(emailField.getText());
+						parser.addEmail(emailField.getText());
 					}
 					if(!descText.getText().isEmpty()) {
-						problem.setDescription(descText.getText());
+						parser.addDescription(descText.getText());
 					}
 					if(!maxTimeField.getText().isEmpty()) {
-						problem.setTempoDeEspera(maxTimeField.getText());
+						parser.addWaitingTime(maxTimeField.getText());
 					}
 					if(varTableModel.getRowCount()>0) {
-						Variable tmp=null;
-						ArrayList<Variable> varList = new ArrayList<Variable>();
-						for (int i = 0; i < varTableModel.getRowCount(); i++) {
-							tmp=getVariable(i);
-							varList.add(tmp);
+						for(Variable v : varList) {
+							parser.addVariables(v.getName(), v.getType(), ""+v.getMinValue(), ""+v.getMaxValue());
 						}
-						problem.setVars(varList);
 					}
-//					if(!varBox.getSelectedItem().toString().isEmpty()&& !valueField.getText().isEmpty()) {
-//						parser.addLimitations(varBox.getSelectedItem().toString()+" "+opBox.getItemAt(opBox.getSelectedIndex())+" "+valueField.getText());
-//					}
+					if(resTableModel.getRowCount()>0) {
+						Restriction tmp = null;
+						for(int i=0; i<resTableModel.getRowCount(); i++) {
+							tmp = getRestriction(i);
+							parser.addLimitations(tmp.getVarName()+" "+tmp.getOperation()+" "+tmp.getValue());
+						}
+					}
 					if(critTableModel.getRowCount()>0) {
 						for (int i = 0; i < varTableModel.getRowCount(); i++) {
 							parser.addPaths(i, critTableModel.getValueAt(i, 0).toString());
