@@ -12,7 +12,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.IOException;
 import java.lang.reflect.Array;
+import java.rmi.NoSuchObjectException;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -47,7 +49,14 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
 import org.uma.jmetal.algorithm.Algorithm;
+import org.uma.jmetal.problem.IntegerProblem;
 
+import antiSpamFilter.BinaryProblemAutomaticConfiguration;
+import antiSpamFilter.DoubleProblemAutomaticConfiguration;
+import antiSpamFilter.GenericBinaryProblem;
+import antiSpamFilter.GenericDoubleProblem;
+import antiSpamFilter.GenericIntegerProblem;
+import antiSpamFilter.IntegerProblemAutomaticConfiguration;
 import extras.Email;
 import extras.Parser;
 import objects.Problem;
@@ -102,7 +111,7 @@ public class Interface {
 	private ArrayList<String> intAlgorithms;
 	private ArrayList<String> doubleAlgorithms;
 	private ArrayList<String> binaryAlgorithms;
-	private ArrayList<String> checkedAlgorithms;
+	private ArrayList<Integer> checkedAlgorithms;
 	
 	public Interface() {
 		frame = new JFrame("ES2 Project");
@@ -136,7 +145,7 @@ public class Interface {
 		binaryBox = new JCheckBox("Binary");
 		algorithmListModel = new DefaultListModel<>();
 		algorithmList = new JList<CheckBoxItem>(algorithmListModel);
-		checkedAlgorithms = new ArrayList<String>();
+		checkedAlgorithms = new ArrayList<Integer>();
 		initAlgorithmLists();
 		addCheckListeners();
 		setAlgorithmList();
@@ -360,33 +369,34 @@ public class Interface {
 				int index = list.locationToIndex(e.getPoint());
 				CheckBoxItem item = (CheckBoxItem) list.getModel().getElementAt(index);
 				if(!item.isSelected())
-					checkedAlgorithms.add(item.getName());
+					checkedAlgorithms.add(/*item.getName()*/index+1);
 				else
-					checkedAlgorithms.remove(item.getName());
+					checkedAlgorithms.remove(/*item.getName()*/index+1);
 			}
 		});
 	}
 	
 	public void addListeners() {
-		
 		runButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				Email email= new Email();
-				String mensagem= new String("Muito obrigado por usar esta plataforma de otimiza��o. Ser� informado por email sobre o progresso do processo de otimiza��o, quando o processo de otimiza��o tiver atingido 25%, 50%, 75% do total do (n�mero de avalia��es ou) tempo estimado, e tamb�m quando o processo tiver terminado, com sucesso ou devido � ocorr�ncia de erros.");
-				email.createMessage("Optimiza��o em curso:" + nameText.getText() + " " + Calendar.getInstance().getTime() , mensagem);
-				String to=emailField.getText();
-				if(to.isEmpty()) {
-					System.out.println("o email n�o foi preenchido");
-					JOptionPane.showMessageDialog(new JPanel(),"o email n�o foi preenchido","Erro mail", JOptionPane.ERROR_MESSAGE);
-				}else {
-					email.adddestination(to);
-					//inserir o mail do admin em vez do raoma
-					email.CC("raoma@iscte-iul.pt");
-					String file=new String(path);
-					email.anexo(file);
-					email.send();
-				}
+//				Email email= new Email();
+//				String mensagem= new String("Muito obrigado por usar esta plataforma de otimiza��o. Ser� informado por email sobre o progresso do processo de otimiza��o, quando o processo de otimiza��o tiver atingido 25%, 50%, 75% do total do (n�mero de avalia��es ou) tempo estimado, e tamb�m quando o processo tiver terminado, com sucesso ou devido � ocorr�ncia de erros.");
+//				email.createMessage("Optimiza��o em curso:" + nameText.getText() + " " + Calendar.getInstance().getTime() , mensagem);
+//				String to=emailField.getText();
+//				if(to.isEmpty()) {
+//					System.out.println("o email n�o foi preenchido");
+//					JOptionPane.showMessageDialog(new JPanel(),"o email n�o foi preenchido","Erro mail", JOptionPane.ERROR_MESSAGE);
+//				}else {
+//					email.adddestination(to);
+//					//inserir o mail do admin em vez do raoma
+//					email.CC("raoma@iscte-iul.pt");
+//					String file=new String(path);
+//					email.anexo(file);
+//					email.send();
+//				}
+				
+				runAlgorithm();
 			}
 		});
 
@@ -601,6 +611,46 @@ public class Interface {
 			}
 		});
 	}
+	 
+	private void runAlgorithm() {
+		int nVar=varList.size();
+		int nObj=2;
+		int nConst=0;
+		String probName=nameText.getText();
+		if (intBox.isSelected()) {
+			GenericIntegerProblem x = new GenericIntegerProblem(nVar, nObj, nConst, probName);
+			x.setLimits(-5, 5);
+			GenericIntegerProblem[] args = {x};
+			try {
+				IntegerProblemAutomaticConfiguration.main(args, getCheckedAlgorithms());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else if (doubleBox.isSelected()) {
+			GenericDoubleProblem x = new GenericDoubleProblem(nVar, nObj, nConst, probName);
+			x.setLimits(-5, 5);
+			GenericDoubleProblem[] args = {x};
+			for (int i = 0; i < getCheckedAlgorithms().size(); i++) {
+				System.out.println("Algorithm "+getCheckedAlgorithms().get(i));
+			}
+			try {
+				DoubleProblemAutomaticConfiguration.main(args, getCheckedAlgorithms());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else if (binaryBox.isSelected()) {
+			GenericBinaryProblem x = new GenericBinaryProblem(nVar, nObj, nConst, probName);
+			GenericBinaryProblem[] args = {x};
+			try {
+				BinaryProblemAutomaticConfiguration.main(args, getCheckedAlgorithms());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
 	
 	public void createFAQFrame() {
 		JFrame FAQframe = new JFrame("F.A.Q");
@@ -786,7 +836,7 @@ public class Interface {
 			}
 	}
 
-	public ArrayList<String> getCheckedAlgorithms() {
+	public ArrayList<Integer> getCheckedAlgorithms() {
 		  return checkedAlgorithms;
 	}
 	
