@@ -37,6 +37,7 @@ public class Parser {
 	private Element descriptions;
 	private Element algorithms;
 	private Element waiting_times;
+	private Element name;
 	//counter de variaveis
 	private int variable_count;
 	//unique email, unique description
@@ -74,6 +75,11 @@ public class Parser {
 			//-----Algorithms Node Creation-----//
 				 waiting_times = doc.createElement("Waiting_Times");
 				 rootElement.appendChild(waiting_times);
+				//-----Algorithms Node Creation-----//
+				 name = doc.createElement("Name");
+				 rootElement.appendChild(name);
+				 
+				 
 				 
 			variable_count=0;
 		} catch (ParserConfigurationException e) {
@@ -93,6 +99,11 @@ public class Parser {
 			System.out.println("Email Alterado de '"+tmp.getTextContent()+"' para '"+e_mail+"'");
 			tmp.setTextContent(e_mail);
 		}
+	}
+	public void addName(String names) {
+		Element nameP = doc.createElement("ProblemName");
+		nameP.appendChild(doc.createTextNode(names));
+		name.appendChild(nameP);
 	}
 	
 	public void addDescription(String Description) {
@@ -167,13 +178,13 @@ public class Parser {
 //		path.setAttribute("id", ""+variableID);
 		paths.appendChild(path);
 			
-			Element Name = doc.createElement("Path_Name");
+			Element Name = doc.createElement("PathName");
 			Name.appendChild(doc.createTextNode(name));
-			paths.appendChild(Name);
+			path.appendChild(Name);
 			
-			Element pat = doc.createElement("Path");
+			Element pat = doc.createElement("PathPath");
 			pat.appendChild(doc.createTextNode(Path));
-			paths.appendChild(pat);
+			path.appendChild(pat);
 		
 	}
 	
@@ -250,11 +261,21 @@ public class Parser {
 								variable.setMinValue(nList.item(i3).getTextContent());
 							}
 						}						
-						System.out.println("Variable "+i+": "+variable.getName()+", "+variable.getType()+", "+variable.getMinValue()+", "+variable.getMaxValue());
 						problem.getVars().add(variable);
 					}
-					else if(node2.getNodeName().equals("Paths")) {
-						problem.getPaths().add(node2.getTextContent());
+					else if(node2.getNodeName().equals("Path")) {
+						String[] p = new String[2];
+						NodeList nList =node2.getChildNodes();
+						for(int i3=0;i3<nList.getLength();i3++) {
+							if(nList.item(i3).getNodeName().equals("PathName")){
+								p[0]=nList.item(i3).getTextContent();
+							}
+							else if(nList.item(i3).getNodeName().equals("PathPath")){
+								p[1]=nList.item(i3).getTextContent();
+							}
+						}
+						problem.getPaths().add(p);
+						
 					}
 					else if(node2.getNodeName().equals("Tempo_de_Espera")) {
 						problem.setTempoDeEspera(node2.getTextContent());
@@ -263,13 +284,27 @@ public class Parser {
 						NodeList nList =node2.getChildNodes();
 						for(int i3=0;i3<nList.getLength();i3++) {
 							if(nList.item(i3).getNodeName().equals("Name")){
-								problem.setAlgotihm(nList.item(i3).getTextContent());
-								break;
+								problem.getAlgorithms().add(nList.item(i3).getTextContent());
 							}
 						}
-					}	
+					}
+					else if(node2.getNodeName().equals("ProblemName")) {
+						problem.setProblemName(node2.getTextContent());
+					}
 					else if(node2.getNodeName().equals("Limitacoes")) {
-						//limitacoes
+						NodeList nList =node2.getChildNodes();
+						Restriction a = new Restriction(null, null, null);
+						for(int i3=0;i3<nList.getLength();i3++) {
+							if(nList.item(i3).getNodeName().equals("Operation")){
+								a.setOperation(nList.item(i3).getTextContent());
+							}
+							else if(nList.item(i3).getNodeName().equals("VarName")){
+								a.setVarName(nList.item(i3).getTextContent());
+							}
+							else if(nList.item(i3).getNodeName().equals("OperationValue")){
+								a.setValue(nList.item(i3).getTextContent());
+							}
+						}
 					}
 				}
 			}

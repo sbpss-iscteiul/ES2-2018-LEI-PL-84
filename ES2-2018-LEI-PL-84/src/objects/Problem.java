@@ -6,11 +6,11 @@ public class Problem {
 	private String email="";
 	private String problemName="";
 	private String description="";
-	private ArrayList<String> paths= new ArrayList<String>();
+	private ArrayList<String[]> paths= new ArrayList<String[]>();
 	private String tempoDeEspera="";
 	private ArrayList<Restriction> restrictions= new ArrayList<Restriction>();
 	private ArrayList<Variable> vars= new ArrayList<Variable>();
-	private String algotihm="";
+	private ArrayList<String> algorithms = new ArrayList<String>();
 	public String getEmail() {
 		return email;
 	}
@@ -29,10 +29,10 @@ public class Problem {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public ArrayList<String> getPaths() {
+	public ArrayList<String[]> getPaths() {
 		return paths;
 	}
-	public void setPaths(ArrayList<String> paths) {
+	public void setPaths(ArrayList<String[]> paths) {
 		this.paths = paths;
 	}
 	public String getTempoDeEspera() {
@@ -53,16 +53,17 @@ public class Problem {
 	public void setVars(ArrayList<Variable> vars) {
 		this.vars = vars;
 	}
-	public String getAlgotihm() {
-		return algotihm;
-	}
-	public void setAlgotihm(String algotihm) {
-		this.algotihm = algotihm;
-	}
+
 	@Override
 	public String toString() {
 		return "Problem [email=" + email + ", problemName=" + problemName + ", description=" + description + ", paths="
 				+ paths + ", tempoDeEspera=" + tempoDeEspera + ", restrictions=" + restrictions + ", vars=" + vars
-				+ ", algotihm=" + algotihm + "]";
+				+ ", algotihm=" + algorithms + "]";
+	}
+	public ArrayList<String> getAlgorithms() {
+		return algorithms;
+	}
+	public void setAlgorithms(ArrayList<String> algorithms) {
+		this.algorithms = algorithms;
 	}
 }

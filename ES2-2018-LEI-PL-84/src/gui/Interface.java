@@ -278,6 +278,15 @@ public class Interface {
 				maxTimeField.setText(problem.getTempoDeEspera());
 //				maxVarField.setText(String.valueOf(problem.getVars().size()));
 				varTableModel.setRowCount(0);
+				if(problem.getVars().get(0).getType().equals("Integer")) {
+					intBox.doClick();
+				}
+				else if(problem.getVars().get(0).getType().equals("Double")) {
+					doubleBox.doClick();	
+				}
+				else if(problem.getVars().get(0).getType().equals("Binary")) {	
+					binaryBox.doClick();
+				}
 				for(int i=0; i<problem.getVars().size(); i++) {
 					String name = problem.getVars().get(i).getName();
 					String type = problem.getVars().get(i).getType();
@@ -292,11 +301,14 @@ public class Interface {
 					Object value = problem.getRestrictions().get(i).getValue();
 					insertRes(name, op, value);
 				}
-				
-				//missing implementation:
-				//var table
-				//limitations
-				//paths
+				for(String[] it : problem.getPaths()) {
+					System.out.println(it[0]+" "+it[1]);
+					insertPath(it[0], it[1]);
+				}
+				for(String it : problem.getAlgorithms()) {
+					
+				}
+
 				
 			}
 		});
@@ -424,10 +436,7 @@ public class Interface {
 				path= load.getSelectedFile().getAbsolutePath();
 				Problem problem = Parser.read_XML(load.getSelectedFile().toString());
 				loadProblem(problem);
-				//missing implementation:
-				//var table
 				//limitations
-				//paths
 				
 				
 			}
@@ -462,7 +471,7 @@ public class Interface {
 						}
 					}
 					if(critTableModel.getRowCount()>0) {
-						for (int i = 0; i < varTableModel.getRowCount(); i++) {
+						for (int i = 0; i < critTableModel.getRowCount(); i++) {
 							parser.addPaths(critTableModel.getValueAt(i, 0).toString(), critTableModel.getValueAt(i, 1).toString());
 						}
 					}
@@ -472,6 +481,9 @@ public class Interface {
 							parser.addChosenAlgorithm(id, algorithm);
 							id++;
 						}
+					}
+					if(!nameText.getText().isEmpty()) {
+						parser.addName(nameText.getText());
 					}
 				parser.write_XML(nameText.getText(),save.getSelectedFile().toString());
 				}else {
@@ -777,6 +789,9 @@ public class Interface {
 				JOptionPane.showMessageDialog(frame, "Warning: Variable must have a type!");
 			}
 		}
+	}
+	public void insertPath(String name, String path) {
+		critTableModel.addRow(new Object[] {name, path});
 	}
 	
 	private void addVariableToList(String varName, String type) {
