@@ -96,6 +96,7 @@ public class Interface {
 	private ArrayList<Variable> varList;
 	private JList<CheckBoxItem> algorithmList;
 	private DefaultListModel<CheckBoxItem> algorithmListModel;
+	private JScrollPane algorithmPane;
 	private JCheckBox intBox;
 	private JCheckBox doubleBox;
 	private JCheckBox binaryBox;
@@ -103,6 +104,7 @@ public class Interface {
 	private ArrayList<String> doubleAlgorithms;
 	private ArrayList<String> binaryAlgorithms;
 	private ArrayList<String> checkedAlgorithms;
+	private String varType = "String";
 	
 	public Interface() {
 		frame = new JFrame("ES2 Project");
@@ -132,10 +134,11 @@ public class Interface {
 		Send = new JButton("Send E-mail");
 		varList = new ArrayList<Variable>();
 		intBox = new JCheckBox("Integer");
-		doubleBox = new JCheckBox("Double");
+		doubleBox = new JCheckBox("Decimal");
 		binaryBox = new JCheckBox("Binary");
 		algorithmListModel = new DefaultListModel<>();
 		algorithmList = new JList<CheckBoxItem>(algorithmListModel);
+		algorithmPane = new JScrollPane(algorithmList);
 		checkedAlgorithms = new ArrayList<String>();
 		initAlgorithmLists();
 		addCheckListeners();
@@ -204,6 +207,7 @@ public class Interface {
 		problemDescPanel.add(descText);
 		problemPanel.add(problemDescPanel);
 	}
+
 	
 	public void addConfigPanel() {
 		JPanel leftConfigPanel = new JPanel(new GridLayout(6,1));
@@ -216,7 +220,7 @@ public class Interface {
 		JPanel algTypePanel = new JPanel(new FlowLayout());
 		algorithmsPanel.setBorder(border);
 		algTypePanel.add(intBox); algTypePanel.add(doubleBox); algTypePanel.add(binaryBox);
-		algorithmsPanel.add(new JScrollPane(algorithmList), BorderLayout.NORTH);
+		algorithmsPanel.add(algorithmPane);
 		/////////////// VARIABLES /////////////////
 		JPanel varTablePanel = new JPanel(new BorderLayout());
 		JPanel varOptionPanel = new JPanel(new GridLayout(2,1));
@@ -497,7 +501,7 @@ public class Interface {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				varTable.clearSelection();
-				String varType = "String";
+//				String varType = "String";
 				if(intBox.isSelected())
 					varType = "Integer";
 				else if(doubleBox.isSelected())
@@ -509,7 +513,7 @@ public class Interface {
 				Class tmp = null;
 				if(varType.equals("Integer"))
 					tmp=Integer.class;
-				else if(varType.equals("Decimal"))
+				else if(varType.equals("Double"))
 					tmp=Double.class;
 				else 
 					tmp=String.class;
@@ -562,6 +566,20 @@ public class Interface {
 			}
 		});
 		
+		deleteResButton.addActionListener(new ActionListener() {			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(resTable.getSelectedRow() > 0) {
+					resTable.setRowSelectionInterval(resTable.getSelectedRow()-1, resTable.getSelectedRow()-1);
+					resTableModel.removeRow(resTable.getSelectedRow()+1);
+					resTable.clearSelection();
+				}else {
+					resTable.clearSelection();
+					resTableModel.removeRow(0);
+				}
+			}
+		});
+		
 		varTableModel.addTableModelListener(new TableModelListener() {
 			@SuppressWarnings({ "unchecked", "rawtypes" })
 			@Override
@@ -598,23 +616,24 @@ public class Interface {
 			public void tableChanged(TableModelEvent e) {
 				for(int i=0; i<varTable.getRowCount(); i++) {
 					if(resTable.getSelectedRow()!=-1) {
-					if(!resTable.getValueAt(resTable.getSelectedRow(), 0).equals(null)) {
-						try {
+//					if(!resTable.getValueAt(resTable.getSelectedRow(), 0).equals(null)) {
+					try {
 							if(resTable.getValueAt(resTable.getSelectedRow(), 0).equals(varTable.getValueAt(i, 0))) {
-								if(varTable.getValueAt(i, 1).equals("Integer")) {
-									resTableModel.setCellDataType(Integer.class);
-									resTableModel.getColumnClass(2);
-								}else if(varTable.getValueAt(i, 1).equals("Decimal")) {
-									resTableModel.setCellDataType(Double.class);
-									resTableModel.getColumnClass(2);
-								}else if(varTable.getValueAt(i, 1).equals("Binary")){
-									resTableModel.setCellDataType(String.class);
-									resTableModel.getColumnClass(2);
-								}
+								resTableModel.setCellDataType(varTableModel.getDataType());
+								resTableModel.getColumnClass(2);
+//								if(varType.equals("Integer")) {
+//									resTableModel.setCellDataType(Integer.class);
+//									resTableModel.getColumnClass(2);
+//								}else if(varType.equals("Decimal")) {
+//									resTableModel.setCellDataType(Double.class);
+//									resTableModel.getColumnClass(2);
+//								}else if(varType.equals("Binary")){
+//									resTableModel.setCellDataType(String.class);
+//									resTableModel.getColumnClass(2);
+//								}
 							}
-						}catch(NullPointerException e1) {
-							JOptionPane.showMessageDialog(frame, "Warning: Variable must have a type!");
-						}
+					}catch(NullPointerException e2) {
+						JOptionPane.showMessageDialog(frame, "Warning: Choose a variable!");
 					}
 				}}
 			}
