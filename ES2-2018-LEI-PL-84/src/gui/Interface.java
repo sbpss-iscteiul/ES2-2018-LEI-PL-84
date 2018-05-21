@@ -300,17 +300,23 @@ public class Interface {
 				}
 				resTableModel.setRowCount(0);
 				for(int i=0; i<problem.getRestrictions().size()-1; i++) {
+					System.out.println(problem.getRestrictions().get(i).toString());
 					String name = problem.getRestrictions().get(i).getVarName();
 					String op = problem.getRestrictions().get(i).getOperation();
 					Object value = problem.getRestrictions().get(i).getValue();
 					insertRes(name, op, value);
 				}
 				for(String[] it : problem.getPaths()) {
-					System.out.println(it[0]+" "+it[1]);
 					insertPath(it[0], it[1]);
 				}
-				for(String it : problem.getAlgorithms()) {
-					
+				for(int i = 0;i<algorithmListModel.size();i++) {
+					CheckBoxItem item = algorithmListModel.get(i);
+					for(String it : problem.getAlgorithms()) {
+						if (item.getName().equals(it)) {
+							item.setSelected(true);
+							break;
+						}
+					}
 				}
 
 				
@@ -324,6 +330,7 @@ public class Interface {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(intBox.isSelected()) {
+					varType = "Integer";
 					doubleBox.setEnabled(false);
 					binaryBox.setEnabled(false);
 				}else {
@@ -340,6 +347,7 @@ public class Interface {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(doubleBox.isSelected()) {
+					varType = "Double";
 					intBox.setEnabled(false);
 					binaryBox.setEnabled(false);
 				}else {
@@ -356,6 +364,7 @@ public class Interface {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(binaryBox.isSelected()) {
+					varType ="String";
 					intBox.setEnabled(false);
 					doubleBox.setEnabled(false);
 				}else {
@@ -501,13 +510,13 @@ public class Interface {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				varTable.clearSelection();
-//				String varType = "String";
-				if(intBox.isSelected())
-					varType = "Integer";
-				else if(doubleBox.isSelected())
-					varType = "Double";
-				else
-					varType = "String";
+////				String varType = "String";
+//				if(intBox.isSelected())
+//					varType = "Integer";
+//				else if(doubleBox.isSelected())
+//					varType = "Double";
+//				else
+//					varType = "String";
 					
 				varTableModel.addRow(new Object[] {null, varType, null, null});
 				Class tmp = null;
@@ -787,27 +796,22 @@ public class Interface {
 	}
 	
 	public void insertRes(String name, String op, Object value) {
-		resTableModel.addRow(new Object[] {});
-		resTable.setValueAt(name, resTable.getRowCount()-1, 0);
-		resTable.setValueAt(op, resTable.getRowCount()-1, 1);
-		for(int i=0; i<varTable.getRowCount(); i++) {	
+		resTableModel.addRow(new Object[] {name, op, null});
 			try {
-				if(resTable.getValueAt(resTable.getSelectedRow(), 0).equals(varTable.getValueAt(i, 0))) {
-					if(varTable.getValueAt(i, 1).equals("Integer")) {
-						resTableModel.setCellDataType(Integer.class);
-						resTableModel.getColumnClass(2);
-					}else if(varTable.getValueAt(i, 1).equals("Decimal")) {
-						resTableModel.setCellDataType(Double.class);
-						resTableModel.getColumnClass(2);
-					}else if(varTable.getValueAt(i, 1).equals("Binary")){
-						resTableModel.setCellDataType(String.class);
-						resTableModel.getColumnClass(2);
-					}
-				}
+				Class tmp = null;
+				if(varType.equals("Integer"))
+					tmp=Integer.class;
+				else if(varType.equals("Double"))
+					tmp=Double.class;
+				else 
+					tmp=String.class;
+				resTableModel.setCellDataType(tmp);
+				resTableModel.getColumnClass(2);
+				resTableModel.setValueAt(value, resTable.getRowCount()-1, 2);
 			}catch(NullPointerException e1) {
 				JOptionPane.showMessageDialog(frame, "Warning: Variable must have a type!");
 			}
-		}
+		
 	}
 	public void insertPath(String name, String path) {
 		critTableModel.addRow(new Object[] {name, path});

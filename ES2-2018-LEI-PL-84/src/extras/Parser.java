@@ -145,7 +145,7 @@ public class Parser {
 			Limitations.appendChild(operation);
 		
 			Element value = doc.createElement("OperationValue");
-			value.appendChild(doc.createTextNode(lim.getValue()));
+			value.appendChild(doc.createTextNode(lim.getValue()+""));
 			Limitations.appendChild(value);
 	}
 	
@@ -305,6 +305,7 @@ public class Parser {
 								a.setValue(nList.item(i3).getTextContent());
 							}
 						}
+						problem.getRestrictions().add(a);
 					}
 				}
 			}
