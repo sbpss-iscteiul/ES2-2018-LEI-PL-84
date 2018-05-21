@@ -21,6 +21,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import objects.Problem;
+import objects.Restriction;
 import objects.Variable;
 
 
@@ -120,10 +121,21 @@ public class Parser {
 		}
 	}
 	
-	public void addLimitations(String Limitation) {
+	public void addLimitations(Restriction lim) {
 		Element Limitations = doc.createElement("Limitacoes");
-		Limitations.appendChild(doc.createTextNode(Limitation));
+//		Limitations.appendChild(doc.createTextNode(Limitation));
 		limitations.appendChild(Limitations);
+			Element varName = doc.createElement("VarName");
+			varName.appendChild(doc.createTextNode(lim.getVarName()));
+			Limitations.appendChild(varName);
+		
+			Element operation = doc.createElement("Operation");
+			operation.appendChild(doc.createTextNode(lim.getOperation()));
+			Limitations.appendChild(operation);
+		
+			Element value = doc.createElement("OperationValue");
+			value.appendChild(doc.createTextNode(lim.getValue()));
+			Limitations.appendChild(value);
 	}
 	
 	public void addVariables(String Name, String Type, String LimInf, String LimSup) {
@@ -150,19 +162,22 @@ public class Parser {
 		variable_count++;
 	}
 	
-	public void addPaths(int variableID , String Path) {
+	public void addPaths(String name , String Path) {
 		Element path = doc.createElement("Path");
-		path.setAttribute("id", ""+variableID);
+//		path.setAttribute("id", ""+variableID);
 		paths.appendChild(path);
 			
-			Element name = doc.createElement("Path_Name");
-			name.appendChild(doc.createTextNode(Path));
-			paths.appendChild(name);
+			Element Name = doc.createElement("Path_Name");
+			Name.appendChild(doc.createTextNode(name));
+			paths.appendChild(Name);
+			
+			Element pat = doc.createElement("Path");
+			pat.appendChild(doc.createTextNode(Path));
+			paths.appendChild(pat);
 		
 	}
 	
 	public void addChosenAlgorithm(int number, String algorithmName) {
-		if(chosen_algorithm==false) {
 			Element chosenAlgorithm = doc.createElement("Algorithm");
 			chosenAlgorithm.setAttribute("id", ""+number);
 			algorithms.appendChild(chosenAlgorithm);
@@ -172,11 +187,11 @@ public class Parser {
 			chosenAlgorithm.appendChild(name);
 			
 			chosen_algorithm = true;
-		}else {
-			Node tmp = rootElement.getChildNodes().item(5).getChildNodes().item(0);
-			System.out.println("Algoritmo Selecionado Alterado de "+tmp.getTextContent()+" para "+algorithmName);
-			tmp.setTextContent(algorithmName);
-		}
+//		}else {
+//			Node tmp = rootElement.getChildNodes().item(5).getChildNodes().item(0);
+//			System.out.println("Algoritmo Selecionado Alterado de "+tmp.getTextContent()+" para "+algorithmName);
+//			tmp.setTextContent(algorithmName);
+//		}
 	}
 	
 	
