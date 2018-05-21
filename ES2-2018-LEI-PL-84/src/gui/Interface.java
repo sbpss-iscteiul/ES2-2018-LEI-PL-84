@@ -161,7 +161,7 @@ public class Interface {
 		addProblemPanel();
 		addConfigPanel();
 		tabs.addTab("Problema", problemPanel);
-		tabs.addTab("Configuração", configPanel);
+		tabs.addTab("Configuraï¿½ï¿½o", configPanel);
 		frame.add(tabs);
 		
 	}
@@ -462,12 +462,19 @@ public class Interface {
 						Restriction tmp = null;
 						for(int i=0; i<resTableModel.getRowCount(); i++) {
 							tmp = getRestriction(i);
-							parser.addLimitations(tmp.getVarName()+" "+tmp.getOperation()+" "+tmp.getValue());
+							parser.addLimitations(tmp);
 						}
 					}
 					if(critTableModel.getRowCount()>0) {
 						for (int i = 0; i < varTableModel.getRowCount(); i++) {
-							parser.addPaths(i, critTableModel.getValueAt(i, 0).toString());
+							parser.addPaths(critTableModel.getValueAt(i, 0).toString(), critTableModel.getValueAt(i, 1).toString());
+						}
+					}
+					if(!checkedAlgorithms.isEmpty()) {
+						int id = 0;
+						for(String algorithm : checkedAlgorithms) {
+							parser.addChosenAlgorithm(id, algorithm);
+							id++;
 						}
 					}
 				parser.write_XML(nameText.getText(),save.getSelectedFile().toString());
@@ -741,7 +748,7 @@ public class Interface {
 		return var;
 	}
 	public Restriction getRestriction(int row) {
-		Restriction res = new Restriction(resTableModel.getValueAt(row, 0).toString(), resTableModel.getValueAt(row, 1).toString(), resTableModel.getValueAt(row, 2));
+		Restriction res = new Restriction(resTableModel.getValueAt(row, 0).toString(), resTableModel.getValueAt(row, 1).toString(), resTableModel.getValueAt(row, 2)+"");
 		return res;
 	}
 	
