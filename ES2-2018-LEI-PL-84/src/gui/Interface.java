@@ -105,13 +105,16 @@ public class Interface {
 	private ArrayList<Variable> varList;
 	private JList<CheckBoxItem> algorithmList;
 	private DefaultListModel<CheckBoxItem> algorithmListModel;
+	private JScrollPane algorithmPane;
 	private JCheckBox intBox;
 	private JCheckBox doubleBox;
 	private JCheckBox binaryBox;
 	private ArrayList<String> intAlgorithms;
 	private ArrayList<String> doubleAlgorithms;
 	private ArrayList<String> binaryAlgorithms;
-	private ArrayList<Integer> checkedAlgorithms;
+	private ArrayList<Integer> checkedAlgorithmsInt;
+	private ArrayList<String> checkedAlgorithms;
+	private String varType = "String";
 	
 	public Interface() {
 		frame = new JFrame("ES2 Project");
@@ -141,11 +144,13 @@ public class Interface {
 		Send = new JButton("Send E-mail");
 		varList = new ArrayList<Variable>();
 		intBox = new JCheckBox("Integer");
-		doubleBox = new JCheckBox("Double");
+		doubleBox = new JCheckBox("Decimal");
 		binaryBox = new JCheckBox("Binary");
 		algorithmListModel = new DefaultListModel<>();
 		algorithmList = new JList<CheckBoxItem>(algorithmListModel);
-		checkedAlgorithms = new ArrayList<Integer>();
+		checkedAlgorithmsInt = new ArrayList<Integer>();
+		algorithmPane = new JScrollPane(algorithmList);
+		checkedAlgorithms = new ArrayList<String>();
 		initAlgorithmLists();
 		addCheckListeners();
 		setAlgorithmList();
@@ -167,7 +172,7 @@ public class Interface {
 		addProblemPanel();
 		addConfigPanel();
 		tabs.addTab("Problema", problemPanel);
-		tabs.addTab("Configuração", configPanel);
+		tabs.addTab("Configuraï¿½ï¿½o", configPanel);
 		frame.add(tabs);
 		
 	}
@@ -213,6 +218,7 @@ public class Interface {
 		problemDescPanel.add(descText);
 		problemPanel.add(problemDescPanel);
 	}
+
 	
 	public void addConfigPanel() {
 		JPanel leftConfigPanel = new JPanel(new GridLayout(6,1));
@@ -225,7 +231,7 @@ public class Interface {
 		JPanel algTypePanel = new JPanel(new FlowLayout());
 		algorithmsPanel.setBorder(border);
 		algTypePanel.add(intBox); algTypePanel.add(doubleBox); algTypePanel.add(binaryBox);
-		algorithmsPanel.add(new JScrollPane(algorithmList), BorderLayout.NORTH);
+		algorithmsPanel.add(algorithmPane);
 		/////////////// VARIABLES /////////////////
 		JPanel varTablePanel = new JPanel(new BorderLayout());
 		JPanel varOptionPanel = new JPanel(new GridLayout(2,1));
@@ -287,6 +293,15 @@ public class Interface {
 				maxTimeField.setText(problem.getTempoDeEspera());
 //				maxVarField.setText(String.valueOf(problem.getVars().size()));
 				varTableModel.setRowCount(0);
+				if(problem.getVars().get(0).getType().equals("Integer")) {
+					intBox.doClick();
+				}
+				else if(problem.getVars().get(0).getType().equals("Double")) {
+					doubleBox.doClick();	
+				}
+				else if(problem.getVars().get(0).getType().equals("Binary")) {	
+					binaryBox.doClick();
+				}
 				for(int i=0; i<problem.getVars().size(); i++) {
 					String name = problem.getVars().get(i).getName();
 					String type = problem.getVars().get(i).getType();
@@ -296,16 +311,25 @@ public class Interface {
 				}
 				resTableModel.setRowCount(0);
 				for(int i=0; i<problem.getRestrictions().size()-1; i++) {
+					System.out.println(problem.getRestrictions().get(i).toString());
 					String name = problem.getRestrictions().get(i).getVarName();
 					String op = problem.getRestrictions().get(i).getOperation();
 					Object value = problem.getRestrictions().get(i).getValue();
 					insertRes(name, op, value);
 				}
-				
-				//missing implementation:
-				//var table
-				//limitations
-				//paths
+				for(String[] it : problem.getPaths()) {
+					insertPath(it[0], it[1]);
+				}
+				for(int i = 0;i<algorithmListModel.size();i++) {
+					CheckBoxItem item = algorithmListModel.get(i);
+					for(String it : problem.getAlgorithms()) {
+						if (item.getName().equals(it)) {
+							item.setSelected(true);
+							break;
+						}
+					}
+				}
+
 				
 			}
 		});
@@ -317,6 +341,7 @@ public class Interface {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(intBox.isSelected()) {
+					varType = "Integer";
 					doubleBox.setEnabled(false);
 					binaryBox.setEnabled(false);
 				}else {
@@ -325,6 +350,7 @@ public class Interface {
 				}
 				algorithmListModel.clear();
 				checkedAlgorithms.clear();
+				checkedAlgorithmsInt.clear();
 				for(String i : intAlgorithms)
 					algorithmListModel.addElement(new CheckBoxItem(i));
 			}
@@ -333,6 +359,7 @@ public class Interface {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(doubleBox.isSelected()) {
+					varType = "Double";
 					intBox.setEnabled(false);
 					binaryBox.setEnabled(false);
 				}else {
@@ -341,6 +368,7 @@ public class Interface {
 				}
 				algorithmListModel.clear();
 				checkedAlgorithms.clear();
+				checkedAlgorithmsInt.clear();
 				for(String i : doubleAlgorithms)
 					algorithmListModel.addElement(new CheckBoxItem(i));
 			}
@@ -349,6 +377,7 @@ public class Interface {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(binaryBox.isSelected()) {
+					varType ="String";
 					intBox.setEnabled(false);
 					doubleBox.setEnabled(false);
 				}else {
@@ -357,6 +386,7 @@ public class Interface {
 				}
 				algorithmListModel.clear();
 				checkedAlgorithms.clear();
+				checkedAlgorithmsInt.clear();
 				for(String i : binaryAlgorithms)
 					algorithmListModel.addElement(new CheckBoxItem(i));
 			}
@@ -369,9 +399,9 @@ public class Interface {
 				int index = list.locationToIndex(e.getPoint());
 				CheckBoxItem item = (CheckBoxItem) list.getModel().getElementAt(index);
 				if(!item.isSelected())
-					checkedAlgorithms.add(/*item.getName()*/index+1);
+					checkedAlgorithmsInt.add(/*item.getName()*/index+1);
 				else
-					checkedAlgorithms.remove(/*item.getName()*/index+1);
+					checkedAlgorithmsInt.remove(/*item.getName()*/index+1);
 			}
 		});
 	}
@@ -434,10 +464,7 @@ public class Interface {
 				path= load.getSelectedFile().getAbsolutePath();
 				Problem problem = Parser.read_XML(load.getSelectedFile().toString());
 				loadProblem(problem);
-				//missing implementation:
-				//var table
 				//limitations
-				//paths
 				
 				
 			}
@@ -468,13 +495,23 @@ public class Interface {
 						Restriction tmp = null;
 						for(int i=0; i<resTableModel.getRowCount(); i++) {
 							tmp = getRestriction(i);
-							parser.addLimitations(tmp.getVarName()+" "+tmp.getOperation()+" "+tmp.getValue());
+							parser.addLimitations(tmp);
 						}
 					}
 					if(critTableModel.getRowCount()>0) {
-						for (int i = 0; i < varTableModel.getRowCount(); i++) {
-							parser.addPaths(i, critTableModel.getValueAt(i, 0).toString());
+						for (int i = 0; i < critTableModel.getRowCount(); i++) {
+							parser.addPaths(critTableModel.getValueAt(i, 0).toString(), critTableModel.getValueAt(i, 1).toString());
 						}
+					}
+					if(!checkedAlgorithms.isEmpty()) {
+						int id = 0;
+						for(String algorithm : checkedAlgorithms) {
+							parser.addChosenAlgorithm(id, algorithm);
+							id++;
+						}
+					}
+					if(!nameText.getText().isEmpty()) {
+						parser.addName(nameText.getText());
 					}
 				parser.write_XML(nameText.getText(),save.getSelectedFile().toString());
 				}else {
@@ -488,19 +525,19 @@ public class Interface {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				varTable.clearSelection();
-				String varType = "String";
-				if(intBox.isSelected())
-					varType = "Integer";
-				else if(doubleBox.isSelected())
-					varType = "Double";
-				else
-					varType = "String";
+////				String varType = "String";
+//				if(intBox.isSelected())
+//					varType = "Integer";
+//				else if(doubleBox.isSelected())
+//					varType = "Double";
+//				else
+//					varType = "String";
 					
 				varTableModel.addRow(new Object[] {null, varType, null, null});
 				Class tmp = null;
 				if(varType.equals("Integer"))
 					tmp=Integer.class;
-				else if(varType.equals("Decimal"))
+				else if(varType.equals("Double"))
 					tmp=Double.class;
 				else 
 					tmp=String.class;
@@ -553,6 +590,20 @@ public class Interface {
 			}
 		});
 		
+		deleteResButton.addActionListener(new ActionListener() {			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(resTable.getSelectedRow() > 0) {
+					resTable.setRowSelectionInterval(resTable.getSelectedRow()-1, resTable.getSelectedRow()-1);
+					resTableModel.removeRow(resTable.getSelectedRow()+1);
+					resTable.clearSelection();
+				}else {
+					resTable.clearSelection();
+					resTableModel.removeRow(0);
+				}
+			}
+		});
+		
 		varTableModel.addTableModelListener(new TableModelListener() {
 			@SuppressWarnings({ "unchecked", "rawtypes" })
 			@Override
@@ -589,23 +640,24 @@ public class Interface {
 			public void tableChanged(TableModelEvent e) {
 				for(int i=0; i<varTable.getRowCount(); i++) {
 					if(resTable.getSelectedRow()!=-1) {
-					if(!resTable.getValueAt(resTable.getSelectedRow(), 0).equals(null)) {
-						try {
+//					if(!resTable.getValueAt(resTable.getSelectedRow(), 0).equals(null)) {
+					try {
 							if(resTable.getValueAt(resTable.getSelectedRow(), 0).equals(varTable.getValueAt(i, 0))) {
-								if(varTable.getValueAt(i, 1).equals("Integer")) {
-									resTableModel.setCellDataType(Integer.class);
-									resTableModel.getColumnClass(2);
-								}else if(varTable.getValueAt(i, 1).equals("Decimal")) {
-									resTableModel.setCellDataType(Double.class);
-									resTableModel.getColumnClass(2);
-								}else if(varTable.getValueAt(i, 1).equals("Binary")){
-									resTableModel.setCellDataType(String.class);
-									resTableModel.getColumnClass(2);
-								}
+								resTableModel.setCellDataType(varTableModel.getDataType());
+								resTableModel.getColumnClass(2);
+//								if(varType.equals("Integer")) {
+//									resTableModel.setCellDataType(Integer.class);
+//									resTableModel.getColumnClass(2);
+//								}else if(varType.equals("Decimal")) {
+//									resTableModel.setCellDataType(Double.class);
+//									resTableModel.getColumnClass(2);
+//								}else if(varType.equals("Binary")){
+//									resTableModel.setCellDataType(String.class);
+//									resTableModel.getColumnClass(2);
+//								}
 							}
-						}catch(NullPointerException e1) {
-							JOptionPane.showMessageDialog(frame, "Warning: Variable must have a type!");
-						}
+					}catch(NullPointerException e2) {
+						JOptionPane.showMessageDialog(frame, "Warning: Choose a variable!");
 					}
 				}}
 			}
@@ -767,7 +819,7 @@ public class Interface {
 		return var;
 	}
 	public Restriction getRestriction(int row) {
-		Restriction res = new Restriction(resTableModel.getValueAt(row, 0).toString(), resTableModel.getValueAt(row, 1).toString(), resTableModel.getValueAt(row, 2));
+		Restriction res = new Restriction(resTableModel.getValueAt(row, 0).toString(), resTableModel.getValueAt(row, 1).toString(), resTableModel.getValueAt(row, 2)+"");
 		return res;
 	}
 	
@@ -794,27 +846,25 @@ public class Interface {
 	}
 	
 	public void insertRes(String name, String op, Object value) {
-		resTableModel.addRow(new Object[] {});
-		resTable.setValueAt(name, resTable.getRowCount()-1, 0);
-		resTable.setValueAt(op, resTable.getRowCount()-1, 1);
-		for(int i=0; i<varTable.getRowCount(); i++) {	
+		resTableModel.addRow(new Object[] {name, op, null});
 			try {
-				if(resTable.getValueAt(resTable.getSelectedRow(), 0).equals(varTable.getValueAt(i, 0))) {
-					if(varTable.getValueAt(i, 1).equals("Integer")) {
-						resTableModel.setCellDataType(Integer.class);
-						resTableModel.getColumnClass(2);
-					}else if(varTable.getValueAt(i, 1).equals("Decimal")) {
-						resTableModel.setCellDataType(Double.class);
-						resTableModel.getColumnClass(2);
-					}else if(varTable.getValueAt(i, 1).equals("Binary")){
-						resTableModel.setCellDataType(String.class);
-						resTableModel.getColumnClass(2);
-					}
-				}
+				Class tmp = null;
+				if(varType.equals("Integer"))
+					tmp=Integer.class;
+				else if(varType.equals("Double"))
+					tmp=Double.class;
+				else 
+					tmp=String.class;
+				resTableModel.setCellDataType(tmp);
+				resTableModel.getColumnClass(2);
+				resTableModel.setValueAt(value, resTable.getRowCount()-1, 2);
 			}catch(NullPointerException e1) {
 				JOptionPane.showMessageDialog(frame, "Warning: Variable must have a type!");
 			}
-		}
+		
+	}
+	public void insertPath(String name, String path) {
+		critTableModel.addRow(new Object[] {name, path});
 	}
 	
 	private void addVariableToList(String varName, String type) {
@@ -832,7 +882,7 @@ public class Interface {
 	}
 
 	public ArrayList<Integer> getCheckedAlgorithms() {
-		  return checkedAlgorithms;
+		  return checkedAlgorithmsInt;
 	}
 	
 	public static void main(String[] args) {

@@ -25,6 +25,10 @@ public class MyTableModel extends DefaultTableModel{
 		else return String.class;
 	}
 	
+	public Class getDataType() {
+		return dataType;
+	}
+	
 	public void setCellDataType(Class type) {
 		this.dataType = type;
 	}

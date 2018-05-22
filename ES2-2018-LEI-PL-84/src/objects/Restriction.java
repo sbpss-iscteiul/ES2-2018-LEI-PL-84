@@ -6,9 +6,9 @@ public class Restriction {
 	private Object value;
 	@Override
 	public String toString() {
-		return "Restriction ["+varName + operation + value + "]" ;
+		return "Restriction [varName=" + varName + ", operation=" + operation + ", value=" + value + "]";
 	}
-	public Restriction(String varName, String operation, Object value) {
+	public Restriction(String varName, String operation, String value) {
 		super();
 		this.varName = varName;
 		this.operation = operation;
@@ -29,7 +29,7 @@ public class Restriction {
 	public Object getValue() {
 		return value;
 	}
-	public void setValue(Object value) {
+	public void setValue(String value) {
 		this.value = value;
 	}
 }
