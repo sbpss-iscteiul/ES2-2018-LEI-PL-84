@@ -624,34 +624,29 @@ public class Interface {
 			try {
 				IntegerProblemAutomaticConfiguration.main(args, getCheckedAlgorithms());
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}else if (doubleBox.isSelected()) {
 			GenericDoubleProblem x = new GenericDoubleProblem(nVar, nObj, nConst, probName);
 			x.setLimits(-5, 5);
 			GenericDoubleProblem[] args = {x};
-			for (int i = 0; i < getCheckedAlgorithms().size(); i++) {
-				System.out.println("Algorithm "+getCheckedAlgorithms().get(i));
-			}
 			try {
 				DoubleProblemAutomaticConfiguration.main(args, getCheckedAlgorithms());
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}else if (binaryBox.isSelected()) {
-			GenericBinaryProblem x = new GenericBinaryProblem(nVar, nObj, nConst, probName);
+			/*500 refere-se ao numero de bits que é fixo, mas nao deveria ser teoricamente*/
+			GenericBinaryProblem x = new GenericBinaryProblem(nVar, nObj, nConst, probName,500);
 			GenericBinaryProblem[] args = {x};
 			try {
 				BinaryProblemAutomaticConfiguration.main(args, getCheckedAlgorithms());
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 	}
-	
+
 	public void createFAQFrame() {
 		JFrame FAQframe = new JFrame("F.A.Q");
 		FAQframe.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);

@@ -40,9 +40,21 @@ public class GenericIntegerProblem extends AbstractIntegerProblem implements Con
 	}
 
 	@Override
-	public void evaluate(IntegerSolution arg0) {
-		// TODO Auto-generated method stub
-		
+	public void evaluate(IntegerSolution solution) {
+		int approximationToN;
+	    int approximationToM ;
+
+	    approximationToN = 0;
+	    approximationToM = 0;
+
+	    for (int i = 0; i < solution.getNumberOfVariables(); i++) {
+	      int value = solution.getVariableValue(i) ;
+	      approximationToN += Math.abs(getNumberOfVariables() - value) ;
+	      approximationToM += Math.abs((0-getNumberOfVariables()) - value) ;
+	    }
+
+	    solution.setObjective(0, approximationToN);
+	    solution.setObjective(1, approximationToM);
 	}
 
 	@Override

@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import org.uma.jmetal.algorithm.Algorithm;
 import org.uma.jmetal.problem.impl.AbstractDoubleProblem;
+import org.uma.jmetal.problem.multiobjective.zdt.ZDT1;
 import org.uma.jmetal.qualityindicator.impl.hypervolume.PISAHypervolume;
 import org.uma.jmetal.solution.DoubleSolution;
 import org.uma.jmetal.util.experiment.Experiment;
@@ -56,7 +57,7 @@ public class DoubleProblemAutomaticConfiguration {
    
 	  List<ExperimentAlgorithm<DoubleSolution, List<DoubleSolution>>> algorithms = new ArrayList<>();
 	  
-	  BuilderDouble test = new BuilderDouble(2500);
+	  BuilderDouble test = new BuilderDouble(250);
 	  
 	  for (int i = 0; i < problemList.size(); i++) {
 		  test.setExperimentProblem(problemList.get(i));

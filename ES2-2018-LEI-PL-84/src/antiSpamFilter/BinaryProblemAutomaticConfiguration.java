@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.uma.jmetal.algorithm.Algorithm;
 import org.uma.jmetal.problem.impl.AbstractBinaryProblem;
+import org.uma.jmetal.problem.multiobjective.OneZeroMax;
 import org.uma.jmetal.qualityindicator.impl.hypervolume.PISAHypervolume;
 import org.uma.jmetal.solution.BinarySolution;
 import org.uma.jmetal.util.experiment.Experiment;
@@ -27,7 +28,7 @@ public class BinaryProblemAutomaticConfiguration {
 
     List<ExperimentProblem<BinarySolution>> problemList = new ArrayList<>();
     for (int i = 0; i < args.length; i++) {
-    		problemList.add(new ExperimentProblem<>(args[i]));
+    		problemList.add(new ExperimentProblem<>(args[i]/*new OneZeroMax()*/));
 	}
     
     List<ExperimentAlgorithm<BinarySolution, List<BinarySolution>>> algorithmList =

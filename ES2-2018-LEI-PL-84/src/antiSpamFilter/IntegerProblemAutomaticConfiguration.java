@@ -6,7 +6,9 @@ import java.util.Arrays;
 import java.util.List;
 import org.uma.jmetal.algorithm.Algorithm;
 import org.uma.jmetal.problem.impl.AbstractIntegerProblem;
+import org.uma.jmetal.problem.multiobjective.NMMin;
 import org.uma.jmetal.qualityindicator.impl.hypervolume.PISAHypervolume;
+import org.uma.jmetal.solution.DoubleSolution;
 import org.uma.jmetal.solution.IntegerSolution;
 import org.uma.jmetal.util.experiment.Experiment;
 import org.uma.jmetal.util.experiment.ExperimentBuilder;
@@ -26,7 +28,7 @@ public class IntegerProblemAutomaticConfiguration {
 
     List<ExperimentProblem<IntegerSolution>> problemList = new ArrayList<>();
     for (int i = 0; i < args.length; i++) {
-    		problemList.add(new ExperimentProblem<>(args[i]));
+    		problemList.add(new ExperimentProblem<>(args[0]));
 	}
     
     List<ExperimentAlgorithm<IntegerSolution, List<IntegerSolution>>> algorithmList =
@@ -56,7 +58,7 @@ public class IntegerProblemAutomaticConfiguration {
    
 	  List<ExperimentAlgorithm<IntegerSolution, List<IntegerSolution>>> algorithms = new ArrayList<>();
 	  
-	  BuilderInteger test = new BuilderInteger(2500);
+	  BuilderInteger test = new BuilderInteger(250);
 	  
 	  for (int i = 0; i < problemList.size(); i++) {
 		  test.setExperimentProblem(problemList.get(i));
@@ -64,6 +66,9 @@ public class IntegerProblemAutomaticConfiguration {
 				Algorithm<List<IntegerSolution>> algorithm = test.getAlgorithm(algs.get(j));
 				if(algorithm!=null)
 					algorithms.add(new ExperimentAlgorithm<>(algorithm, algorithm.getName(), problemList.get(i).getTag()));
+				else {
+					System.out.println("isNull");
+				}
 		  }
 	  }
 	  
