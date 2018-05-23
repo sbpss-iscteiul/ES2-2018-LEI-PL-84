@@ -104,7 +104,7 @@ public class Interface {
 	private ArrayList<String> doubleAlgorithms;
 	private ArrayList<String> binaryAlgorithms;
 	private ArrayList<String> checkedAlgorithms;
-	private String varType = "String";
+	private String varType = "Integer";
 	
 	public Interface() {
 		frame = new JFrame("ES2 Project");
@@ -312,6 +312,9 @@ public class Interface {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(intBox.isSelected()) {
+					varTable.clearSelection();
+					varTableModel.setRowCount(0);
+					varList.clear();
 					doubleBox.setEnabled(false);
 					binaryBox.setEnabled(false);
 				}else {
@@ -328,6 +331,9 @@ public class Interface {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(doubleBox.isSelected()) {
+					varTable.clearSelection();
+					varTableModel.setRowCount(0);
+					varList.clear();
 					intBox.setEnabled(false);
 					binaryBox.setEnabled(false);
 				}else {
@@ -344,6 +350,9 @@ public class Interface {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(binaryBox.isSelected()) {
+					varTable.clearSelection();
+					varTableModel.setRowCount(0);
+					varList.clear();
 					intBox.setEnabled(false);
 					doubleBox.setEnabled(false);
 				}else {
@@ -416,7 +425,8 @@ public class Interface {
 		FAQButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				createFAQFrame();
+//				createFAQFrame();
+				getIntervals();
 			}
 		});
 
@@ -466,7 +476,7 @@ public class Interface {
 						}
 					}
 					if(critTableModel.getRowCount()>0) {
-						for (int i = 0; i < varTableModel.getRowCount(); i++) {
+						for (int i = 0; i < critTableModel.getRowCount(); i++) {
 							parser.addPaths(critTableModel.getValueAt(i, 0).toString(), critTableModel.getValueAt(i, 1).toString());
 						}
 					}
@@ -489,13 +499,18 @@ public class Interface {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				varTable.clearSelection();
-//				String varType = "String";
-				if(intBox.isSelected())
+				if(intBox.isSelected()) {
 					varType = "Integer";
-				else if(doubleBox.isSelected())
+					varTableModel.setCellEditable(true);
+				}else if(doubleBox.isSelected()) {
 					varType = "Double";
-				else
-					varType = "String";
+					varTableModel.setCellEditable(true);
+				}else if(binaryBox.isSelected()){
+					varType = "Binary";
+					varTableModel.setCellEditable(false);
+					varTableModel.isCellEditable(0, 2);
+					varTableModel.isCellEditable(0, 3);
+				}
 					
 				varTableModel.addRow(new Object[] {null, varType, null, null});
 				Class tmp = null;
@@ -504,7 +519,7 @@ public class Interface {
 				else if(varType.equals("Double"))
 					tmp=Double.class;
 				else 
-					tmp=String.class;
+					tmp=Integer.class;
 				
 				varTableModel.setCellDataType(tmp);
 				varTableModel.getColumnClass(2);
@@ -814,6 +829,14 @@ public class Interface {
 
 	public ArrayList<String> getCheckedAlgorithms() {
 		  return checkedAlgorithms;
+	}
+	
+	public ArrayList<Integer> getIntervals() {
+		int min = (int) varTable.getValueAt(0, 2);
+		int max = (int) varTable.getValueAt(0, 3);
+		ArrayList<Integer> interval = new ArrayList<Integer>();
+		interval.add(min); interval.add(max);
+		return interval;
 	}
 	
 	public static void main(String[] args) {

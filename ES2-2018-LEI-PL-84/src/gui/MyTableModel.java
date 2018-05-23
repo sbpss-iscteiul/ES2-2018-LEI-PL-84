@@ -7,9 +7,11 @@ import javax.swing.table.DefaultTableModel;
 public class MyTableModel extends DefaultTableModel{
 	
 	private Class dataType;
+	private boolean celldEditable;
 	
 	public MyTableModel(Object[][] rowNames, Object columnNames[]) {
 		super(rowNames, columnNames);
+		celldEditable = true;
 	}	
 
 	@Override
@@ -25,6 +27,15 @@ public class MyTableModel extends DefaultTableModel{
 		else return String.class;
 	}
 	
+	@Override
+	public boolean isCellEditable(int row, int column) {
+		switch(column) {
+		case 2: return celldEditable;
+		case 3: return celldEditable;
+		default: return true;
+		}
+	}
+	
 	public Class getDataType() {
 		return dataType;
 	}
@@ -33,4 +44,11 @@ public class MyTableModel extends DefaultTableModel{
 		this.dataType = type;
 	}
 
+	public void setCellEditable(boolean e) {
+		this.celldEditable = e;
+	}
+	public boolean getCellEditable() {
+		return celldEditable;
+	}
+	
 }
