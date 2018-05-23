@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import org.uma.jmetal.algorithm.Algorithm;
 import org.uma.jmetal.problem.impl.AbstractDoubleProblem;
+import org.uma.jmetal.problem.multiobjective.zdt.ZDT1;
 import org.uma.jmetal.qualityindicator.impl.hypervolume.PISAHypervolume;
 import org.uma.jmetal.solution.DoubleSolution;
 import org.uma.jmetal.util.experiment.Experiment;
@@ -21,7 +22,7 @@ import org.uma.jmetal.util.experiment.util.ExperimentProblem;
 public class DoubleProblemAutomaticConfiguration {
   private static final int INDEPENDENT_RUNS = 5 ;
 
-  public static void main(AbstractDoubleProblem [] args, int[]algs) throws IOException {
+  public static void main(AbstractDoubleProblem [] args, ArrayList<Integer>algs) throws IOException {
     String experimentBaseDirectory = "experimentBaseDirectory";
 
     List<ExperimentProblem<DoubleSolution>> problemList = new ArrayList<>();
@@ -52,16 +53,16 @@ public class DoubleProblemAutomaticConfiguration {
     new GenerateBoxplotsWithR<>(experiment).setRows(1).setColumns(1).run() ;
   }
 
-  static List<ExperimentAlgorithm<DoubleSolution, List<DoubleSolution>>> configureAlgorithmList(List<ExperimentProblem<DoubleSolution>> problemList,int []algs) {
+  static List<ExperimentAlgorithm<DoubleSolution, List<DoubleSolution>>> configureAlgorithmList(List<ExperimentProblem<DoubleSolution>> problemList,ArrayList<Integer>algs) {
    
 	  List<ExperimentAlgorithm<DoubleSolution, List<DoubleSolution>>> algorithms = new ArrayList<>();
 	  
-	  BuilderDouble test = new BuilderDouble(2500);
+	  BuilderDouble test = new BuilderDouble(250);
 	  
 	  for (int i = 0; i < problemList.size(); i++) {
 		  test.setExperimentProblem(problemList.get(i));
-		  for (int j = 0; j < algs.length; j++) {
-				Algorithm<List<DoubleSolution>> algorithm = test.getAlgorithm(algs[j]);
+		  for (int j = 0; j < algs.size(); j++) {
+				Algorithm<List<DoubleSolution>> algorithm = test.getAlgorithm(algs.get(j));
 				if(algorithm!=null)
 					algorithms.add(new ExperimentAlgorithm<>(algorithm, algorithm.getName(), problemList.get(i).getTag()));
 		  }

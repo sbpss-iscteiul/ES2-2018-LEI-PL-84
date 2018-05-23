@@ -24,7 +24,7 @@ public class BuilderInteger {
 	}
 	
 	public Algorithm<List<IntegerSolution>> getAlgorithm(int i) {
-		if(i>1&&i<6) {
+		if(i>0&&i<6) {
 			Algorithm<List<IntegerSolution>> algorithm=null;
 			switch (i) {
 			case 1:
@@ -94,7 +94,7 @@ public class BuilderInteger {
 		Algorithm<List<IntegerSolution>> algorithm = new NSGAIIBuilder<IntegerSolution>(
 	              (IntegerProblem) experimentProblem.getProblem(),
 	              new IntegerSBXCrossover(0.9, 20.0),
-	              new IntegerPolynomialMutation(1/experimentProblem.getProblem().getNumberOfVariables(), 20.0))
+	              new IntegerPolynomialMutation(1/(experimentProblem.getProblem().getNumberOfVariables()), 20.0))
 	              .setMaxEvaluations(maxEvaluations)
 	              .setPopulationSize(100)
 	              .build();

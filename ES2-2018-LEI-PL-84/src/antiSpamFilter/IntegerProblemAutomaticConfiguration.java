@@ -6,7 +6,9 @@ import java.util.Arrays;
 import java.util.List;
 import org.uma.jmetal.algorithm.Algorithm;
 import org.uma.jmetal.problem.impl.AbstractIntegerProblem;
+import org.uma.jmetal.problem.multiobjective.NMMin;
 import org.uma.jmetal.qualityindicator.impl.hypervolume.PISAHypervolume;
+import org.uma.jmetal.solution.DoubleSolution;
 import org.uma.jmetal.solution.IntegerSolution;
 import org.uma.jmetal.util.experiment.Experiment;
 import org.uma.jmetal.util.experiment.ExperimentBuilder;
@@ -15,19 +17,18 @@ import org.uma.jmetal.util.experiment.component.ExecuteAlgorithms;
 import org.uma.jmetal.util.experiment.component.GenerateBoxplotsWithR;
 import org.uma.jmetal.util.experiment.component.GenerateLatexTablesWithStatistics;
 import org.uma.jmetal.util.experiment.component.GenerateReferenceParetoFront;
-import org.uma.jmetal.util.experiment.component.GenerateReferenceParetoSetAndFrontFromDoubleSolutions;
 import org.uma.jmetal.util.experiment.util.ExperimentAlgorithm;
 import org.uma.jmetal.util.experiment.util.ExperimentProblem;
 
 public class IntegerProblemAutomaticConfiguration {
   private static final int INDEPENDENT_RUNS = 5 ;
 
-  public static void main(AbstractIntegerProblem [] args, int[]algs) throws IOException {
+  public static void main(AbstractIntegerProblem [] args, ArrayList<Integer>algs) throws IOException {
     String experimentBaseDirectory = "experimentBaseDirectory";
 
     List<ExperimentProblem<IntegerSolution>> problemList = new ArrayList<>();
     for (int i = 0; i < args.length; i++) {
-    		problemList.add(new ExperimentProblem<>(args[i]));
+    		problemList.add(new ExperimentProblem<>(args[0]));
 	}
     
     List<ExperimentAlgorithm<IntegerSolution, List<IntegerSolution>>> algorithmList =
@@ -53,18 +54,21 @@ public class IntegerProblemAutomaticConfiguration {
     new GenerateBoxplotsWithR<>(experiment).setRows(1).setColumns(1).run() ;
   }
 
-  static List<ExperimentAlgorithm<IntegerSolution, List<IntegerSolution>>> configureAlgorithmList(List<ExperimentProblem<IntegerSolution>> problemList,int []algs) {
+  static List<ExperimentAlgorithm<IntegerSolution, List<IntegerSolution>>> configureAlgorithmList(List<ExperimentProblem<IntegerSolution>> problemList,ArrayList<Integer>algs) {
    
 	  List<ExperimentAlgorithm<IntegerSolution, List<IntegerSolution>>> algorithms = new ArrayList<>();
 	  
-	  BuilderInteger test = new BuilderInteger(2500);
+	  BuilderInteger test = new BuilderInteger(250);
 	  
 	  for (int i = 0; i < problemList.size(); i++) {
 		  test.setExperimentProblem(problemList.get(i));
-		  for (int j = 0; j < algs.length; j++) {
-				Algorithm<List<IntegerSolution>> algorithm = test.getAlgorithm(algs[j]);
+		  for (int j = 0; j < algs.size(); j++) {
+				Algorithm<List<IntegerSolution>> algorithm = test.getAlgorithm(algs.get(j));
 				if(algorithm!=null)
 					algorithms.add(new ExperimentAlgorithm<>(algorithm, algorithm.getName(), problemList.get(i).getTag()));
+				else {
+					System.out.println("isNull");
+				}
 		  }
 	  }
 	  

@@ -67,7 +67,7 @@ public class BuilderBinary {
 		 Algorithm<List<BinarySolution>> algorithm = new SPEA2Builder<BinarySolution>(
 				 (BinaryProblem) experimentProblem.getProblem(),
 				 new SinglePointCrossover(1.0),
-				 new BitFlipMutation(1.0 / ((GenericBinaryProblem) experimentProblem.getProblem()).getNumberOfBits(0)))
+				 new BitFlipMutation(1.0 / ((BinaryProblem) experimentProblem.getProblem()).getNumberOfBits(0)))
 				 .setMaxIterations(maxEvaluations)
 				 .build();
 		return algorithm;
@@ -86,7 +86,7 @@ public class BuilderBinary {
 				(BinaryProblem) experimentProblem.getProblem())
 				.setMaxEvaluations(maxEvaluations)
 				.setArchiveSize(100).setBiSections(2)
-				.setMutationOperator( new BitFlipMutation(1.0 / ((GenericBinaryProblem) experimentProblem.getProblem()).getNumberOfBits(0)))
+				.setMutationOperator( new BitFlipMutation(1.0 / ((BinaryProblem) experimentProblem.getProblem()).getNumberOfBits(0)))
 				.build();
 		return algorithm;
 	}
@@ -108,7 +108,7 @@ public class BuilderBinary {
 		Algorithm<List<BinarySolution>> algorithm = new MOCellBuilder<BinarySolution>(
 				(BinaryProblem) experimentProblem.getProblem(), 
 				new SinglePointCrossover(1.0), 
-				new BitFlipMutation(1.0 / ((GenericBinaryProblem) experimentProblem.getProblem()).getNumberOfBits(0)))
+				new BitFlipMutation(1.0 / ((BinaryProblem) experimentProblem.getProblem()).getNumberOfBits(0)))
 				.setMaxEvaluations(maxEvaluations)
 				.build();
 		return algorithm;
@@ -118,7 +118,7 @@ public class BuilderBinary {
 		Algorithm<List<BinarySolution>> algorithm = new SMSEMOABuilder<BinarySolution>(
 				(BinaryProblem) experimentProblem.getProblem(), 
 				new SinglePointCrossover(1.0), 
-				new BitFlipMutation(1.0 / ((GenericBinaryProblem) experimentProblem.getProblem()).getNumberOfBits(0)))
+				new BitFlipMutation(1.0 / ((BinaryProblem) experimentProblem.getProblem()).getNumberOfBits(0)))
 				.setMaxEvaluations(maxEvaluations).build();
 		return algorithm;
 	}
@@ -127,7 +127,7 @@ public class BuilderBinary {
 	     Algorithm<List<BinarySolution>> algorithm = new NSGAIIBuilder<BinarySolution>(
 	             (BinaryProblem) experimentProblem.getProblem(),
 	             new SinglePointCrossover(1.0),
-	             new BitFlipMutation(1.0 / ((GenericBinaryProblem) experimentProblem.getProblem()).getNumberOfBits(0)))
+	             new BitFlipMutation(1.0 / ((BinaryProblem) experimentProblem.getProblem()).getNumberOfBits(0)))
 	             .setMaxEvaluations(maxEvaluations)
 	             .setPopulationSize(100)
 	             .build();
