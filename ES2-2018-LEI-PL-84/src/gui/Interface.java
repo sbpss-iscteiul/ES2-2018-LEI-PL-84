@@ -685,8 +685,10 @@ public class Interface {
 		int nConst=0;
 		String probName=nameText.getText();
 		if (intBox.isSelected()) {
-			GenericIntegerProblem x = new GenericIntegerProblem(nVar, nObj, nConst, probName);
-			x.setLimits(-5, 5);
+			GenericIntegerProblem x = new GenericIntegerProblem(nVar, nObj, nConst, probName,(String)critTableModel.getValueAt(0, 1));
+			if(varTableModel.getValueAt(0,2)!=null && varTableModel.getValueAt(0,3)!=null ) {
+				x.setLimits((Integer)varTableModel.getValueAt(0,2), (Integer)varTableModel.getValueAt(0,3));	
+			}
 			GenericIntegerProblem[] args = {x};
 			try {
 				IntegerProblemAutomaticConfiguration.main(args, getCheckedAlgorithms());
@@ -694,8 +696,10 @@ public class Interface {
 				e.printStackTrace();
 			}
 		}else if (doubleBox.isSelected()) {
-			GenericDoubleProblem x = new GenericDoubleProblem(nVar, nObj, nConst, probName);
-			x.setLimits(-5, 5);
+			GenericDoubleProblem x = new GenericDoubleProblem(/*nVar*/335, nObj, nConst, probName,(String)critTableModel.getValueAt(0, 1));
+			if(varTableModel.getValueAt(0,2)!=null && varTableModel.getValueAt(0,3)!=null ) {
+				x.setLimits((Double)varTableModel.getValueAt(0,2), (Double)varTableModel.getValueAt(0,3));	
+			}
 			GenericDoubleProblem[] args = {x};
 			try {
 				DoubleProblemAutomaticConfiguration.main(args, getCheckedAlgorithms());
@@ -704,7 +708,7 @@ public class Interface {
 			}
 		}else if (binaryBox.isSelected()) {
 			/*500 refere-se ao numero de bits que é fixo, mas nao deveria ser teoricamente*/
-			GenericBinaryProblem x = new GenericBinaryProblem(nVar, nObj, nConst, probName,500);
+			GenericBinaryProblem x = new GenericBinaryProblem(nVar, nObj, nConst, probName,500,(String)critTableModel.getValueAt(0, 1));
 			GenericBinaryProblem[] args = {x};
 			try {
 				BinaryProblemAutomaticConfiguration.main(args, getCheckedAlgorithms());

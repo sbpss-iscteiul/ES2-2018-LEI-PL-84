@@ -58,7 +58,7 @@ public class BinaryProblemAutomaticConfiguration {
    
 	  List<ExperimentAlgorithm<BinarySolution, List<BinarySolution>>> algorithms = new ArrayList<>();
 	  
-	  BuilderBinary test = new BuilderBinary(2500);
+	  BuilderBinary test = new BuilderBinary(250);
 	  
 	  for (int i = 0; i < problemList.size(); i++) {
 		  test.setExperimentProblem(problemList.get(i));

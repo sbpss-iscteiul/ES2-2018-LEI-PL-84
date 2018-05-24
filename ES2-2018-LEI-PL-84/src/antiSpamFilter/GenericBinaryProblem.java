@@ -1,5 +1,7 @@
 package antiSpamFilter;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.BitSet;
 
 import org.uma.jmetal.problem.ConstrainedProblem;
@@ -8,18 +10,21 @@ import org.uma.jmetal.solution.BinarySolution;
 import org.uma.jmetal.solution.impl.DefaultBinarySolution;
 import org.uma.jmetal.util.JMetalException;
 
+import extras.JARexec;
+
 public class GenericBinaryProblem extends AbstractBinaryProblem implements ConstrainedProblem<BinarySolution>{
 	
 	private static final long serialVersionUID = 1L;
 	private int bits;
+	private String pathName;
 
-	public GenericBinaryProblem(int numberOfVariables,int numberOfObjectives,int numberOfConstraints,String problemName,int numberOfBits) {
+	public GenericBinaryProblem(int numberOfVariables,int numberOfObjectives,int numberOfConstraints,String problemName,int numberOfBits,String Path) {
 	    setNumberOfVariables(numberOfVariables);
 	    setNumberOfObjectives(numberOfObjectives);
 	    setNumberOfConstraints(numberOfConstraints);
 	    setName(problemName);
-	    
-	    bits = numberOfBits;
+	    this.bits = numberOfBits;
+	    this.pathName=Path;
 	}
 
 	public void setRestrictions() {
@@ -32,26 +37,27 @@ public class GenericBinaryProblem extends AbstractBinaryProblem implements Const
 		return new DefaultBinarySolution(this);
 	}
 
-	public void evaluate(BinarySolution solution) {
-		int counterOnes;
-	    int counterZeroes;
-
-	    counterOnes = 0;
-	    counterZeroes = 0;
-
-	    BitSet bitset = solution.getVariableValue(0) ;
-
-	    for (int i = 0; i < bitset.length(); i++) {
-	      if (bitset.get(i)) {
-	        counterOnes++;
-	      } else {
-	        counterZeroes++;
-	      }
-	    }
-
-	    // OneZeroMax is a maximization problem: multiply by -1 to minimize
-	    solution.setObjective(0, -1.0 * counterOnes);
-	    solution.setObjective(1, -1.0 * counterZeroes);
+	public void evaluate(BinarySolution solution) {	    
+		  /*preencher string cenas com a solution*/
+		  String cenas = "";
+		  for (int i = 0; i < getNumberOfVariables(); i++) {
+			  if (i==0) {
+				cenas += ""+solution.getVariableValue(i);
+			} else {
+				cenas += " "+solution.getVariableValue(i);
+			}
+		  }
+		  /*chamar o jar dando a String como atributo*/
+		  try {
+			  ArrayList<String> x = JARexec.runJAR(this.pathName, cenas, getNumberOfObjectives());
+			  for (int i = 0; i < getNumberOfObjectives(); i++) {
+				  solution.setObjective(i, Double.parseDouble(x.get(i)));
+			  }
+		  } catch (IOException e) {
+			  for (int i = 0; i < getNumberOfObjectives(); i++) {
+				  solution.setObjective(i, 0.0);
+			  }
+		  }	
 	  }
 
 	@Override

@@ -1,11 +1,14 @@
 package antiSpamFilter;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.uma.jmetal.problem.ConstrainedProblem;
 import org.uma.jmetal.problem.impl.AbstractIntegerProblem;
 import org.uma.jmetal.solution.IntegerSolution;
+
+import extras.JARexec;
 
 public class GenericIntegerProblem extends AbstractIntegerProblem implements ConstrainedProblem<IntegerSolution>{
 	
@@ -14,12 +17,14 @@ public class GenericIntegerProblem extends AbstractIntegerProblem implements Con
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private String pathName;
 
-	public GenericIntegerProblem(int numberOfVariables,int numberOfObjectives,int numberOfConstraints,String problemName) {
+	public GenericIntegerProblem(int numberOfVariables,int numberOfObjectives,int numberOfConstraints,String problemName,String Path) {
 	    setNumberOfVariables(numberOfVariables);
 	    setNumberOfObjectives(numberOfObjectives);
 	    setNumberOfConstraints(numberOfConstraints);
 	    setName(problemName);
+	    this.pathName=Path;
 	}
 	
 	public void setLimits(Integer lLimit,Integer uLimit) {
@@ -41,20 +46,26 @@ public class GenericIntegerProblem extends AbstractIntegerProblem implements Con
 
 	@Override
 	public void evaluate(IntegerSolution solution) {
-		int approximationToN;
-	    int approximationToM ;
-
-	    approximationToN = 0;
-	    approximationToM = 0;
-
-	    for (int i = 0; i < solution.getNumberOfVariables(); i++) {
-	      int value = solution.getVariableValue(i) ;
-	      approximationToN += Math.abs(getNumberOfVariables() - value) ;
-	      approximationToM += Math.abs((0-getNumberOfVariables()) - value) ;
-	    }
-
-	    solution.setObjective(0, approximationToN);
-	    solution.setObjective(1, approximationToM);
+		  /*preencher string cenas com a solution*/
+		  String cenas = "";
+		  for (int i = 0; i < getNumberOfVariables(); i++) {
+			  if (i==0) {
+				cenas += ""+solution.getVariableValue(i);
+			} else {
+				cenas += " "+solution.getVariableValue(i);
+			}
+		  }
+		  /*chamar o jar dando a String como atributo*/
+		  try {
+			  ArrayList<String> x = JARexec.runJAR(this.pathName, cenas, getNumberOfObjectives());
+			  for (int i = 0; i < getNumberOfObjectives(); i++) {
+				  solution.setObjective(i, Double.parseDouble(x.get(i)));
+			  }
+		  } catch (IOException e) {
+			  for (int i = 0; i < getNumberOfObjectives(); i++) {
+				  solution.setObjective(i, 0.0);
+			  }
+		  }	
 	}
 
 	@Override

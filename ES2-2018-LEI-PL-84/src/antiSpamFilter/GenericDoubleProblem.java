@@ -17,13 +17,15 @@ public class GenericDoubleProblem extends AbstractDoubleProblem implements Const
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private String pathName;
 
 
-	public GenericDoubleProblem(int numberOfVariables,int numberOfObjectives,int numberOfConstraints,String problemName) {
+	public GenericDoubleProblem(int numberOfVariables,int numberOfObjectives,int numberOfConstraints,String problemName,String Path) {
 	    setNumberOfVariables(numberOfVariables);
 	    setNumberOfObjectives(numberOfObjectives);
 	    setNumberOfConstraints(numberOfConstraints);
 	    setName(problemName);
+	    this.pathName=Path;
 	}
 	
 	public void setLimits(double lLimit,double uLimit) {
@@ -45,26 +47,26 @@ public class GenericDoubleProblem extends AbstractDoubleProblem implements Const
 	
 	@Override
 	public void evaluate(DoubleSolution solution) {
-		/*Caso de Teste*/
-	    double[] fx = new double[getNumberOfObjectives()];
-	    double[] x = new double[getNumberOfVariables()];
-	    for (int i = 0; i < solution.getNumberOfVariables(); i++) {
-	      x[i] = solution.getVariableValue(i) ;
-	    }
-	    
-	    fx[0] = 0.0;
-	    for (int var = 0; var < solution.getNumberOfVariables() - 1; var++) {
-		  fx[0] += Math.abs(x[0]); // Example for testing
-	    }
-	    
-	    fx[1] = 0.0;
-	    for (int var = 0; var < solution.getNumberOfVariables(); var++) {
-	    	fx[1] += Math.abs(x[1]); // Example for testing
-	    }
-
-	    solution.setObjective(0, fx[0]);
-	    solution.setObjective(1, fx[1]);
-		/*-------------*/		
+		  /*preencher string cenas com a solution*/
+		  String cenas = "";
+		  for (int i = 0; i < getNumberOfVariables(); i++) {
+			  if (i==0) {
+				cenas += ""+solution.getVariableValue(i);
+			} else {
+				cenas += " "+solution.getVariableValue(i);
+			}
+		  }
+		  /*chamar o jar dando a String como atributo*/
+		  try {
+			  ArrayList<String> x = JARexec.runJAR(this.pathName, cenas, getNumberOfObjectives());
+			  for (int i = 0; i < getNumberOfObjectives(); i++) {
+				  solution.setObjective(i, Double.parseDouble(x.get(i)));
+			  }
+		  } catch (IOException e) {
+			  for (int i = 0; i < getNumberOfObjectives(); i++) {
+				  solution.setObjective(i, 0.0);
+			  }
+		  }	
 	}
 
 	@Override
