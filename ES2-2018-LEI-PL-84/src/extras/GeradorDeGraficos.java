@@ -96,12 +96,5 @@ public class GeradorDeGraficos extends ApplicationFrame {
     		return chart;
     }
 
-//    public static void main(String[] args) throws IOException {
-//        GeradorDeGraficos demo = new GeradorDeGraficos("Soluções ótimas geradas pelo processo de otimização","BEST_HV_FUN");
-//        GeradorDeGraficos demo = new GeradorDeGraficos("Soluções ótimas geradas pelo processo de otimização","FUN0");
-//        demo.pack();
-//        RefineryUtilities.centerFrameOnScreen(demo);
-//        demo.setVisible(true);
-//    }
 
 }
