@@ -22,7 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class AntiSpamFilterAutomaticConfiguration {
-  private static final int INDEPENDENT_RUNS = 5 ;
+  private static final int INDEPENDENT_RUNS = 1 ;
 
   public static void main(String[] args) throws IOException {
     String experimentBaseDirectory = "experimentBaseDirectory";
@@ -63,7 +63,7 @@ public class AntiSpamFilterAutomaticConfiguration {
               problemList.get(i).getProblem(),
               new SBXCrossover(1.0, 5),
               new PolynomialMutation(1.0 / problemList.get(i).getProblem().getNumberOfVariables(), 10.0))
-              .setMaxEvaluations(25000)
+              .setMaxEvaluations(250)
               .setPopulationSize(100)
               .build();
       algorithms.add(new ExperimentAlgorithm<>(algorithm, "NSGAII", problemList.get(i).getTag()));

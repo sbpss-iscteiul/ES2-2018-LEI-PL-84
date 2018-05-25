@@ -21,6 +21,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import objects.Problem;
+import objects.Restriction;
 import objects.Variable;
 
 
@@ -36,6 +37,7 @@ public class Parser {
 	private Element descriptions;
 	private Element algorithms;
 	private Element waiting_times;
+	private Element name;
 	//counter de variaveis
 	private int variable_count;
 	//unique email, unique description
@@ -73,6 +75,11 @@ public class Parser {
 			//-----Algorithms Node Creation-----//
 				 waiting_times = doc.createElement("Waiting_Times");
 				 rootElement.appendChild(waiting_times);
+				//-----Algorithms Node Creation-----//
+				 name = doc.createElement("Name");
+				 rootElement.appendChild(name);
+				 
+				 
 				 
 			variable_count=0;
 		} catch (ParserConfigurationException e) {
@@ -92,6 +99,11 @@ public class Parser {
 			System.out.println("Email Alterado de '"+tmp.getTextContent()+"' para '"+e_mail+"'");
 			tmp.setTextContent(e_mail);
 		}
+	}
+	public void addName(String names) {
+		Element nameP = doc.createElement("ProblemName");
+		nameP.appendChild(doc.createTextNode(names));
+		name.appendChild(nameP);
 	}
 	
 	public void addDescription(String Description) {
@@ -120,10 +132,21 @@ public class Parser {
 		}
 	}
 	
-	public void addLimitations(String Limitation) {
+	public void addLimitations(Restriction lim) {
 		Element Limitations = doc.createElement("Limitacoes");
-		Limitations.appendChild(doc.createTextNode(Limitation));
+//		Limitations.appendChild(doc.createTextNode(Limitation));
 		limitations.appendChild(Limitations);
+			Element varName = doc.createElement("VarName");
+			varName.appendChild(doc.createTextNode(lim.getVarName()));
+			Limitations.appendChild(varName);
+		
+			Element operation = doc.createElement("Operation");
+			operation.appendChild(doc.createTextNode(lim.getOperation()));
+			Limitations.appendChild(operation);
+		
+			Element value = doc.createElement("OperationValue");
+			value.appendChild(doc.createTextNode(lim.getValue()+""));
+			Limitations.appendChild(value);
 	}
 	
 	public void addVariables(String Name, String Type, String LimInf, String LimSup) {
@@ -150,19 +173,22 @@ public class Parser {
 		variable_count++;
 	}
 	
-	public void addPaths(int variableID , String Path) {
+	public void addPaths(String name , String Path) {
 		Element path = doc.createElement("Path");
-		path.setAttribute("id", ""+variableID);
+//		path.setAttribute("id", ""+variableID);
 		paths.appendChild(path);
 			
-			Element name = doc.createElement("Path_Name");
-			name.appendChild(doc.createTextNode(Path));
-			paths.appendChild(name);
+			Element Name = doc.createElement("PathName");
+			Name.appendChild(doc.createTextNode(name));
+			path.appendChild(Name);
+			
+			Element pat = doc.createElement("PathPath");
+			pat.appendChild(doc.createTextNode(Path));
+			path.appendChild(pat);
 		
 	}
 	
 	public void addChosenAlgorithm(int number, String algorithmName) {
-		if(chosen_algorithm==false) {
 			Element chosenAlgorithm = doc.createElement("Algorithm");
 			chosenAlgorithm.setAttribute("id", ""+number);
 			algorithms.appendChild(chosenAlgorithm);
@@ -172,11 +198,11 @@ public class Parser {
 			chosenAlgorithm.appendChild(name);
 			
 			chosen_algorithm = true;
-		}else {
-			Node tmp = rootElement.getChildNodes().item(5).getChildNodes().item(0);
-			System.out.println("Algoritmo Selecionado Alterado de "+tmp.getTextContent()+" para "+algorithmName);
-			tmp.setTextContent(algorithmName);
-		}
+//		}else {
+//			Node tmp = rootElement.getChildNodes().item(5).getChildNodes().item(0);
+//			System.out.println("Algoritmo Selecionado Alterado de "+tmp.getTextContent()+" para "+algorithmName);
+//			tmp.setTextContent(algorithmName);
+//		}
 	}
 	
 	
@@ -191,7 +217,7 @@ public class Parser {
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
 			Date date = new Date();
 			String fileName = problemName+" "+dateFormat.format(date)+".xml";
-			StreamResult result = new StreamResult(new File(dir+fileName));
+			StreamResult result = new StreamResult(new File(dir+"_"+fileName));
 			//-------//
 			transformer.transform(source, result);
 			System.out.println("File saved! "+dateFormat.format(date));
@@ -199,7 +225,7 @@ public class Parser {
 				tfe.printStackTrace();
 		}
 	}
-	public Problem read_XML(String dir) {
+	public static Problem read_XML(String dir) {
 		Problem problem = new Problem();
 		try {
 			File fXML = new File(dir);
@@ -234,11 +260,22 @@ public class Parser {
 							else if(nList.item(i3).getNodeName().equals("Limite_Inferior")){
 								variable.setMinValue(nList.item(i3).getTextContent());
 							}
-						}
+						}						
 						problem.getVars().add(variable);
 					}
-					else if(node2.getNodeName().equals("Paths")) {
-						problem.getPaths().add(node2.getTextContent());
+					else if(node2.getNodeName().equals("Path")) {
+						String[] p = new String[2];
+						NodeList nList =node2.getChildNodes();
+						for(int i3=0;i3<nList.getLength();i3++) {
+							if(nList.item(i3).getNodeName().equals("PathName")){
+								p[0]=nList.item(i3).getTextContent();
+							}
+							else if(nList.item(i3).getNodeName().equals("PathPath")){
+								p[1]=nList.item(i3).getTextContent();
+							}
+						}
+						problem.getPaths().add(p);
+						
 					}
 					else if(node2.getNodeName().equals("Tempo_de_Espera")) {
 						problem.setTempoDeEspera(node2.getTextContent());
@@ -247,13 +284,28 @@ public class Parser {
 						NodeList nList =node2.getChildNodes();
 						for(int i3=0;i3<nList.getLength();i3++) {
 							if(nList.item(i3).getNodeName().equals("Name")){
-								problem.setAlgotihm(nList.item(i3).getTextContent());
-								break;
+								problem.getAlgorithms().add(nList.item(i3).getTextContent());
 							}
 						}
-					}	
+					}
+					else if(node2.getNodeName().equals("ProblemName")) {
+						problem.setProblemName(node2.getTextContent());
+					}
 					else if(node2.getNodeName().equals("Limitacoes")) {
-						//limitacoes
+						NodeList nList =node2.getChildNodes();
+						Restriction a = new Restriction(null, null, null);
+						for(int i3=0;i3<nList.getLength();i3++) {
+							if(nList.item(i3).getNodeName().equals("Operation")){
+								a.setOperation(nList.item(i3).getTextContent());
+							}
+							else if(nList.item(i3).getNodeName().equals("VarName")){
+								a.setVarName(nList.item(i3).getTextContent());
+							}
+							else if(nList.item(i3).getNodeName().equals("OperationValue")){
+								a.setValue(nList.item(i3).getTextContent());
+							}
+						}
+						problem.getRestrictions().add(a);
 					}
 				}
 			}
