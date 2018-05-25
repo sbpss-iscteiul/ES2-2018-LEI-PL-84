@@ -8,6 +8,7 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -37,7 +38,10 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
+import org.jfree.ui.RefineryUtilities;
+
 import extras.Email;
+import extras.GeradorDeGraficos;
 import extras.Parser;
 import objects.Variable;
 
@@ -230,6 +234,7 @@ public class Interface {
 		runButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				//Email
 				Email email= new Email();
 				String mensagem= new String("Muito obrigado por usar esta plataforma de otimização. Será informado por email sobre o progresso do processo de otimização, quando o processo de otimização tiver atingido 25%, 50%, 75% do total do (número de avaliações ou) tempo estimado, e também quando o processo tiver terminado, com sucesso ou devido à ocorrência de erros.");
 				email.createMessage("Optimização em curso:" + nameText.getText() + " " + Calendar.getInstance().getTime() , mensagem);
@@ -245,6 +250,18 @@ public class Interface {
 					email.anexo(file);
 					email.send();
 				}
+				//Grafico		        
+				GeradorDeGraficos demo;
+				try {
+					//Alterar o nome do ficheiro
+					demo = new GeradorDeGraficos("Soluções ótimas geradas pelo processo de otimização","BEST_HV_FUN");
+					demo.pack();
+			        RefineryUtilities.centerFrameOnScreen(demo);
+			        demo.setVisible(true);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}       
+				
 			}
 		});
 
