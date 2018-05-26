@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 class ProblemTest {
 	Problem a;
-	@Test
+	@Test 
 	void test() {
 		ArrayList<String>  algoritmos= new ArrayList<>();
 		algoritmos.add("Alg1");
@@ -34,8 +34,8 @@ class ProblemTest {
 		a.setRestrictions(restrictions);
 		a.setTempoDeEspera("45");
 		ArrayList<Variable> vars= new ArrayList<>();
-		vars.add(new Variable("V1","Integer","-5","5"));
-		vars.add(new Variable("V2","Integer","-5","5"));
+//		vars.add(new Variable("V1","Integer","-5","5"));
+//		vars.add(new Variable("V2","Integer","-5","5"));
 		a.setVars(vars);
 		assertEquals(a.getProblemName(), "ProblemName");
 		assertEquals(a.getDescription(), "Descrição do problema");
