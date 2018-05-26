@@ -441,22 +441,21 @@ public class Interface {
 					String file=new String(path);
 					email.anexo(file);
 					email.send();
-				}
-				
-				runAlgorithm();
-				
-				//Grafico		        
-				GeradorDeGraficos demo;
-				try {
-					//Alterar o nome do ficheiro
-					demo = new GeradorDeGraficos("Soluções ótimas geradas pelo processo de otimização","BEST_HV_FUN");
-					demo.pack();
-			        RefineryUtilities.positionFrameOnScreen(demo, 0.95, 0.2);
-			        demo.setVisible(true);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}       
-				
+					
+					runAlgorithm();
+					
+					//Grafico		        
+					GeradorDeGraficos demo;
+					try {
+						//Alterar o nome do ficheiro
+						demo = new GeradorDeGraficos("Soluções ótimas geradas pelo processo de otimização","BEST_HV_FUN");
+						demo.pack();
+				        RefineryUtilities.positionFrameOnScreen(demo, 0.95, 0.2);
+				        demo.setVisible(true);
+					} catch (IOException e) {
+						e.printStackTrace(); 
+					}		
+				}				
 			}
 		});
 

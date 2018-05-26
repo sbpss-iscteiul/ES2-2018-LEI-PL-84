@@ -1,4 +1,4 @@
-package antiSpamFilter;
+package JunitTestes;
 
 import static org.junit.Assert.*;
 
@@ -9,6 +9,8 @@ import org.uma.jmetal.algorithm.Algorithm;
 import org.uma.jmetal.problem.multiobjective.zdt.ZDT1;
 import org.uma.jmetal.solution.DoubleSolution;
 import org.uma.jmetal.util.experiment.util.ExperimentProblem;
+
+import antiSpamFilter.BuilderDouble;
 
 public class BuilderDoubleTest {
 	
