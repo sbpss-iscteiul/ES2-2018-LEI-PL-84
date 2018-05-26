@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import extras.Parser;
+import objects.Restriction;
 
 class ParserTest {
 
@@ -45,9 +46,10 @@ class ParserTest {
 		x.addVariables("X", "S", "1", "5", "3");
 		x.addPaths("Nome", "Path");
 		x.addChosenAlgorithm(2, "algorithmName");
-		//x.addLimitations(q);
+		Restriction restriction=new Restriction("varName", "operation", "value");
+		x.addLimitations(restriction);
 		x.write_XML("problemName", "dir");
-		x.read_XML("C:\\Users\\Ruben\\git\\ES2-2018-LEI-PL-84\\ES2-2018-LEI-PL-84\\dir_problemName 2018-05-26 18-48-46.xml");
+		x.read_XML("C:\\Users\\Ruben\\git\\ES2-2018-LEI-PL-84\\ES2-2018-LEI-PL-84\\dir_problemName 2018-05-26 19-00-59.xml");
 		y.read_XML("dir");
 		assertEquals("email", x.getEmails().getFirstChild().getTextContent());
 		assertEquals("a",x.getName().getFirstChild().getTextContent());

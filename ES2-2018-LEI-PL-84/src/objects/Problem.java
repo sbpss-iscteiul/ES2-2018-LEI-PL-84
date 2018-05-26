@@ -56,8 +56,13 @@ public class Problem {
 
 	@Override
 	public String toString() {
+		String pathToPrint="{";
+		for (String[] it : paths) {
+			pathToPrint= pathToPrint+"["+it[0]+","+it[1]+"],";
+		}
+		pathToPrint= pathToPrint+"}";
 		return "Problem [email=" + email + ", problemName=" + problemName + ", description=" + description + ", paths="
-				+ paths + ", tempoDeEspera=" + tempoDeEspera + ", restrictions=" + restrictions + ", vars=" + vars
+				+ pathToPrint + ", tempoDeEspera=" + tempoDeEspera + ", restrictions=" + restrictions + ", vars=" + vars
 				+ ", algotihm=" + algorithms + "]";
 	}
 	public ArrayList<String> getAlgorithms() {
