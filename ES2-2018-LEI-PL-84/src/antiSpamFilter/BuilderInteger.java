@@ -11,6 +11,7 @@ import org.uma.jmetal.algorithm.multiobjective.smsemoa.SMSEMOABuilder;
 import org.uma.jmetal.operator.impl.crossover.IntegerSBXCrossover;
 import org.uma.jmetal.operator.impl.mutation.IntegerPolynomialMutation;
 import org.uma.jmetal.problem.IntegerProblem;
+import org.uma.jmetal.solution.BinarySolution;
 import org.uma.jmetal.solution.IntegerSolution;
 import org.uma.jmetal.util.experiment.util.ExperimentProblem;
 
@@ -24,27 +25,26 @@ public class BuilderInteger {
 	}
 	
 	public Algorithm<List<IntegerSolution>> getAlgorithm(int i) {
-		if(i>0&&i<6) {
-			Algorithm<List<IntegerSolution>> algorithm=null;
-			switch (i) {
-			case 1:
-				algorithm = getter_NSGAII();
-				return algorithm;
-			case 2:	
-				algorithm = getter_SMSEMOA() ;
-				return algorithm;
-			case 3:
-				algorithm = getter_MOCell();
-				return algorithm;
-			case 4:
-				algorithm = getter_PAES();
-				return algorithm;
-			case 5:
-				algorithm = getter_RandomSearch();
-				return algorithm;
-			}	
+		Algorithm<List<IntegerSolution>> algorithm=null;
+		switch (i) {
+		case 1:
+			algorithm = getter_NSGAII();
+			return algorithm;
+		case 2:	
+			algorithm = getter_SMSEMOA() ;
+			return algorithm;
+		case 3:
+			algorithm = getter_MOCell();
+			return algorithm;
+		case 4:
+			algorithm = getter_PAES();
+			return algorithm;
+		case 5:
+			algorithm = getter_RandomSearch();
+			return algorithm;
+		default:
+			return null;
 		}
-		return null;
 	}
 
 	public void setExperimentProblem(ExperimentProblem<IntegerSolution> eP) {
@@ -99,6 +99,14 @@ public class BuilderInteger {
 	              .setPopulationSize(100)
 	              .build();
 		return algorithm;
+	}
+
+	public int getMaxEvaluations() {
+		return this.maxEvaluations;
+	}
+
+	public ExperimentProblem<IntegerSolution> geExperimentProblem() {
+		return this.experimentProblem;
 	}
 	
 }

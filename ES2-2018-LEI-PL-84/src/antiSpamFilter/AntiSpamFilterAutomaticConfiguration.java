@@ -23,6 +23,7 @@ import java.util.List;
 
 public class AntiSpamFilterAutomaticConfiguration {
   private static final int INDEPENDENT_RUNS = 1 ;
+  private static List<ExperimentAlgorithm<DoubleSolution, List<DoubleSolution>>> algorithmListAtt;
 
   public static void main(String[] args) throws IOException {
     String experimentBaseDirectory = "experimentBaseDirectory";
@@ -32,6 +33,8 @@ public class AntiSpamFilterAutomaticConfiguration {
 
     List<ExperimentAlgorithm<DoubleSolution, List<DoubleSolution>>> algorithmList =
             configureAlgorithmList(problemList);
+    
+    algorithmListAtt=algorithmList;
 
     Experiment<DoubleSolution, List<DoubleSolution>> experiment =
         new ExperimentBuilder<DoubleSolution, List<DoubleSolution>>("AntiSpamStudy")
@@ -72,4 +75,8 @@ public class AntiSpamFilterAutomaticConfiguration {
     return algorithms;
   }
 
+  public static List<ExperimentAlgorithm<DoubleSolution, List<DoubleSolution>>> getAlgorithmListAtt() {
+	return algorithmListAtt;
+  }
+  
 }

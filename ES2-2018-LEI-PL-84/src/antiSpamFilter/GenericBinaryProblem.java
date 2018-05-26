@@ -43,10 +43,10 @@ public class GenericBinaryProblem extends AbstractBinaryProblem implements Const
 		  for (int i = 0; i < getNumberOfVariables(); i++) {
 			  if (i==0) {
 				cenas += ""+solution.getVariableValue(i);
-			} else {
+			  } else {
 				cenas += " "+solution.getVariableValue(i);
-			}
-		  }
+			  }
+		  } 
 		  /*chamar o jar dando a String como atributo*/
 		  try {
 			  ArrayList<String> x = JARexec.runJAR(this.pathName, cenas, getNumberOfObjectives());
@@ -72,6 +72,14 @@ public class GenericBinaryProblem extends AbstractBinaryProblem implements Const
 	public void evaluateConstraints(BinarySolution arg0) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public int getNBits() {
+		return this.bits;
+	}
+	
+	public String getPath() {
+		return this.pathName;
 	}
 
 }
