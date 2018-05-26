@@ -17,5 +17,5 @@ public class JARexec {
 		brinput.close();
 		p.destroy();
 		return reader;
-	}
+	} 
 }

@@ -1,10 +1,10 @@
 package objects;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 class ProblemTest {
 	Problem a;
@@ -34,8 +34,8 @@ class ProblemTest {
 		a.setRestrictions(restrictions);
 		a.setTempoDeEspera("45");
 		ArrayList<Variable> vars= new ArrayList<>();
-		vars.add(new Variable("V1","Integer","-5","5"));
-		vars.add(new Variable("V2","Integer","-5","5"));
+//		vars.add(new Variable("V1","Integer","-5","5"));
+//		vars.add(new Variable("V2","Integer","-5","5"));
 		a.setVars(vars);
 		assertEquals(a.getProblemName(), "ProblemName");
 		assertEquals(a.getDescription(), "Descrição do problema");
