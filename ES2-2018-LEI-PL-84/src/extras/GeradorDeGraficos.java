@@ -31,6 +31,10 @@ public class GeradorDeGraficos extends ApplicationFrame {
     XYSeries series;
     String alg;
     int x;
+    
+    public String getAlg() {
+		return alg;
+	}
 
     public GeradorDeGraficos(String applicationTitle, String algoritmo) throws IOException {
         super(applicationTitle);

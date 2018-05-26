@@ -50,11 +50,9 @@ import javax.swing.event.TableModelListener;
 import javax.swing.plaf.synth.SynthSeparatorUI;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
-
 import org.jfree.ui.RefineryUtilities;
 import org.uma.jmetal.algorithm.Algorithm;
 import org.uma.jmetal.problem.IntegerProblem;
-
 import antiSpamFilter.BinaryProblemAutomaticConfiguration;
 import antiSpamFilter.DoubleProblemAutomaticConfiguration;
 import antiSpamFilter.GenericBinaryProblem;
@@ -450,7 +448,7 @@ public class Interface {
 					//Alterar o nome do ficheiro
 					demo = new GeradorDeGraficos("Soluções ótimas geradas pelo processo de otimização","BEST_HV_FUN");
 					demo.pack();
-			        RefineryUtilities.centerFrameOnScreen(demo);
+			        RefineryUtilities.positionFrameOnScreen(demo, 0.95, 0.2);
 			        demo.setVisible(true);
 				} catch (IOException e) {
 					e.printStackTrace();

@@ -39,10 +39,10 @@ class GeradorDeGraficoTest {
 		GeradorDeGraficos demo = new GeradorDeGraficos(titulo,File);
 		GeradorDeGraficos demo1 = new GeradorDeGraficos(titulo,File1);
 		GeradorDeGraficos demo2 = new GeradorDeGraficos(titulo,File2);
-		assertEquals("Soluções ótimas geradas pelo processo de otimização", titulo);
-		assertEquals("BEST_HV_FUN", File);
-		assertEquals("FUN0", File1);
-		assertEquals("X", File2);
+		assertEquals("Soluções ótimas geradas pelo processo de otimização", demo.getTitle());
+		assertEquals("BEST_HV_FUN", demo.getAlg());
+		assertEquals("FUN0", demo1.getAlg());
+		assertEquals("X", demo2.getAlg());
 	}
 
 }
