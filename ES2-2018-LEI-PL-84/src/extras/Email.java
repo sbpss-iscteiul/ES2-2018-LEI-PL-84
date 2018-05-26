@@ -26,6 +26,14 @@ public class Email {
 	private MimeMessage message;
 	private Multipart multipart;
 
+	public MimeMessage getMessage() {
+		return message;
+	}
+
+	public Multipart getMultipart() {
+		return multipart;
+	}
+
 	public Email(){
 	      // Get system properties
 	      Properties props = new Properties();
@@ -43,20 +51,19 @@ public class Email {
              });
 	}
 	
-	public void createMessage(String x, String p) {
+	public void createMessage(String Titulo, String mensagem) {
 		
         // Create a default MimeMessage object.
         message = new MimeMessage(session);
         MimeBodyPart messagePart = new MimeBodyPart(); 
+        
         try {
 	        // Set From: header field of the header.
 	        message.setFrom(new InternetAddress("ES2.iscte.84.2018@gmail.com"));
-	
-	
 	        // Set Subject: header field assunto
-	        message.setSubject(x);
+	        message.setSubject(Titulo);
 	        // Now set the actual message
-	        messagePart.setText(p);
+	        messagePart.setText(mensagem);
 	        multipart.addBodyPart(messagePart);
         }catch (MessagingException mex) {
         	mex.printStackTrace();
@@ -92,7 +99,6 @@ public class Email {
 			attachPart.setFileName(data.getName());
 			multipart.addBodyPart(attachPart);
 		} catch (MessagingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -107,6 +113,7 @@ public class Email {
 		}
 	}
 
+	
 
 
 }

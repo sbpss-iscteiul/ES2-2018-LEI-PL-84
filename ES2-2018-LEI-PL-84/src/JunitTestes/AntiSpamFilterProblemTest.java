@@ -1,4 +1,4 @@
-package antiSpamFilter;
+package JunitTestes;
 
 import static org.junit.Assert.*;
 
@@ -6,31 +6,28 @@ import org.junit.Test;
 import org.uma.jmetal.solution.DoubleSolution;
 import org.uma.jmetal.solution.Solution;
 
-public class GenericDoubleProblemTest {
+import antiSpamFilter.AntiSpamFilterProblem;
+
+public class AntiSpamFilterProblemTest {
 
 	@Test
 	public void constructerTest() {
-		GenericDoubleProblem dProblem = new GenericDoubleProblem(10, 2, 1, "ProblemaTeste", "C:\\Users\\Sergio-PC\\Desktop\\Universidade\\Semestre 2\\Engenharia de software II\\Projecto\\JarsTeste\\testeEvaluate.jar");
-		dProblem.setLimits(-5.0, 5.0);
-		assertEquals(10, dProblem.getNumberOfVariables());
+		AntiSpamFilterProblem dProblem = new AntiSpamFilterProblem();
+		assertEquals(335, dProblem.getNumberOfVariables());
 		assertEquals(2, dProblem.getNumberOfObjectives());
-		assertEquals(1, dProblem.getNumberOfConstraints());
-		assertEquals("ProblemaTeste", dProblem.getName());
-		assertEquals("C:\\Users\\Sergio-PC\\Desktop\\Universidade\\Semestre 2\\Engenharia de software II\\Projecto\\JarsTeste\\testeEvaluate.jar", dProblem.getPath());
+		assertEquals("AntiSpamFilterProblem", dProblem.getName());
 		assertEquals(""+(-5.0), ""+dProblem.getLowerBound(0).doubleValue());
 		assertEquals(""+(5.0), ""+dProblem.getUpperBound(0).doubleValue());
 	}
 	
 	@Test 
 	public void evaluateTest() {
-		GenericDoubleProblem dProblem = new GenericDoubleProblem(10, 2, 1, "ProblemaTeste", "C:\\Users\\Sergio-PC\\Desktop\\testeEvaluate.jar");
-		dProblem.setLimits(-5.0, 5.0);
+		AntiSpamFilterProblem dProblem = new AntiSpamFilterProblem();
 		DoubleSolution tmp = createDS();
 		dProblem.evaluate(tmp);
-		assertEquals(""+1.0, ""+tmp.getObjective(0));
-		assertEquals(""+2.0, ""+tmp.getObjective(1));
+		assertEquals(""+104.0, ""+tmp.getObjective(0));
+		assertEquals(""+0.0, ""+tmp.getObjective(1));
 	}
-	
 	
 	private DoubleSolution createDS() {
 		DoubleSolution tmp = new DoubleSolution() {
@@ -71,13 +68,13 @@ public class GenericDoubleProblemTest {
 			@Override
 			public String getVariableValueString(int index) {
 				// TODO Auto-generated method stub
-				return null;
+				return ""+0.5;
 			}
 			
 			@Override
 			public Double getVariableValue(int index) {
 				// TODO Auto-generated method stub
-				return null;
+				return 0.5;
 			}
 			
 			@Override
@@ -95,7 +92,7 @@ public class GenericDoubleProblemTest {
 			@Override
 			public int getNumberOfVariables() {
 				// TODO Auto-generated method stub
-				return 0;
+				return 335;
 			}
 			
 			@Override
@@ -119,15 +116,16 @@ public class GenericDoubleProblemTest {
 			@Override
 			public Double getUpperBound(int index) {
 				// TODO Auto-generated method stub
-				return null;
+				return 5.0;
 			}
 			
 			@Override
 			public Double getLowerBound(int index) {
 				// TODO Auto-generated method stub
-				return null;
+				return -5.0;
 			}
 		};
 		return tmp;
 	}
+
 }

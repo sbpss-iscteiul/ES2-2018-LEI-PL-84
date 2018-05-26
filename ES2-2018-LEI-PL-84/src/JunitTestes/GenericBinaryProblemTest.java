@@ -1,48 +1,50 @@
-package antiSpamFilter;
+package JunitTestes;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 import org.uma.jmetal.solution.BinarySolution;
-import org.uma.jmetal.solution.DoubleSolution;
-import org.uma.jmetal.solution.IntegerSolution;
 import org.uma.jmetal.solution.Solution;
+import org.uma.jmetal.util.binarySet.BinarySet;
 
-public class GenericIntegerProblemTest {
+import antiSpamFilter.GenericBinaryProblem;
+
+public class GenericBinaryProblemTest {
 
 	@Test
 	public void constructerTest() {
-		GenericIntegerProblem iProblem = new GenericIntegerProblem(10, 2, 1, "ProblemaTeste","C:\\Users\\Sergio-PC\\Desktop\\Universidade\\Semestre 2\\Engenharia de software II\\Projecto\\JarsTeste\\testeEvaluate.jar");
-		iProblem.setLimits(-5, 5);
-		assertEquals(10, iProblem.getNumberOfVariables());
-		assertEquals(2, iProblem.getNumberOfObjectives());
-		assertEquals(1, iProblem.getNumberOfConstraints());
-		assertEquals("ProblemaTeste", iProblem.getName());
-		assertEquals("C:\\Users\\Sergio-PC\\Desktop\\Universidade\\Semestre 2\\Engenharia de software II\\Projecto\\JarsTeste\\testeEvaluate.jar", iProblem.getPath());
-		assertEquals(""+(-5), ""+iProblem.getLowerBound(0).intValue());
-		assertEquals(""+(5), ""+iProblem.getUpperBound(0).intValue());
+		GenericBinaryProblem bProblem = new GenericBinaryProblem(10, 2, 1, "ProblemaTeste",500 ,"C:\\Users\\Sergio-PC\\Desktop\\Universidade\\Semestre 2\\Engenharia de software II\\Projecto\\JarsTeste\\testeEvaluate.jar");
+		BinarySolution solutionTeste = bProblem.createSolution();
+		assertEquals(10, bProblem.getNumberOfVariables());
+		assertEquals(2, bProblem.getNumberOfObjectives());
+		assertEquals(1, bProblem.getNumberOfConstraints());
+		assertEquals("ProblemaTeste", bProblem.getName());
+		assertEquals("C:\\Users\\Sergio-PC\\Desktop\\Universidade\\Semestre 2\\Engenharia de software II\\Projecto\\JarsTeste\\testeEvaluate.jar", bProblem.getPath());
+		assertEquals(500, bProblem.getNBits());
+		assertNotNull(solutionTeste);
 	}
 	
 	@Test
 	public void evaluateTest() {
-		GenericIntegerProblem iProblem = new GenericIntegerProblem(10, 2, 1, "ProblemaTeste","C:\\Users\\Sergio-PC\\Desktop\\testeEvaluate.jar");
-		iProblem.setLimits(-5, 5);
-		IntegerSolution tmp = createDS();
-		iProblem.evaluate(tmp);
+		GenericBinaryProblem bProblem = new GenericBinaryProblem(10, 2, 1, "ProblemaTeste",500 ,"C:\\Users\\Sergio-PC\\Desktop\\testeEvaluate.jar");
+		BinarySolution tmp = createDS();
+		bProblem.evaluate(tmp);
 		assertEquals(""+1.0, ""+tmp.getObjective(0));
 		assertEquals(""+2.0, ""+tmp.getObjective(1));
 	}
 	
-	private IntegerSolution createDS() {
-		IntegerSolution tmp = new IntegerSolution() {
+	private BinarySolution createDS() {
+		BinarySolution tmp = new BinarySolution() {
 			/**
 			 * 
 			 */
 			private static final long serialVersionUID = 1L;
 			private double obj1= 0.0;
 			private double obj2= 0.0;
+			
 			@Override
-			public void setVariableValue(int index, Integer value) {
+			public void setVariableValue(int index, BinarySet value) {
 				// TODO Auto-generated method stub
 				
 			}
@@ -59,8 +61,9 @@ public class GenericIntegerProblemTest {
 				default:
 					break;
 				}
+				
 			}
-			 
+			
 			@Override
 			public void setAttribute(Object id, Object value) {
 				// TODO Auto-generated method stub
@@ -74,9 +77,9 @@ public class GenericIntegerProblemTest {
 			}
 			
 			@Override
-			public Integer getVariableValue(int index) {
-				// TODO Auto-generated method stub
-				return null;
+			public BinarySet getVariableValue(int index) {
+				BinarySet set = new BinarySet(500);
+				return set;
 			}
 			
 			@Override
@@ -110,23 +113,24 @@ public class GenericIntegerProblemTest {
 			}
 			
 			@Override
-			public Solution<Integer> copy() {
+			public Solution<BinarySet> copy() {
 				// TODO Auto-generated method stub
 				return null;
 			}
 			
 			@Override
-			public Integer getUpperBound(int index) {
+			public int getTotalNumberOfBits() {
 				// TODO Auto-generated method stub
-				return null;
+				return 0;
 			}
 			
 			@Override
-			public Integer getLowerBound(int index) {
+			public int getNumberOfBits(int index) {
 				// TODO Auto-generated method stub
-				return null;
+				return 500;
 			}
 		};
-		return tmp;
+		return null; 
 	}
+
 }

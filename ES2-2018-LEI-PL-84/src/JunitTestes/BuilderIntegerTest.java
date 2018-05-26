@@ -1,4 +1,4 @@
-package antiSpamFilter;
+package JunitTestes;
 
 import static org.junit.Assert.*;
 
@@ -6,49 +6,53 @@ import java.util.List;
 
 import org.junit.Test;
 import org.uma.jmetal.algorithm.Algorithm;
-import org.uma.jmetal.problem.multiobjective.OneZeroMax;
+import org.uma.jmetal.problem.multiobjective.NMMin;
+import org.uma.jmetal.problem.multiobjective.zdt.ZDT1;
 import org.uma.jmetal.solution.BinarySolution;
 import org.uma.jmetal.solution.DoubleSolution;
+import org.uma.jmetal.solution.IntegerSolution;
 import org.uma.jmetal.util.experiment.util.ExperimentProblem;
 
-public class BuilderBinaryTest {
+import antiSpamFilter.BuilderInteger;
+
+public class BuilderIntegerTest {
 
 	@Test
 	public void maxEvaluationTest() {
-		BuilderBinary tmp = new BuilderBinary(100);
+		BuilderInteger tmp = new BuilderInteger(100);
 		assertEquals(100, tmp.getMaxEvaluations());
 	}
 	
 	@Test
 	public void setExperimentProblemTest() {
-		OneZeroMax problem = new OneZeroMax();
-		BuilderBinary tmp = new BuilderBinary(100);
+		NMMin problem = new NMMin();
+		BuilderInteger tmp = new BuilderInteger(100);
 		tmp.setExperimentProblem(new ExperimentProblem<>(problem));
 		assertEquals(problem, tmp.geExperimentProblem().getProblem());
 	}
 	
 	@Test
 	public void notNullAlgorithmNull() {
-		OneZeroMax problem = new OneZeroMax();
-		BuilderBinary builder = new BuilderBinary(250);
+		NMMin problem = new NMMin();
+		BuilderInteger builder = new BuilderInteger(250);
 		builder.setExperimentProblem(new ExperimentProblem<>(problem));
-		for (int i = 1; i <8 ; i++) {
-			Algorithm<List<BinarySolution>> algorithm = builder.getAlgorithm(i);
+		for (int i = 1; i <6 ; i++) {
+			Algorithm<List<IntegerSolution>> algorithm = builder.getAlgorithm(i);
 			assertNotNull(algorithm);
 		}
 	}
 	
 	@Test
 	public void nullAlgorithm() {
-		OneZeroMax problem = new OneZeroMax();
-		BuilderBinary builder = new BuilderBinary(250);
+		NMMin problem = new NMMin();
+		BuilderInteger builder = new BuilderInteger(250);
 		builder.setExperimentProblem(new ExperimentProblem<>(problem));
 		for (int i = 0; i <2 ; i++) {
 			if(i==0) {
-				Algorithm<List<BinarySolution>> algorithm = builder.getAlgorithm(i);
+				Algorithm<List<IntegerSolution>> algorithm = builder.getAlgorithm(i);
 				assertNull(algorithm);
 			}else {
-				Algorithm<List<BinarySolution>> algorithm = builder.getAlgorithm(i+8);
+				Algorithm<List<IntegerSolution>> algorithm = builder.getAlgorithm(i+8);
 				assertNull(algorithm);
 			}
 		}

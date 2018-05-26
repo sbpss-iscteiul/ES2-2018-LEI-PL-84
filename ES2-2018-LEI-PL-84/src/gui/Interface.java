@@ -8,11 +8,14 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.IOException;
 import java.lang.reflect.Array;
 import java.rmi.NoSuchObjectException;
 import java.util.ArrayList;
@@ -47,15 +50,17 @@ import javax.swing.event.TableModelListener;
 import javax.swing.plaf.synth.SynthSeparatorUI;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
-
+import org.jfree.ui.RefineryUtilities;
 import org.uma.jmetal.algorithm.Algorithm;
 import org.uma.jmetal.problem.IntegerProblem;
-
 import antiSpamFilter.BinaryProblemAutomaticConfiguration;
 import antiSpamFilter.DoubleProblemAutomaticConfiguration;
 import antiSpamFilter.GenericBinaryProblem;
 import antiSpamFilter.GenericDoubleProblem;
 import antiSpamFilter.GenericIntegerProblem;
+import antiSpamFilter.IntegerProblemAutomaticConfiguration;
+import extras.Email;
+import extras.GeradorDeGraficos;
 import antiSpamFilter.IntegerProblemAutomaticConfiguration;
 //import extras.Email;
 import extras.Parser;
@@ -302,11 +307,11 @@ public class Interface {
 						insertVar(name, tmpType, null, null, nrBits);
 				}
 				resTableModel.setRowCount(0);
-				for(int i=0; i<problem.getRestrictions().size()-1; i++) {
-					System.out.println(problem.getRestrictions().get(i).toString());
-					String name = problem.getRestrictions().get(i).getVarName();
-					String op = problem.getRestrictions().get(i).getOperation();
-					Object value = problem.getRestrictions().get(i).getValue();
+				for(Restriction a : problem.getRestrictions()) {
+					System.out.println(a.toString());
+					String name = a.getVarName();
+					String op = a.getOperation();
+					Object value = a.getValue();
 					insertRes(name, op, value);
 				}
 				for(String[] it : problem.getPaths()) {
@@ -408,10 +413,14 @@ public class Interface {
 				JList list = (JList) e.getSource();
 				int index = list.locationToIndex(e.getPoint());
 				CheckBoxItem item = (CheckBoxItem) list.getModel().getElementAt(index);
-				if(!item.isSelected())
+				if(!item.isSelected()) {
 					checkedAlgorithmsInt.add(/*item.getName()*/index+1);
-				else
+					checkedAlgorithms.add(item.getName());
+				}
+				else {
 					checkedAlgorithmsInt.remove(/*item.getName()*/index+1);
+				checkedAlgorithms.remove(item.getName());
+				}
 			}
 		});
 	}
@@ -420,23 +429,37 @@ public class Interface {
 		runButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-//				Email email= new Email();
-//				String mensagem= new String("Muito obrigado por usar esta plataforma de otimizaï¿½ï¿½o. Serï¿½ informado por email sobre o progresso do processo de otimizaï¿½ï¿½o, quando o processo de otimizaï¿½ï¿½o tiver atingido 25%, 50%, 75% do total do (nï¿½mero de avaliaï¿½ï¿½es ou) tempo estimado, e tambï¿½m quando o processo tiver terminado, com sucesso ou devido ï¿½ ocorrï¿½ncia de erros.");
-//				email.createMessage("Optimizaï¿½ï¿½o em curso:" + nameText.getText() + " " + Calendar.getInstance().getTime() , mensagem);
-//				String to=emailField.getText();
-//				if(to.isEmpty()) {
-//					System.out.println("o email nï¿½o foi preenchido");
-//					JOptionPane.showMessageDialog(new JPanel(),"o email nï¿½o foi preenchido","Erro mail", JOptionPane.ERROR_MESSAGE);
-//				}else {
-//					email.adddestination(to);
-//					//inserir o mail do admin em vez do raoma
-//					email.CC("raoma@iscte-iul.pt");
-//					String file=new String(path);
-//					email.anexo(file);
-//					email.send();
-//				}
-				
-				runAlgorithm();
+
+				//Email
+				Email email= new Email();
+				String mensagem= new String("Muito obrigado por usar esta plataforma de otimização. Será informado por email sobre o progresso do processo de otimização, quando o processo de otimização tiver atingido 25%, 50%, 75% do total do (número de avaliações ou) tempo estimado, e também quando o processo tiver terminado, com sucesso ou devido à ocorrência de erros.");
+				email.createMessage("Optimização em curso:" + nameText.getText() + " " + Calendar.getInstance().getTime() , mensagem);
+				String to=emailField.getText();
+				if(to.isEmpty()) {
+					System.out.println("o email não foi preenchido");
+					JOptionPane.showMessageDialog(new JPanel(),"o email não foi preenchido","Erro mail", JOptionPane.ERROR_MESSAGE);
+				}else {
+					email.adddestination(to);
+					//inserir o mail do admin em vez do raoma
+					email.CC("raoma@iscte-iul.pt");
+					String file=new String(path);
+					email.anexo(file);
+					email.send();
+					
+					runAlgorithm();
+					
+					//Grafico		        
+					GeradorDeGraficos demo;
+					try {
+						//Alterar o nome do ficheiro
+						demo = new GeradorDeGraficos("Soluções ótimas geradas pelo processo de otimização","BEST_HV_FUN");
+						demo.pack();
+				        RefineryUtilities.positionFrameOnScreen(demo, 0.95, 0.2);
+				        demo.setVisible(true);
+					} catch (IOException e) {
+						e.printStackTrace(); 
+					}		
+				}				
 			}
 		});
 
@@ -462,9 +485,8 @@ public class Interface {
 		FAQButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-//				createFAQFrame();
-				for(Variable v : varList)
-					System.out.println(v.toString());
+//				createFAQFrame()
+					
 			}
 		});
 
@@ -476,7 +498,6 @@ public class Interface {
 				path= load.getSelectedFile().getAbsolutePath();
 				Problem problem = Parser.read_XML(load.getSelectedFile().toString());
 				loadProblem(problem);
-				//limitations
 				
 				
 			}
@@ -702,7 +723,7 @@ public class Interface {
 				e.printStackTrace();
 			}
 		}else if (binaryBox.isSelected()) {
-			/*500 refere-se ao numero de bits que é fixo, mas nao deveria ser teoricamente*/
+			/*500 refere-se ao numero de bits que ï¿½ fixo, mas nao deveria ser teoricamente*/
 			GenericBinaryProblem x = new GenericBinaryProblem(nVar, nObj, nConst, probName,500,(String)critTableModel.getValueAt(0, 1));
 			GenericBinaryProblem[] args = {x};
 			try {

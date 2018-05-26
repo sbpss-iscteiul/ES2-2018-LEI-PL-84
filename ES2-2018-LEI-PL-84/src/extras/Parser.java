@@ -337,5 +337,34 @@ public class Parser {
 	 * Adicionar atributo nome ao elemento Path
 	 * 
 	 * */
-	
+
+	public Element getVariables() {
+		return variables;
+	}
+
+	public Element getPaths() {
+		return paths;
+	}
+
+
+	public Element getEmails() {
+		return emails;
+	}
+
+	public Element getDescriptions() {
+		return descriptions;
+	}
+
+	public Element getAlgorithms() {
+		return algorithms;
+	}
+
+	public Element getWaiting_times() {
+		return waiting_times;
+	}
+
+	public Element getName() {
+		return name;
+	}
+
 }
