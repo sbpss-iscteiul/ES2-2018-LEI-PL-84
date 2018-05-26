@@ -302,11 +302,11 @@ public class Interface {
 						insertVar(name, tmpType, null, null, nrBits);
 				}
 				resTableModel.setRowCount(0);
-				for(int i=0; i<problem.getRestrictions().size()-1; i++) {
-					System.out.println(problem.getRestrictions().get(i).toString());
-					String name = problem.getRestrictions().get(i).getVarName();
-					String op = problem.getRestrictions().get(i).getOperation();
-					Object value = problem.getRestrictions().get(i).getValue();
+				for(Restriction a : problem.getRestrictions()) {
+					System.out.println(a.toString());
+					String name = a.getVarName();
+					String op = a.getOperation();
+					Object value = a.getValue();
 					insertRes(name, op, value);
 				}
 				for(String[] it : problem.getPaths()) {
@@ -408,10 +408,14 @@ public class Interface {
 				JList list = (JList) e.getSource();
 				int index = list.locationToIndex(e.getPoint());
 				CheckBoxItem item = (CheckBoxItem) list.getModel().getElementAt(index);
-				if(!item.isSelected())
+				if(!item.isSelected()) {
 					checkedAlgorithmsInt.add(/*item.getName()*/index+1);
-				else
+					checkedAlgorithms.add(item.getName());
+				}
+				else {
 					checkedAlgorithmsInt.remove(/*item.getName()*/index+1);
+				checkedAlgorithms.remove(item.getName());
+				}
 			}
 		});
 	}
@@ -462,9 +466,8 @@ public class Interface {
 		FAQButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-//				createFAQFrame();
-				for(Variable v : varList)
-					System.out.println(v.toString());
+//				createFAQFrame()
+					
 			}
 		});
 
@@ -476,7 +479,6 @@ public class Interface {
 				path= load.getSelectedFile().getAbsolutePath();
 				Problem problem = Parser.read_XML(load.getSelectedFile().toString());
 				loadProblem(problem);
-				//limitations
 				
 				
 			}
@@ -702,7 +704,7 @@ public class Interface {
 				e.printStackTrace();
 			}
 		}else if (binaryBox.isSelected()) {
-			/*500 refere-se ao numero de bits que é fixo, mas nao deveria ser teoricamente*/
+			/*500 refere-se ao numero de bits que ï¿½ fixo, mas nao deveria ser teoricamente*/
 			GenericBinaryProblem x = new GenericBinaryProblem(nVar, nObj, nConst, probName,500,(String)critTableModel.getValueAt(0, 1));
 			GenericBinaryProblem[] args = {x};
 			try {
