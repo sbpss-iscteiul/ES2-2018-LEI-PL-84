@@ -149,7 +149,7 @@ public class Parser {
 			Limitations.appendChild(value);
 	}
 	
-	public void addVariables(String Name, String Type, String LimInf, String LimSup) {
+	public void addVariables(String Name, String Type, String LimInf, String LimSup, String NrBits) {
 		Element variable = doc.createElement("Variavel");
 		variable.setAttribute("id", ""+variable_count);
 		variables.appendChild(variable);
@@ -169,6 +169,10 @@ public class Parser {
 			Element limSup = doc.createElement("Limite_Superior");
 			limSup.appendChild(doc.createTextNode(""+LimSup));
 			variable.appendChild(limSup);
+			
+			Element nrBits = doc.createElement("Numero_Bits");
+			nrBits.appendChild(doc.createTextNode(""+NrBits));
+			variable.appendChild(nrBits);
 			
 		variable_count++;
 	}
@@ -246,7 +250,7 @@ public class Parser {
 					}
 					else if(node2.getNodeName().equals("Variavel")) {
 						NodeList nList =node2.getChildNodes();
-						Variable variable = new Variable(null, null, null, null);
+						Variable variable = new Variable(null, null, null, null, 0);
 						for(int i3=0;i3<nList.getLength();i3++) {
 							if(nList.item(i3).getNodeName().equals("Name")){
 								variable.setName(nList.item(i3).getTextContent());
@@ -257,8 +261,11 @@ public class Parser {
 							else if(nList.item(i3).getNodeName().equals("Limite_Superior")){
 								variable.setMaxValue(nList.item(i3).getTextContent());
 							}
-							else if(nList.item(i3).getNodeName().equals("Limite_Inferior")){
+							else if(nList.item(i3).getNodeName().equals("Limite_Inferior")){ 
 								variable.setMinValue(nList.item(i3).getTextContent());
+							}
+							else if(nList.item(i3).getNodeName().equals("Numero_Bits")){ 
+								variable.setNumberBits(Integer.parseInt(nList.item(i3).getTextContent()));
 							}
 						}						
 						problem.getVars().add(variable);

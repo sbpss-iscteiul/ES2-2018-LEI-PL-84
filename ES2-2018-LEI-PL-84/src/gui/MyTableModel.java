@@ -1,17 +1,18 @@
 package gui;
 
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 public class MyTableModel extends DefaultTableModel{
-	
+
+	private static final long serialVersionUID = 1L;
 	private Class dataType;
-	private boolean celldEditable;
+	private boolean intervalCelldEditable;
+	private boolean bitsCelldEditable;
 	
 	public MyTableModel(Object[][] rowNames, Object columnNames[]) {
 		super(rowNames, columnNames);
-		celldEditable = true;
+		intervalCelldEditable = true;
+		bitsCelldEditable = true;
 	}	
 
 	@Override
@@ -22,6 +23,7 @@ public class MyTableModel extends DefaultTableModel{
 				case 1: return String.class;
 				case 2: return dataType; 
 				case 3: return dataType;
+				case 4: return Integer.class;
 				default: return String.class;
 			}
 		else return String.class;
@@ -30,8 +32,9 @@ public class MyTableModel extends DefaultTableModel{
 	@Override
 	public boolean isCellEditable(int row, int column) {
 		switch(column) {
-		case 2: return celldEditable;
-		case 3: return celldEditable;
+		case 2: return intervalCelldEditable;
+		case 3: return intervalCelldEditable;
+		case 4: return bitsCelldEditable;
 		default: return true;
 		}
 	}
@@ -44,11 +47,18 @@ public class MyTableModel extends DefaultTableModel{
 		this.dataType = type;
 	}
 
-	public void setCellEditable(boolean e) {
-		this.celldEditable = e;
+	public void setIntervalCellEditable(boolean e) {
+		this.intervalCelldEditable = e;
 	}
-	public boolean getCellEditable() {
-		return celldEditable;
+	public boolean isIntervalCellEditable() {
+		return intervalCelldEditable;
+	}
+	
+	public void setBitsCellEditable(boolean e) {
+		this.bitsCelldEditable = e;
+	}
+	public boolean isBitsCellEditable() {
+		return bitsCelldEditable;
 	}
 	
 }

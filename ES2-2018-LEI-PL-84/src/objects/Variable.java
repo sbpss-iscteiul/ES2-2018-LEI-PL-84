@@ -6,15 +6,14 @@ public class Variable {
 	private String type;
 	private Object minValue;
 	private Object maxValue;
+	private int nrBits;
 	
-	public Variable(String name, String type, Object minValue, Object maxValue) {
+	public Variable(String name, String type, Object minValue, Object maxValue, int nrBits) {
 		this.name = name;
 		this.type = type;
 		this.minValue = minValue;
 		this.maxValue = maxValue;
-	}
-	public Variable() {
-		
+		this.nrBits = nrBits;
 	}
 	
 	public String getName() {
@@ -48,9 +47,16 @@ public class Variable {
 	public void setMaxValue(Object maxValue) {
 		this.maxValue = maxValue;
 	}
+	public void setNumberBits(int n) {
+		this.nrBits = n;
+	}
+	public int getNumberBits() {
+		return nrBits;
+	}
+	
 	
 	@Override
 	public String toString() {
-		return "Variable [name=" + name + ", type=" + type + ", minValue=" + minValue + ", maxValue=" + maxValue + "]";
+		return "Variable [name=" + name + ", type=" + type + ", minValue=" + minValue + ", maxValue=" + maxValue + ", nrBits="+nrBits+"]";
 	}
 }

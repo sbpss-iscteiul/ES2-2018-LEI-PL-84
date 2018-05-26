@@ -61,6 +61,8 @@ import antiSpamFilter.GenericIntegerProblem;
 import antiSpamFilter.IntegerProblemAutomaticConfiguration;
 import extras.Email;
 import extras.GeradorDeGraficos;
+import antiSpamFilter.IntegerProblemAutomaticConfiguration;
+//import extras.Email;
 import extras.Parser;
 import objects.Problem;
 import objects.Restriction;
@@ -102,8 +104,6 @@ public class Interface {
 	private JButton addResButton;
 	private JButton deleteResButton;
 	private JScrollPane critPane;
-	private JTextField maxTimeField;
-	private JTextField maxVarField;
 	private String path;
 	private ArrayList<Variable> varList;
 	private JList<CheckBoxItem> algorithmList;
@@ -120,6 +120,14 @@ public class Interface {
 	private String varType = "Integer";
 	
 	public Interface() {
+		initAttributes();
+		initAlgorithmLists();
+		addCheckListeners();
+		setAlgorithmList();
+		addListeners();
+	}
+	
+	public void initAttributes() {
 		frame = new JFrame("ES2 Project");
 		screenResolution = Toolkit.getDefaultToolkit().getScreenSize();
 		tabs = new JTabbedPane();
@@ -134,10 +142,10 @@ public class Interface {
 		deleteResButton = new JButton("Delete Restriction");
 		addCritButton = new JButton("Add Criterium");
 		deleteCritButton = new JButton("Delete Criterium");
-		varTableModel = new MyTableModel(new Object[][] {}, new Object[] {"Name","Type", "Minimum Value", "Maximum Value"});
+		varTableModel = new MyTableModel(new Object[][] {}, new Object[] {"Name","Type", "Minimum Value", "Maximum Value", "Number of Bits"});
 		critTableModel = new DefaultTableModel(new Object[][] {}, new Object[] {"Name","PATH"});
 		varTable = new JTable(varTableModel);
-		insertVar("tmp_2018_var_a_b_c", "Integer", 0, 0);
+		insertVar("tmp_2018_var_a_b_c", "Integer", 0, 0, 0);
 		varTableModel.removeRow(0);
 		resTableModel = new MyTableModel(new Object[][] {},  new Object[] {"Variable", "Operation", "Value"});
 		resTable = new JTable(resTableModel);
@@ -154,16 +162,12 @@ public class Interface {
 		checkedAlgorithmsInt = new ArrayList<Integer>();
 		algorithmPane = new JScrollPane(algorithmList);
 		checkedAlgorithms = new ArrayList<String>();
-		initAlgorithmLists();
-		addCheckListeners();
-		setAlgorithmList();
-		addListeners();
 	}
 	
 	public void open() {
 		frame.setLayout(new BorderLayout());
 		addContent();
-		frame.setSize((int)screenResolution.getWidth()/2+200, (int)screenResolution.getHeight()-50);
+		frame.setSize((int)screenResolution.getWidth()/2+100, (int)screenResolution.getHeight()/2+300);
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
@@ -171,7 +175,6 @@ public class Interface {
 
 	public void addContent() {
 		addNorthPanel();
-		frame.add(northPanel, BorderLayout.NORTH);
 		addProblemPanel();
 		addConfigPanel();
 		tabs.addTab("Problema", problemPanel);
@@ -197,6 +200,7 @@ public class Interface {
 		northPanel.add(northLeftPanel, BorderLayout.WEST);
 		northPanel.add(northRightPanel, BorderLayout.EAST);
 		northPanel.add(northRightPanel, BorderLayout.WEST);
+		frame.add(northPanel, BorderLayout.NORTH);
 	}
 	
 	public void addProblemPanel() {
@@ -221,14 +225,9 @@ public class Interface {
 		problemDescPanel.add(descText);
 		problemPanel.add(problemDescPanel);
 	}
-
 	
 	public void addConfigPanel() {
-		JPanel leftConfigPanel = new JPanel(new GridLayout(6,1));
-		leftConfigPanel.setBorder(border);
-		JPanel rightConfigPanel = new JPanel(new BorderLayout());
-		rightConfigPanel.setBorder(border);		
-		JPanel optionsPanel = new JPanel(new FlowLayout());
+		JPanel ConfigPanel = new JPanel(new GridLayout(5,1));
 		/////////////// ALGORITHMS /////////////////
 		JPanel algorithmsPanel = new JPanel(new BorderLayout());
 		JPanel algTypePanel = new JPanel(new FlowLayout());
@@ -270,20 +269,12 @@ public class Interface {
 		resOptionPanel.add(deleteResButton);
 		resPanel.add(resOptionPanel, BorderLayout.EAST);
 		resPanel.add(resPane);
-		optionsPanel.add(new JLabel("Max. Time"));
-		maxTimeField = new JTextField("",5);
-		optionsPanel.add(maxTimeField);
-		optionsPanel.add(new JLabel("Max. Variables"));
-		maxVarField = new JTextField("",5);
-		optionsPanel.add(maxVarField);
-		leftConfigPanel.add(optionsPanel);
-		leftConfigPanel.add(algTypePanel);
-		leftConfigPanel.add(algorithmsPanel);
-		leftConfigPanel.add(varTablePanel);
-		leftConfigPanel.add(resPanel);
-		leftConfigPanel.add(critPanel);
-		configPanel.add(leftConfigPanel, BorderLayout.WEST);
-		configPanel.add(rightConfigPanel, BorderLayout.EAST);
+		ConfigPanel.add(algTypePanel);
+		ConfigPanel.add(algorithmsPanel);
+		ConfigPanel.add(varTablePanel);
+		ConfigPanel.add(resPanel);
+		ConfigPanel.add(critPanel);
+		configPanel.add(ConfigPanel);
 	}
 	
 	public void loadProblem(Problem problem) {
@@ -293,24 +284,27 @@ public class Interface {
 				nameText.setText(problem.getProblemName());
 				emailField.setText(problem.getEmail());
 				descText.setText(problem.getDescription());
-				maxTimeField.setText(problem.getTempoDeEspera());
-//				maxVarField.setText(String.valueOf(problem.getVars().size()));
 				varTableModel.setRowCount(0);
-				if(problem.getVars().get(0).getType().equals("Integer")) {
+				String type = problem.getVars().get(0).getType();
+				if(type.equals("Integer")) {
 					intBox.doClick();
 				}
-				else if(problem.getVars().get(0).getType().equals("Double")) {
+				else if(type.equals("Double")) {
 					doubleBox.doClick();	
 				}
-				else if(problem.getVars().get(0).getType().equals("Binary")) {	
+				else if(type.equals("Binary")) {	
 					binaryBox.doClick();
 				}
 				for(int i=0; i<problem.getVars().size(); i++) {
 					String name = problem.getVars().get(i).getName();
-					String type = problem.getVars().get(i).getType();
+					String tmpType = problem.getVars().get(i).getType();
 					Object minValue = problem.getVars().get(i).getMinValue();
 					Object maxValue = problem.getVars().get(i).getMaxValue();
-					insertVar(name, type, minValue, maxValue);
+					int nrBits = problem.getVars().get(i).getNumberBits();
+					if(tmpType.equals("Integer") || tmpType.equals("Decimal"))
+						insertVar(name, tmpType, minValue, maxValue, 0);
+					else
+						insertVar(name, tmpType, null, null, nrBits);
 				}
 				resTableModel.setRowCount(0);
 				for(int i=0; i<problem.getRestrictions().size()-1; i++) {
@@ -351,6 +345,9 @@ public class Interface {
 					doubleBox.setEnabled(false);
 					binaryBox.setEnabled(false);
 				}else {
+					varTable.clearSelection();
+					varTableModel.setRowCount(0);
+					varList.clear();
 					doubleBox.setEnabled(true);
 					binaryBox.setEnabled(true);
 				}
@@ -372,6 +369,9 @@ public class Interface {
 					intBox.setEnabled(false);
 					binaryBox.setEnabled(false);
 				}else {
+					varTable.clearSelection();
+					varTableModel.setRowCount(0);
+					varList.clear();
 					intBox.setEnabled(true);
 					binaryBox.setEnabled(true);
 				}
@@ -389,10 +389,13 @@ public class Interface {
 					varTable.clearSelection();
 					varTableModel.setRowCount(0);
 					varList.clear();
-					varType ="String";
+					varType ="Integer";
 					intBox.setEnabled(false);
 					doubleBox.setEnabled(false);
 				}else {
+					varTable.clearSelection();
+					varTableModel.setRowCount(0);
+					varList.clear();
 					intBox.setEnabled(true);
 					doubleBox.setEnabled(true);
 				}
@@ -468,11 +471,11 @@ public class Interface {
 		Send.addActionListener(new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			Email email= new Email();
-			email.createMessage(nameText.getText(),descText.getText());
-			//inserir o mail do admin em vez do raoma
-			email.adddestination("raoma@iscte-iul.pt");
-			email.send();
+//			Email email= new Email();
+//			email.createMessage(nameText.getText(),descText.getText());
+//			//inserir o mail do admin em vez do raoma
+//			email.adddestination("raoma@iscte-iul.pt");
+//			email.send();
 		}
 	});
 		
@@ -480,7 +483,8 @@ public class Interface {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 //				createFAQFrame();
-				getIntervals();
+				for(Variable v : varList)
+					System.out.println(v.toString());
 			}
 		});
 
@@ -511,12 +515,9 @@ public class Interface {
 					if(!descText.getText().isEmpty()) {
 						parser.addDescription(descText.getText());
 					}
-					if(!maxTimeField.getText().isEmpty()) {
-						parser.addWaitingTime(maxTimeField.getText());
-					}
 					if(varTableModel.getRowCount()>0) {
 						for(Variable v : varList) {
-							parser.addVariables(v.getName(), v.getType(), ""+v.getMinValue(), ""+v.getMaxValue());
+							parser.addVariables(v.getName(), v.getType(), ""+v.getMinValue(), ""+v.getMaxValue(), ""+v.getNumberBits());
 						}
 					}
 					if(resTableModel.getRowCount()>0) {
@@ -555,15 +556,16 @@ public class Interface {
 				varTable.clearSelection();
 				if(intBox.isSelected()) {
 					varType = "Integer";
-					varTableModel.setCellEditable(true);
+					varTableModel.setIntervalCellEditable(true);
+					varTableModel.setBitsCellEditable(false);
 				}else if(doubleBox.isSelected()) {
 					varType = "Double";
-					varTableModel.setCellEditable(true);
+					varTableModel.setIntervalCellEditable(true);
+					varTableModel.setBitsCellEditable(false);
 				}else if(binaryBox.isSelected()){
 					varType = "Binary";
-					varTableModel.setCellEditable(false);
-					varTableModel.isCellEditable(0, 2);
-					varTableModel.isCellEditable(0, 3);
+					varTableModel.setIntervalCellEditable(false);
+					varTableModel.setBitsCellEditable(true);
 				}
 					
 				varTableModel.addRow(new Object[] {null, varType, null, null});
@@ -659,7 +661,13 @@ public class Interface {
 							int index = varTable.getSelectedRow();
 							if(varList.size()-1 >= index)
 								varList.get(index).setMaxValue(value);
-						}						
+						}	
+						if(varTable.getSelectedColumn() == 4) {
+							int value = (int) varTable.getValueAt(varTable.getSelectedRow(), varTable.getSelectedColumn());
+							int index = varTable.getSelectedRow();
+							if(varList.size()-1 >= index)
+								varList.get(index).setNumberBits(value);
+						}	
 					}
 				}
 				varBox.removeAllItems();
@@ -673,22 +681,11 @@ public class Interface {
 			public void tableChanged(TableModelEvent e) {
 				for(int i=0; i<varTable.getRowCount(); i++) {
 					if(resTable.getSelectedRow()!=-1) {
-//					if(!resTable.getValueAt(resTable.getSelectedRow(), 0).equals(null)) {
 					try {
-							if(resTable.getValueAt(resTable.getSelectedRow(), 0).equals(varTable.getValueAt(i, 0))) {
-								resTableModel.setCellDataType(varTableModel.getDataType());
-								resTableModel.getColumnClass(2);
-//								if(varType.equals("Integer")) {
-//									resTableModel.setCellDataType(Integer.class);
-//									resTableModel.getColumnClass(2);
-//								}else if(varType.equals("Decimal")) {
-//									resTableModel.setCellDataType(Double.class);
-//									resTableModel.getColumnClass(2);
-//								}else if(varType.equals("Binary")){
-//									resTableModel.setCellDataType(String.class);
-//									resTableModel.getColumnClass(2);
-//								}
-							}
+						if(resTable.getValueAt(resTable.getSelectedRow(), 0).equals(varTable.getValueAt(i, 0))) {
+							resTableModel.setCellDataType(varTableModel.getDataType());
+							resTableModel.getColumnClass(2);
+						}
 					}catch(NullPointerException e2) {
 						JOptionPane.showMessageDialog(frame, "Warning: Choose a variable!");
 					}
@@ -852,7 +849,7 @@ public class Interface {
 	}
 	
 	public Variable getVariable(int row) {
-		Variable var = new Variable(varTableModel.getValueAt(row, 0).toString(), varTableModel.getValueAt(row, 1).toString(), varTableModel.getValueAt(row, 2), varTableModel.getValueAt(row, 3));
+		Variable var = new Variable(varTableModel.getValueAt(row, 0).toString(), varTableModel.getValueAt(row, 1).toString(), varTableModel.getValueAt(row, 2), varTableModel.getValueAt(row, 3), (int) varTableModel.getValueAt(row, 4));
 		return var;
 	}
 	public Restriction getRestriction(int row) {
@@ -860,7 +857,7 @@ public class Interface {
 		return res;
 	}
 	
-	public void insertVar(String name, String type, Object minValue, Object maxValue) {
+	public void insertVar(String name, String type, Object minValue, Object maxValue, int nrBits) {
 		varTableModel.addRow(new Object[] {});
 		varTable.setValueAt(name, varTable.getRowCount()-1, 0);
 		varTable.setValueAt(type, varTable.getRowCount()-1, 1);
@@ -871,15 +868,18 @@ public class Interface {
 		else if(type.equals("Decimal")) {
 			tmp=Double.class;
 		}
-		else {
-			tmp=String.class;
+		else if(type.equals("Binary")){
+			tmp=Integer.class;
 		}
 		
 		varTableModel.setCellDataType(tmp);
 		varTableModel.getColumnClass(2);
 		varTableModel.getColumnClass(3);
-		varTable.setValueAt(minValue, varTable.getRowCount()-1, 2);
-		varTable.setValueAt(maxValue, varTable.getRowCount()-1, 3);
+		if(type.equals("Integer") || type.equals("Decimal")) {
+			varTable.setValueAt(minValue, varTable.getRowCount()-1, 2);
+			varTable.setValueAt(maxValue, varTable.getRowCount()-1, 3);
+		}else if(type.equals("Binary"))
+			varTable.setValueAt(nrBits, varTable.getRowCount()-1, 4);
 	}
 	
 	public void insertRes(String name, String op, Object value) {
@@ -905,7 +905,7 @@ public class Interface {
 	}
 	
 	private void addVariableToList(String varName, String type) {
-		Variable var = new Variable(varName, type, null, null);
+		Variable var = new Variable(varName, type, null, null, 0);
 		if(varList.isEmpty())
 			varList.add(var);
 		else {
