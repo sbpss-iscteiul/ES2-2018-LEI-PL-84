@@ -18,7 +18,7 @@ public class GenericDoubleProblem extends AbstractDoubleProblem implements Const
 	 */
 	private static final long serialVersionUID = 1L;
 	private String pathName;
-
+ 
 
 	public GenericDoubleProblem(int numberOfVariables,int numberOfObjectives,int numberOfConstraints,String problemName,String Path) {
 	    setNumberOfVariables(numberOfVariables);
@@ -36,7 +36,6 @@ public class GenericDoubleProblem extends AbstractDoubleProblem implements Const
 	      lowerLimit.add(lLimit);
 	      upperLimit.add(uLimit);
 	    }
-
 	    setLowerLimit(lowerLimit);
 	    setUpperLimit(upperLimit);
 	}
@@ -55,9 +54,9 @@ public class GenericDoubleProblem extends AbstractDoubleProblem implements Const
 			} else {
 				cenas += " "+solution.getVariableValue(i);
 			}
-		  }
+		  } 
 		  /*chamar o jar dando a String como atributo*/
-		  try {
+		  try { 
 			  ArrayList<String> x = JARexec.runJAR(this.pathName, cenas, getNumberOfObjectives());
 			  for (int i = 0; i < getNumberOfObjectives(); i++) {
 				  solution.setObjective(i, Double.parseDouble(x.get(i)));
@@ -72,6 +71,10 @@ public class GenericDoubleProblem extends AbstractDoubleProblem implements Const
 	@Override
 	public void evaluateConstraints(DoubleSolution solution) {
 		
+	}
+
+	public String getPath() {
+		return this.pathName;
 	}
 
 }

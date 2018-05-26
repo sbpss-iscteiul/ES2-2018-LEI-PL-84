@@ -73,6 +73,10 @@ public class GenericIntegerProblem extends AbstractIntegerProblem implements Con
 		// TODO Auto-generated method stub
 		
 	}
+	
+	public String getPath() {
+		return this.pathName;
+	}
 
 
 }

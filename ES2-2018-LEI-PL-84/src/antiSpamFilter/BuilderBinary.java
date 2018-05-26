@@ -30,33 +30,32 @@ public class BuilderBinary {
 	}
 
 	public Algorithm<List<BinarySolution>> getAlgorithm(int i) {
-		if(i>0&&i<8) {
-			Algorithm<List<BinarySolution>> algorithm=null;
-			switch (i) {
-			case 1:
-				algorithm = getter_NSGAII();
-				return algorithm;
-			case 2:	
-				algorithm = getter_SMSEMOA() ;
-				return algorithm;
-			case 3:
-				algorithm = getter_MOCell();
-				return algorithm;
-			case 4:
-				algorithm = getter_MOCH();
-				return algorithm;
-			case 5:
-				algorithm = getter_PAES();
-				return algorithm;
-			case 6:
-				algorithm = getter_RandomSearch();
-				return algorithm;
-			case 7:
-				algorithm = getter_SPEA2() ;
-				return algorithm;
-			}	
+		Algorithm<List<BinarySolution>> algorithm=null;
+		switch (i) {
+		case 1:
+			algorithm = getter_NSGAII();
+			return algorithm;
+		case 2:	
+			algorithm = getter_SMSEMOA() ;
+			return algorithm;
+		case 3:
+			algorithm = getter_MOCell();
+			return algorithm;
+		case 4:
+			algorithm = getter_MOCH();
+			return algorithm;
+		case 5:
+			algorithm = getter_PAES();
+			return algorithm;
+		case 6:
+			algorithm = getter_RandomSearch();
+			return algorithm;
+		case 7:
+			algorithm = getter_SPEA2() ;
+			return algorithm;
+		default:
+			return null;
 		}
-		return null;
 	}
 	
 	public void setExperimentProblem(ExperimentProblem<BinarySolution> eP) {
@@ -132,5 +131,13 @@ public class BuilderBinary {
 	             .setPopulationSize(100)
 	             .build();
 		return algorithm;
+	}
+
+	public ExperimentProblem<BinarySolution> geExperimentProblem() {
+		return this.experimentProblem;
+	}
+
+	public int getMaxEvaluations() {
+		return this.maxEvaluations;
 	}
 }

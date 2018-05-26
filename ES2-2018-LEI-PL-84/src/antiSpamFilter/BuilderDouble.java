@@ -28,36 +28,35 @@ public class BuilderDouble {
 	}
 	
 	public Algorithm<List<DoubleSolution>> getAlgorithm(int i) {
-		if(i>0&&i<9) {
-			Algorithm<List<DoubleSolution>> algorithm=null;
-			switch (i) {
-			case 1:
-				algorithm = getter_NSGAII();
-				return algorithm;
-			case 2:	
-				algorithm = getter_SMSEMOA() ;
-				return algorithm;
-			case 3:
-				algorithm = getter_GDE3();
-				return algorithm;
-			case 4:
-				algorithm = getter_IBEA();
-				return algorithm;
-			case 5:
-				algorithm = getter_MOCell();
-				return algorithm;
-			case 6:
-				algorithm = getter_MOEAD();
-				return algorithm;
-			case 7:
-				algorithm = getter_PAES() ;
-				return algorithm;
-			case 8:
-				algorithm = getter_RandomSearch() ;
-				return algorithm;
-			}	
-		}
-		return null;
+		Algorithm<List<DoubleSolution>> algorithm=null;
+		switch (i) {
+		case 1:
+			algorithm = getter_NSGAII();
+			return algorithm;
+		case 2:	
+			algorithm = getter_SMSEMOA() ;
+			return algorithm;
+		case 3:
+			algorithm = getter_GDE3();
+			return algorithm;
+		case 4:
+			algorithm = getter_IBEA();
+			return algorithm;
+		case 5:
+			algorithm = getter_MOCell();
+			return algorithm;
+		case 6:
+			algorithm = getter_MOEAD();
+			return algorithm;
+		case 7:
+			algorithm = getter_PAES() ;
+			return algorithm;
+		case 8:
+			algorithm = getter_RandomSearch() ;
+			return algorithm;
+		default:
+			return null;
+		}	
 	}
 
 	public void setExperimentProblem(ExperimentProblem<DoubleSolution> eP) {
@@ -136,5 +135,13 @@ public class BuilderDouble {
 	              .setPopulationSize(100)
 	              .build();
 		return algorithm;
+	}
+	
+	public int getMaxEvaluations() {
+		return this.maxEvaluations;
+	}
+
+	public ExperimentProblem<DoubleSolution> geExperimentProblem(){
+		return this.experimentProblem;
 	}
 }
