@@ -23,37 +23,35 @@ import org.jfree.ui.RefineryUtilities;
 public class GeradorDeGraficos extends ApplicationFrame {
 
     private static final long serialVersionUID = 1L;
-    XYSeriesCollection dataset;
-    JFreeChart chart;
-    final ChartPanel chartPanel;
-    final int chartWidth = 560;
-    final int chartHeight = 400;;
-    XYSeries series;
-    String alg;
-    int x;
+    private XYSeriesCollection dataset;
+    private JFreeChart chart;
+    private final ChartPanel chartPanel;
+    private final int chartWidth = 560;
+    private final int chartHeight = 400;;
+    private XYSeries series;
+    private String alg;
+    private int x;
     
     public String getAlg() {
 		return alg;
 	}
 
-    public GeradorDeGraficos(String applicationTitle, String algoritmo) throws IOException {
+    public GeradorDeGraficos(String applicationTitle, String algoritmo,String Path) throws IOException {
         super(applicationTitle);
         this.alg=algoritmo;
-        dataset = createDataset();
+        dataset = createDataset(Path);
         chart = createChart(dataset);
         chartPanel = new ChartPanel(chart);
         chartPanel.setPreferredSize(new java.awt.Dimension(chartHeight,chartWidth));
         this.add(chartPanel);
     }
 
-    public XYSeriesCollection createDataset() throws NumberFormatException, IOException {
+    public XYSeriesCollection createDataset(String Path) throws NumberFormatException, IOException {
         dataset = new XYSeriesCollection();
         ArrayList<XYSeries> Series1 = new ArrayList<XYSeries>();
       
         try {
-        	//ALTERAR O PATH
-        	System.out.println("experimentBaseDirectory\\referenceFronts\\" + alg +".tsv");
-        	Scanner scanner = new Scanner(new File("experimentBaseDirectory\\referenceFronts\\" + alg +".tsv"));
+        	Scanner scanner = new Scanner(new File(Path));
 
             XYSeries seriesX = new XYSeries("Solução1");
             int contador=0;

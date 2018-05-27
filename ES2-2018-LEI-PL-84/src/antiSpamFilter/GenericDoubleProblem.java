@@ -47,7 +47,7 @@ public class GenericDoubleProblem extends AbstractDoubleProblem implements Const
 	@Override
 	public void evaluate(DoubleSolution solution) {
 		  /*preencher string cenas com a solution*/
-		  String cenas = "";
+		  String cenas = getNumberOfObjectives()+" ";
 		  for (int i = 0; i < getNumberOfVariables(); i++) {
 			  if (i==0) {
 				cenas += ""+solution.getVariableValue(i);

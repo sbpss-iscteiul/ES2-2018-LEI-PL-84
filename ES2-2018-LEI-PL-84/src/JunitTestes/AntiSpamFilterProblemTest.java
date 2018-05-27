@@ -9,7 +9,7 @@ import org.uma.jmetal.solution.Solution;
 import antiSpamFilter.AntiSpamFilterProblem;
 
 public class AntiSpamFilterProblemTest {
-
+ 
 	@Test
 	public void constructerTest() {
 		AntiSpamFilterProblem dProblem = new AntiSpamFilterProblem();

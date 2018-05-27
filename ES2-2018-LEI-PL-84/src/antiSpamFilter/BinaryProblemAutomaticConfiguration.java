@@ -21,7 +21,7 @@ import org.uma.jmetal.util.experiment.util.ExperimentAlgorithm;
 import org.uma.jmetal.util.experiment.util.ExperimentProblem;
 
 public class BinaryProblemAutomaticConfiguration {
-  private static final int INDEPENDENT_RUNS = 5 ;
+  private static final int INDEPENDENT_RUNS = 1 ;
 
   public static void main(AbstractBinaryProblem [] args, ArrayList<Integer>algs) throws IOException {
     String experimentBaseDirectory = "experimentBaseDirectory";
@@ -30,12 +30,12 @@ public class BinaryProblemAutomaticConfiguration {
     for (int i = 0; i < args.length; i++) {
     		problemList.add(new ExperimentProblem<>(args[i]/*new OneZeroMax()*/));
 	}
-    
+     
     List<ExperimentAlgorithm<BinarySolution, List<BinarySolution>>> algorithmList =
             configureAlgorithmList(problemList,algs);
 
     Experiment<BinarySolution, List<BinarySolution>> experiment =
-        new ExperimentBuilder<BinarySolution, List<BinarySolution>>("BinaryProblemAutomaticConfigurationStudy")
+        new ExperimentBuilder<BinarySolution, List<BinarySolution>>("BinaryProblemStudy")
             .setAlgorithmList(algorithmList)
             .setProblemList(problemList)
             .setExperimentBaseDirectory(experimentBaseDirectory)
@@ -58,7 +58,7 @@ public class BinaryProblemAutomaticConfiguration {
    
 	  List<ExperimentAlgorithm<BinarySolution, List<BinarySolution>>> algorithms = new ArrayList<>();
 	  
-	  BuilderBinary test = new BuilderBinary(250);
+	  BuilderBinary test = new BuilderBinary(120);
 	  
 	  for (int i = 0; i < problemList.size(); i++) {
 		  test.setExperimentProblem(problemList.get(i));

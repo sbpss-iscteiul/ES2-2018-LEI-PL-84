@@ -39,14 +39,14 @@ public class GenericBinaryProblem extends AbstractBinaryProblem implements Const
 
 	public void evaluate(BinarySolution solution) {	    
 		  /*preencher string cenas com a solution*/
-		  String cenas = "";
+		  String cenas = getNumberOfObjectives()+" ";
 		  for (int i = 0; i < getNumberOfVariables(); i++) {
 			  if (i==0) {
 				cenas += ""+solution.getVariableValue(i);
 			  } else {
 				cenas += " "+solution.getVariableValue(i);
 			  }
-		  } 
+		  }  
 		  /*chamar o jar dando a String como atributo*/
 		  try {
 			  ArrayList<String> x = JARexec.runJAR(this.pathName, cenas, getNumberOfObjectives());

@@ -178,7 +178,7 @@ public class Interface {
 		addProblemPanel();
 		addConfigPanel();
 		tabs.addTab("Problema", problemPanel);
-		tabs.addTab("Configuraï¿½ï¿½o", configPanel);
+		tabs.addTab("Configuração", configPanel);
 		frame.add(tabs);
 		
 	}
@@ -429,16 +429,12 @@ public class Interface {
 		runButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-
-				//Email
-				Email email= new Email();
-				String mensagem= new String("Muito obrigado por usar esta plataforma de otimização. Será informado por email sobre o progresso do processo de otimização, quando o processo de otimização tiver atingido 25%, 50%, 75% do total do (número de avaliações ou) tempo estimado, e também quando o processo tiver terminado, com sucesso ou devido à ocorrência de erros.");
-				email.createMessage("Optimização em curso:" + nameText.getText() + " " + Calendar.getInstance().getTime() , mensagem);
-				String to=emailField.getText();
-				if(to.isEmpty()) {
-					System.out.println("o email não foi preenchido");
-					JOptionPane.showMessageDialog(new JPanel(),"o email não foi preenchido","Erro mail", JOptionPane.ERROR_MESSAGE);
-				}else {
+				if (getReady()) {
+					//Email
+					Email email= new Email();
+					String mensagem= new String("Muito obrigado por usar esta plataforma de otimização. Será informado por email sobre o progresso do processo de otimização, quando o processo de otimização tiver atingido 25%, 50%, 75% do total do (número de avaliações ou) tempo estimado, e também quando o processo tiver terminado, com sucesso ou devido à ocorrência de erros.");
+					email.createMessage("Optimização em curso:" + nameText.getText() + " " + Calendar.getInstance().getTime().getDate()+"-"+Calendar.getInstance().getTime().getMonth()+"-"+Calendar.getInstance().getTime().getYear() + " "+Calendar.getInstance().getTime().getHours()+":"+Calendar.getInstance().getTime().getMinutes() , mensagem);
+					String to=emailField.getText();
 					email.adddestination(to);
 					//inserir o mail do admin em vez do raoma
 					email.CC("raoma@iscte-iul.pt");
@@ -452,14 +448,16 @@ public class Interface {
 					GeradorDeGraficos demo;
 					try {
 						//Alterar o nome do ficheiro
-						demo = new GeradorDeGraficos("Soluções ótimas geradas pelo processo de otimização","BEST_HV_FUN");
+						demo = new GeradorDeGraficos("Soluções ótimas geradas pelo processo de otimização","BEST_HV_FUN",DefinePath());
 						demo.pack();
 				        RefineryUtilities.positionFrameOnScreen(demo, 0.95, 0.2);
 				        demo.setVisible(true);
 					} catch (IOException e) {
 						e.printStackTrace(); 
 					}		
-				}				
+				}else {
+					JOptionPane.showMessageDialog(new JPanel(),"Campos Por Preencher","Erro", JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 
@@ -712,7 +710,7 @@ public class Interface {
 				e.printStackTrace();
 			}
 		}else if (doubleBox.isSelected()) {
-			GenericDoubleProblem x = new GenericDoubleProblem(/*nVar*/335, nObj, nConst, probName,(String)critTableModel.getValueAt(0, 1));
+			GenericDoubleProblem x = new GenericDoubleProblem(nVar, nObj, nConst, probName,(String)critTableModel.getValueAt(0, 1));
 			if(varTableModel.getValueAt(0,2)!=null && varTableModel.getValueAt(0,3)!=null ) {
 				x.setLimits((Double)varTableModel.getValueAt(0,2), (Double)varTableModel.getValueAt(0,3));	
 			}
@@ -723,8 +721,7 @@ public class Interface {
 				e.printStackTrace();
 			}
 		}else if (binaryBox.isSelected()) {
-			/*500 refere-se ao numero de bits que ï¿½ fixo, mas nao deveria ser teoricamente*/
-			GenericBinaryProblem x = new GenericBinaryProblem(nVar, nObj, nConst, probName,500,(String)critTableModel.getValueAt(0, 1));
+			GenericBinaryProblem x = new GenericBinaryProblem(nVar, nObj, nConst, probName,(int)varTableModel.getValueAt(0,4),(String)critTableModel.getValueAt(0, 1));
 			GenericBinaryProblem[] args = {x};
 			try {
 				BinaryProblemAutomaticConfiguration.main(args, getCheckedAlgorithms());
@@ -733,7 +730,34 @@ public class Interface {
 			}
 		}
 	}
-
+	
+	private String DefinePath() {
+		String graphicPath = String.format("experimentBaseDirectory\\%s\\data\\%s\\%s\\BEST_HV_FUN.tsv",getCheckedBox(),checkedAlgorithms.get(0),nameText.getText());
+		return graphicPath;
+	}
+	
+	private boolean getReady() {
+		if (emailField.getText().isEmpty()) {
+			return false;
+		}
+		if (nameText.getText().isEmpty()) {
+			return false;
+		}
+		if (getCheckedBox().equals(null)) {
+			return false;
+		}
+		if (checkedAlgorithms.size()<1) {
+			return false;
+		}
+		if (critTableModel.getRowCount()<1) {
+			return false;
+		}
+		if (varTableModel.getRowCount()<2) {
+			return false;
+		}
+		return true;
+	}
+	
 	public void createFAQFrame() {
 		JFrame FAQframe = new JFrame("F.A.Q");
 		FAQframe.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -921,6 +945,18 @@ public class Interface {
 
 	public ArrayList<Integer> getCheckedAlgorithms() {
 		  return checkedAlgorithmsInt;
+	}
+	
+	private String getCheckedBox() {
+		if (intBox.isSelected()) {
+			return "IntegerProblemStudy";
+		}else if (doubleBox.isSelected()) {
+			return "DoubleProblemStudy";
+		}else if (binaryBox.isSelected()) {
+			return "BinaryProblemStudy";
+		}else {
+			return null;
+		}
 	}
 	
 	public ArrayList<Integer> getIntervals() {

@@ -21,7 +21,7 @@ import org.uma.jmetal.util.experiment.util.ExperimentAlgorithm;
 import org.uma.jmetal.util.experiment.util.ExperimentProblem;
 
 public class IntegerProblemAutomaticConfiguration {
-  private static final int INDEPENDENT_RUNS = 5 ;
+  private static final int INDEPENDENT_RUNS = 1 ;
 
   public static void main(AbstractIntegerProblem [] args, ArrayList<Integer>algs) throws IOException {
     String experimentBaseDirectory = "experimentBaseDirectory";
@@ -35,7 +35,7 @@ public class IntegerProblemAutomaticConfiguration {
             configureAlgorithmList(problemList,algs);
 
     Experiment<IntegerSolution, List<IntegerSolution>> experiment =
-        new ExperimentBuilder<IntegerSolution, List<IntegerSolution>>("GenericProblemAutomaticConfigurationStudy")
+        new ExperimentBuilder<IntegerSolution, List<IntegerSolution>>("IntegerProblemStudy")
             .setAlgorithmList(algorithmList)
             .setProblemList(problemList)
             .setExperimentBaseDirectory(experimentBaseDirectory)
@@ -58,7 +58,7 @@ public class IntegerProblemAutomaticConfiguration {
    
 	  List<ExperimentAlgorithm<IntegerSolution, List<IntegerSolution>>> algorithms = new ArrayList<>();
 	  
-	  BuilderInteger test = new BuilderInteger(250);
+	  BuilderInteger test = new BuilderInteger(120);
 	  
 	  for (int i = 0; i < problemList.size(); i++) {
 		  test.setExperimentProblem(problemList.get(i));

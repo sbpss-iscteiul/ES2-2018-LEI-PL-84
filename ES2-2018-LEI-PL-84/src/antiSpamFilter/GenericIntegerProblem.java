@@ -46,8 +46,7 @@ public class GenericIntegerProblem extends AbstractIntegerProblem implements Con
 
 	@Override
 	public void evaluate(IntegerSolution solution) {
-		  /*preencher string cenas com a solution*/
-		  String cenas = "";
+		  String cenas = getNumberOfObjectives()+" ";
 		  for (int i = 0; i < getNumberOfVariables(); i++) {
 			  if (i==0) {
 				cenas += ""+solution.getVariableValue(i);
@@ -55,7 +54,7 @@ public class GenericIntegerProblem extends AbstractIntegerProblem implements Con
 				cenas += " "+solution.getVariableValue(i);
 			}
 		  }
-		  /*chamar o jar dando a String como atributo*/
+		  
 		  try {
 			  ArrayList<String> x = JARexec.runJAR(this.pathName, cenas, getNumberOfObjectives());
 			  for (int i = 0; i < getNumberOfObjectives(); i++) {
@@ -70,7 +69,6 @@ public class GenericIntegerProblem extends AbstractIntegerProblem implements Con
 
 	@Override
 	public void evaluateConstraints(IntegerSolution arg0) {
-		// TODO Auto-generated method stub
 		
 	}
 	
