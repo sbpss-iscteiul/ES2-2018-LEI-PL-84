@@ -50,7 +50,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.plaf.synth.SynthSeparatorUI;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
-import org.jfree.ui.RefineryUtilities;
+//import org.jfree.ui.RefineryUtilities;
 import org.uma.jmetal.algorithm.Algorithm;
 import org.uma.jmetal.problem.IntegerProblem;
 import antiSpamFilter.BinaryProblemAutomaticConfiguration;
@@ -118,6 +118,7 @@ public class Interface {
 	private ArrayList<Integer> checkedAlgorithmsInt;
 	private ArrayList<String> checkedAlgorithms;
 	private String varType = "Integer";
+	private JIntegerField objectiveField;
 	
 	public Interface() {
 		initAttributes();
@@ -162,6 +163,8 @@ public class Interface {
 		checkedAlgorithmsInt = new ArrayList<Integer>();
 		algorithmPane = new JScrollPane(algorithmList);
 		checkedAlgorithms = new ArrayList<String>();
+		objectiveField = new JIntegerField();
+		objectiveField.setPreferredSize(new Dimension(20,20));
 	}
 	
 	public void open() {
@@ -228,9 +231,14 @@ public class Interface {
 	
 	public void addConfigPanel() {
 		JPanel ConfigPanel = new JPanel(new GridLayout(5,1));
+		JPanel topConfigPanel = new JPanel(new GridLayout(2,1));
+		/////////////// OBJECTIVES /////////////////
+		JPanel objectivesPanel = new JPanel(new FlowLayout());
+		objectivesPanel.add(new JLabel("Number of Objectives"));
+		objectivesPanel.add(objectiveField);
 		/////////////// ALGORITHMS /////////////////
-		JPanel algorithmsPanel = new JPanel(new BorderLayout());
 		JPanel algTypePanel = new JPanel(new FlowLayout());
+		JPanel algorithmsPanel = new JPanel(new BorderLayout());
 		algorithmsPanel.setBorder(border);
 		algTypePanel.add(intBox); algTypePanel.add(doubleBox); algTypePanel.add(binaryBox);
 		algorithmsPanel.add(algorithmPane);
@@ -269,7 +277,9 @@ public class Interface {
 		resOptionPanel.add(deleteResButton);
 		resPanel.add(resOptionPanel, BorderLayout.EAST);
 		resPanel.add(resPane);
-		ConfigPanel.add(algTypePanel);
+		topConfigPanel.add(objectivesPanel);
+		topConfigPanel.add(algTypePanel);
+		ConfigPanel.add(topConfigPanel);
 		ConfigPanel.add(algorithmsPanel);
 		ConfigPanel.add(varTablePanel);
 		ConfigPanel.add(resPanel);
@@ -453,9 +463,9 @@ public class Interface {
 					try {
 						//Alterar o nome do ficheiro
 						demo = new GeradorDeGraficos("Soluções ótimas geradas pelo processo de otimização","BEST_HV_FUN");
-						demo.pack();
-				        RefineryUtilities.positionFrameOnScreen(demo, 0.95, 0.2);
-				        demo.setVisible(true);
+//						demo.pack();
+//				        RefineryUtilities.positionFrameOnScreen(demo, 0.95, 0.2);
+//				        demo.setVisible(true);
 					} catch (IOException e) {
 						e.printStackTrace(); 
 					}		
@@ -485,8 +495,7 @@ public class Interface {
 		FAQButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-//				createFAQFrame()
-					
+				createFAQFrame();
 			}
 		});
 
@@ -697,7 +706,9 @@ public class Interface {
 	 
 	private void runAlgorithm() {
 		int nVar=varList.size();
-		int nObj=2;
+		int nObj=1;
+		if(!objectiveField.getText().equals(""))	
+			nObj = Integer.valueOf(objectiveField.getText());
 		int nConst=0;
 		String probName=nameText.getText();
 		if (intBox.isSelected()) {
