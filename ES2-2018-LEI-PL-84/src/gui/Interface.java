@@ -1,23 +1,15 @@
 package gui;
 import java.awt.BorderLayout;
-import java.awt.Checkbox;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
-
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Paths;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.lang.reflect.Array;
-import java.rmi.NoSuchObjectException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -38,21 +30,17 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import javax.swing.border.Border;
-import javax.swing.event.ListDataEvent;
-import javax.swing.event.ListDataListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-import javax.swing.plaf.synth.SynthSeparatorUI;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+
 import org.jfree.ui.RefineryUtilities;
-import org.uma.jmetal.algorithm.Algorithm;
-import org.uma.jmetal.problem.IntegerProblem;
+
 import antiSpamFilter.BinaryProblemAutomaticConfiguration;
 import antiSpamFilter.DoubleProblemAutomaticConfiguration;
 import antiSpamFilter.GenericBinaryProblem;
@@ -61,7 +49,6 @@ import antiSpamFilter.GenericIntegerProblem;
 import antiSpamFilter.IntegerProblemAutomaticConfiguration;
 import extras.Email;
 import extras.GeradorDeGraficos;
-import antiSpamFilter.IntegerProblemAutomaticConfiguration;
 //import extras.Email;
 import extras.Parser;
 import objects.Problem;
@@ -118,6 +105,7 @@ public class Interface {
 	private ArrayList<Integer> checkedAlgorithmsInt;
 	private ArrayList<String> checkedAlgorithms;
 	private String varType = "Integer";
+	private JIntegerField objectiveField;
 	
 	public Interface() {
 		initAttributes();
@@ -162,6 +150,8 @@ public class Interface {
 		checkedAlgorithmsInt = new ArrayList<Integer>();
 		algorithmPane = new JScrollPane(algorithmList);
 		checkedAlgorithms = new ArrayList<String>();
+		objectiveField = new JIntegerField();
+		objectiveField.setPreferredSize(new Dimension(20,20));
 	}
 	
 	public void open() {
@@ -228,9 +218,14 @@ public class Interface {
 	
 	public void addConfigPanel() {
 		JPanel ConfigPanel = new JPanel(new GridLayout(5,1));
+		JPanel topConfigPanel = new JPanel(new GridLayout(2,1));
+		/////////////// OBJECTIVES /////////////////
+		JPanel objectivesPanel = new JPanel(new FlowLayout());
+		objectivesPanel.add(new JLabel("Number of Objectives"));
+		objectivesPanel.add(objectiveField);
 		/////////////// ALGORITHMS /////////////////
-		JPanel algorithmsPanel = new JPanel(new BorderLayout());
 		JPanel algTypePanel = new JPanel(new FlowLayout());
+		JPanel algorithmsPanel = new JPanel(new BorderLayout());
 		algorithmsPanel.setBorder(border);
 		algTypePanel.add(intBox); algTypePanel.add(doubleBox); algTypePanel.add(binaryBox);
 		algorithmsPanel.add(algorithmPane);
@@ -269,7 +264,9 @@ public class Interface {
 		resOptionPanel.add(deleteResButton);
 		resPanel.add(resOptionPanel, BorderLayout.EAST);
 		resPanel.add(resPane);
-		ConfigPanel.add(algTypePanel);
+		topConfigPanel.add(objectivesPanel);
+		topConfigPanel.add(algTypePanel);
+		ConfigPanel.add(topConfigPanel);
 		ConfigPanel.add(algorithmsPanel);
 		ConfigPanel.add(varTablePanel);
 		ConfigPanel.add(resPanel);
@@ -452,6 +449,7 @@ public class Interface {
 						demo.pack();
 				        RefineryUtilities.positionFrameOnScreen(demo, 0.95, 0.2);
 				        demo.setVisible(true);
+
 					} catch (IOException e) {
 						e.printStackTrace(); 
 					}		
@@ -483,8 +481,7 @@ public class Interface {
 		FAQButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-//				createFAQFrame()
-					
+				createFAQFrame();
 			}
 		});
 
@@ -695,7 +692,9 @@ public class Interface {
 	 
 	private void runAlgorithm() {
 		int nVar=varList.size();
-		int nObj=2;
+		int nObj=1;
+		if(!objectiveField.getText().equals(""))	
+			nObj = Integer.valueOf(objectiveField.getText());
 		int nConst=0;
 		String probName=nameText.getText();
 		if (intBox.isSelected()) {
