@@ -1,0 +1,23 @@
+Sprint Retrospective 2
+
+What did we do well?
+	Implementação do envio de email;
+	Implementação do Load do XML para a interface;
+	Implementação de Algoritmos de optimização;
+	Implementação da interação com Jars;
+	Implementação da class Problem Generica;
+
+What should we have done better?
+	Escolha dos elementos presentes na interface;
+	
+What should we start doing?
+	Junit tests;
+	
+What should we stop doing?
+	
+
+What should we keep doing?
+	Continuação da implementaçao da interface;
+	Continuação da implementaçao da interação com Jars;
+	Continuação da implementaçao de Algoritmos de optimização;
+

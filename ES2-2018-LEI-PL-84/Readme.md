@@ -1,11 +1,16 @@
-Identificação da turma (ex: EIC1)
+Identificacao da turma 
+	Lei-PL
 
-Identificação do grupo (ex: Grupo 2)
+Identificacao do grupo 
+	Grupo 84
 
-Identificação do número, nome e papel de cada membro do grupo (ex: 12345, José Silva, Scrum Master)
+Identificacao do numero, nome e papel de cada membro do grupo 
+	Sergio Passos, 73164, sbpss@iscte-iul.pt
+	Mohammad Rafiq, 68964, mmrqr@iscte.pt
+	Duarte Vital, 72939, dvcvl@iscte-iul.pt
+	Ruben Moreira, 73272, raoma@iscte-iul.pt
 
-Identificação da variante do projeto desenvolvida (ex: AntiSpamConfigurationForProfessionalMailbox)
+Link para o video de demonstra��o da aplica��o desenvolvida:
+	https://www.youtube.com/watch?v=ImQpycW6B7Q&feature=youtu.be
 
-Link para um vídeo no youtube com a demonstração da aplicação final desenvolvida (ex: http://...)
-
-Notas que o grupo entenda relevantes para a análise/avaliação do trabalho
+Indica��o se o trabalho se encontra completo ou quais as funcionalidades n�o implementadas/completas ou que cont�m erros:

@@ -1,0 +1,22 @@
+Sprint Retrospective 1
+
+What did we do well?
+	Iniciação da implementaçao da interface;
+	Implementação de ficheiros XML;
+	Implementação do envio de email;
+	Criação de zona FAQ;
+	Definição das Tarefas na plataforma Trello;
+
+What should we have done better?
+	Planeamento da estrutura da interface;
+	
+What should we start doing?
+	JUnit Tests;
+
+What should we stop doing?
+	
+What should we keep doing?
+	Continuação da implementaçao da interface;
+	Continuação da implementaçao do envio de email;
+
+

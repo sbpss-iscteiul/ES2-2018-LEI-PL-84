@@ -1,0 +1,17 @@
+Sprint Retrospective 3
+
+What did we do well?
+	Conclusão da interface;
+	Junit testes com um coverage acima dos 50%;
+	Implementação da interação interface-JMetal;
+	Implementação ds graficos;
+	Conclusão da imlementação dos Algoritmos;
+
+What should we have done better?
+	Tempo dedicado aos testes do software;
+	
+What should we start doing?
+
+What should we stop doing?
+
+What should we keep doing?

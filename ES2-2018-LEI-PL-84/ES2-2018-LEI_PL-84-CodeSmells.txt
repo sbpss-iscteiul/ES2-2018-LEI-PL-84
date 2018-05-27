@@ -1,0 +1,71 @@
+LongMethod
+	extras.Parser	public static objects.Problem read_XML(java.lang.String) 	variable	B10	0/13
+	main.Mainjar	public static void main(java.lang.String[]) 	fx	B1	0/10
+	main.Mainjar	public static void main(java.lang.String[]) 	fx	B2	0/8
+	main.Mainjar	public static void main(java.lang.String[]) 	fx	B4	0/6
+	extras.Parser	public static objects.Problem read_XML(java.lang.String) 	a	B41	0/9
+	gui.Interface	public void insertVar(java.lang.String, java.lang.String, java.lang.Object, java.lang.Object, int) 	varTableModel	B1	0/8
+	JunitTestes.ParserTest	void test() 	y	B1	0/7
+	gui.Interface	public void insertRes(java.lang.String, java.lang.String, java.lang.Object) 	resTableModel	B1	0/7
+	gui.Interface	public void insertVar(java.lang.String, java.lang.String, java.lang.Object, java.lang.Object, int) 	tmp	B1	0/7
+	extras.Parser	public static objects.Problem read_XML(java.lang.String) 	p	B24	0/7
+	extras.Parser	public static objects.Problem read_XML(java.lang.String) 	p	B25	0/5
+	extras.Parser	public static objects.Problem read_XML(java.lang.String) 	p	B26	0/4
+	JunitTestes.ParserTest	void test() 	x	B1	0/6
+	gui.Interface	public void insertRes(java.lang.String, java.lang.String, java.lang.Object) 	tmp	B1	0/6
+	antiSpamFilter.AntiSpamFilterProblem	public void evaluate(org.uma.jmetal.solution.DoubleSolution) 	cenas	B1	0/5
+	antiSpamFilter.AntiSpamFilterProblem	public void evaluate(org.uma.jmetal.solution.DoubleSolution) 	cenas	B2	0/4
+	antiSpamFilter.AntiSpamFilterProblem	public void evaluate(org.uma.jmetal.solution.DoubleSolution) 	cenas	B3	0/3
+	antiSpamFilter.GenericBinaryProblem	public void evaluate(org.uma.jmetal.solution.BinarySolution) 	cenas	B1	0/5
+	antiSpamFilter.GenericBinaryProblem	public void evaluate(org.uma.jmetal.solution.BinarySolution) 	cenas	B2	0/4
+	antiSpamFilter.GenericBinaryProblem	public void evaluate(org.uma.jmetal.solution.BinarySolution) 	cenas	B3	0/3
+	antiSpamFilter.GenericDoubleProblem	public void evaluate(org.uma.jmetal.solution.DoubleSolution) 	cenas	B1	0/5
+	antiSpamFilter.GenericDoubleProblem	public void evaluate(org.uma.jmetal.solution.DoubleSolution) 	cenas	B2	0/4
+	antiSpamFilter.GenericDoubleProblem	public void evaluate(org.uma.jmetal.solution.DoubleSolution) 	cenas	B3	0/3
+	antiSpamFilter.GenericIntegerProblem	public void evaluate(org.uma.jmetal.solution.IntegerSolution) 	cenas	B1	0/5
+	antiSpamFilter.GenericIntegerProblem	public void evaluate(org.uma.jmetal.solution.IntegerSolution) 	cenas	B2	0/4
+	antiSpamFilter.GenericIntegerProblem	public void evaluate(org.uma.jmetal.solution.IntegerSolution) 	cenas	B3	0/3
+	gui.Interface	public void addListeners() 	demo	B1	0/4
+	objects.Problem	public java.lang.String toString() 	pathToPrint	B1	0/4
+	objects.Problem	public java.lang.String toString() 	pathToPrint	B2	0/3
+	gui.Interface	private void runAlgorithm() 	nObj	B1	0/3
+	gui.Interface	public void initAttributes() 	varTableModel	B1	0/3
+	objects.ProblemTest	void test() 	pathA	B1	0/3
+	objects.ProblemTest	void test() 	pathB	B1	0/3
+	main.Mainjar	public static void main(java.lang.String[]) 	x	B1	0/3
+	main.Mainjar	public static void main(java.lang.String[]) 	x	B2	0/2
+	JunitTestes.BuilderBinaryTest	public void notNullAlgorithmNull() 	builder	B1	2/3
+	JunitTestes.BuilderBinaryTest	public void nullAlgorithm() 	builder	B1	2/3
+	JunitTestes.BuilderBinaryTest	public void setExperimentProblemTest() 	tmp	B1	2/3
+	JunitTestes.BuilderDoubleTest	public void notNullAlgorithmNull() 	builder	B1	2/3
+	JunitTestes.BuilderDoubleTest	public void nullAlgorithm() 	builder	B1	2/3
+	JunitTestes.BuilderDoubleTest	public void setExperimentProblemTest() 	tmp	B1	2/3
+	JunitTestes.BuilderIntegerTest	public void notNullAlgorithmNull() 	builder	B1	2/3
+	JunitTestes.BuilderIntegerTest	public void nullAlgorithm() 	builder	B1	2/3
+	JunitTestes.BuilderIntegerTest	public void setExperimentProblemTest() 	tmp	B1	2/3
+	JunitTestes.GeradorDeGraficoTest	void test() throws java.io.IOException	demo	B1	2/3
+	JunitTestes.GeradorDeGraficoTest	void test() throws java.io.IOException	demo1	B1	2/3
+	JunitTestes.GeradorDeGraficoTest	void test() throws java.io.IOException	demo2	B1	2/3
+	antiSpamFilter.BinaryProblemAutomaticConfiguration	static List<ExperimentAlgorithm<org.uma.jmetal.solution.BinarySolution,List<org.uma.jmetal.solution.BinarySolution>>> configureAlgorithmList(List<ExperimentProblem<org.uma.jmetal.solution.BinarySolution>>, ArrayList<java.lang.Integer>) 	test	B1	2/3
+	antiSpamFilter.DoubleProblemAutomaticConfiguration	static List<ExperimentAlgorithm<org.uma.jmetal.solution.DoubleSolution,List<org.uma.jmetal.solution.DoubleSolution>>> configureAlgorithmList(List<ExperimentProblem<org.uma.jmetal.solution.DoubleSolution>>, ArrayList<java.lang.Integer>) 	test	B1	2/3
+	antiSpamFilter.IntegerProblemAutomaticConfiguration	static List<ExperimentAlgorithm<org.uma.jmetal.solution.IntegerSolution,List<org.uma.jmetal.solution.IntegerSolution>>> configureAlgorithmList(List<ExperimentProblem<org.uma.jmetal.solution.IntegerSolution>>, ArrayList<java.lang.Integer>) 	test	B1	2/3
+
+TypeChecking
+	
+GodClass
+	extras.Parser	[extras.Parser::org.w3c.dom.Document doc, extras.Parser::org.w3c.dom.Element rootElement, extras.Parser::org.w3c.dom.Element emails, extras.Parser::boolean e_Mail, extras.Parser::addEmail(java.lang.String):void, extras.Parser::org.w3c.dom.Element descriptions, extras.Parser::boolean problem_description, extras.Parser::addDescription(java.lang.String):void, extras.Parser::org.w3c.dom.Element waiting_times, extras.Parser::boolean wating_time, extras.Parser::addWaitingTime(java.lang.String):void, extras.Parser::org.w3c.dom.Element variables, extras.Parser::int variable_count, extras.Parser::addVariables(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String):void, extras.Parser::org.w3c.dom.Element paths, extras.Parser::addPaths(java.lang.String, java.lang.String):void, extras.Parser::write_XML(java.lang.String, java.lang.String):void, extras.Parser::org.w3c.dom.Element name, extras.Parser::addName(java.lang.String):void, extras.Parser::org.w3c.dom.Element algorithms, extras.Parser::boolean chosen_algorithm, extras.Parser::addChosenAlgorithm(int, java.lang.String):void]
+	extras.Parser	[extras.Parser::org.w3c.dom.Document doc, extras.Parser::org.w3c.dom.Element rootElement, extras.Parser::org.w3c.dom.Element emails, extras.Parser::boolean e_Mail, extras.Parser::addEmail(java.lang.String):void, extras.Parser::org.w3c.dom.Element descriptions, extras.Parser::boolean problem_description, extras.Parser::addDescription(java.lang.String):void, extras.Parser::org.w3c.dom.Element waiting_times, extras.Parser::boolean wating_time, extras.Parser::addWaitingTime(java.lang.String):void, extras.Parser::org.w3c.dom.Element variables, extras.Parser::int variable_count, extras.Parser::addVariables(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String):void, extras.Parser::org.w3c.dom.Element paths, extras.Parser::addPaths(java.lang.String, java.lang.String):void, extras.Parser::write_XML(java.lang.String, java.lang.String):void, extras.Parser::org.w3c.dom.Element name, extras.Parser::addName(java.lang.String):void]
+	extras.Parser	[extras.Parser::org.w3c.dom.Document doc, extras.Parser::org.w3c.dom.Element rootElement, extras.Parser::org.w3c.dom.Element emails, extras.Parser::boolean e_Mail, extras.Parser::addEmail(java.lang.String):void, extras.Parser::org.w3c.dom.Element descriptions, extras.Parser::boolean problem_description, extras.Parser::addDescription(java.lang.String):void, extras.Parser::org.w3c.dom.Element waiting_times, extras.Parser::boolean wating_time, extras.Parser::addWaitingTime(java.lang.String):void, extras.Parser::org.w3c.dom.Element variables, extras.Parser::int variable_count, extras.Parser::addVariables(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String):void]
+	extras.Parser	[extras.Parser::org.w3c.dom.Document doc, extras.Parser::org.w3c.dom.Element rootElement, extras.Parser::org.w3c.dom.Element emails, extras.Parser::boolean e_Mail, extras.Parser::addEmail(java.lang.String):void, extras.Parser::org.w3c.dom.Element descriptions, extras.Parser::boolean problem_description, extras.Parser::addDescription(java.lang.String):void, extras.Parser::org.w3c.dom.Element waiting_times, extras.Parser::boolean wating_time, extras.Parser::addWaitingTime(java.lang.String):void]
+	extras.Parser	[extras.Parser::org.w3c.dom.Element rootElement, extras.Parser::org.w3c.dom.Element emails, extras.Parser::boolean e_Mail, extras.Parser::addEmail(java.lang.String):void, extras.Parser::org.w3c.dom.Element descriptions, extras.Parser::boolean problem_description, extras.Parser::addDescription(java.lang.String):void]
+	extras.Parser	[extras.Parser::org.w3c.dom.Element rootElement, extras.Parser::org.w3c.dom.Element emails, extras.Parser::boolean e_Mail, extras.Parser::addEmail(java.lang.String):void]
+	extras.Parser	[extras.Parser::org.w3c.dom.Element algorithms, extras.Parser::boolean chosen_algorithm, extras.Parser::addChosenAlgorithm(int, java.lang.String):void]
+	extras.Parser	[extras.Parser::org.w3c.dom.Element paths, extras.Parser::addPaths(java.lang.String, java.lang.String):void, extras.Parser::write_XML(java.lang.String, java.lang.String):void, extras.Parser::org.w3c.dom.Element name, extras.Parser::addName(java.lang.String):void]
+	extras.Parser	[extras.Parser::org.w3c.dom.Element variables, extras.Parser::int variable_count, extras.Parser::addVariables(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String):void]
+	gui.Interface	[gui.Interface::java.util.ArrayList<java.lang.String> intAlgorithms, gui.Interface::java.util.ArrayList<java.lang.String> doubleAlgorithms, gui.Interface::java.util.ArrayList<java.lang.String> binaryAlgorithms, gui.Interface::initAlgorithmLists():void]
+	extras.GeradorDeGraficos	[extras.GeradorDeGraficos::org.jfree.data.xy.XYSeriesCollection dataset, extras.GeradorDeGraficos::createDataset(java.lang.String):org.jfree.data.xy.XYSeriesCollection, extras.GeradorDeGraficos::int x]
+
+FeatureEnvy
+	Refactoring Type	Source Entity	Target Class	Source/Target accessed members	Rate it!
+	Move Method	extras.Parser::addLimitations(objects.Restriction):void	objects.Restriction	2/3	
+	Move Method	gui.Interface::insertVar(java.lang.String, java.lang.String, java.lang.Object, java.lang.Object, int):void	gui.MyTableModel	2/3	

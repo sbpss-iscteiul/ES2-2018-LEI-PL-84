@@ -427,17 +427,19 @@ public class Interface {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if (getReady()) {
-					//Email
-					Email email= new Email();
-					String mensagem= new String("Muito obrigado por usar esta plataforma de otimização. Será informado por email sobre o progresso do processo de otimização, quando o processo de otimização tiver atingido 25%, 50%, 75% do total do (número de avaliações ou) tempo estimado, e também quando o processo tiver terminado, com sucesso ou devido à ocorrência de erros.");
-					email.createMessage("Optimização em curso:" + nameText.getText() + " " + Calendar.getInstance().getTime().getDate()+"-"+Calendar.getInstance().getTime().getMonth()+"-"+Calendar.getInstance().getTime().getYear() + " "+Calendar.getInstance().getTime().getHours()+":"+Calendar.getInstance().getTime().getMinutes() , mensagem);
-					String to=emailField.getText();
-					email.adddestination(to);
-					//inserir o mail do admin em vez do raoma
-					email.CC("raoma@iscte-iul.pt");
-					String file=new String(path);
-					email.anexo(file);
-					email.send();
+//					//Email
+//					Email email= new Email();
+//					String mensagem= new String("Muito obrigado por usar esta plataforma de otimização. Será informado por email sobre o progresso do processo de otimização, quando o processo de otimização tiver atingido 25%, 50%, 75% do total do (número de avaliações ou) tempo estimado, e também quando o processo tiver terminado, com sucesso ou devido à ocorrência de erros.");
+//					int ano=Calendar.getInstance().getTime().getYear()+1900;
+//	                email.createMessage("Optimização em curso:" + nameText.getText() + " " + Calendar.getInstance().getTime().getDate()+"-"+Calendar.getInstance().getTime().getMonth()+"-"+ano+ " "+Calendar.getInstance().getTime().getHours()+":"+Calendar.getInstance().getTime().getMinutes() , mensagem);
+//					String to=emailField.getText();
+//					email.adddestination(to);
+//					//inserir o mail do admin em vez do raoma
+//					email.CC("sbpss@iscte-iul.pt");
+					System.out.println("Email Enviado");
+//					String file=new String(path);
+//					email.anexo(file);
+//					email.send();
 					
 					runAlgorithm();
 					
@@ -966,8 +968,8 @@ public class Interface {
 		return interval;
 	}
 	
-	public static void main(String[] args) {
-		Interface i = new Interface();
-		i.open();
-	}
+//	public static void main(String[] args) {
+//		Interface i = new Interface();
+//		i.open();
+//	}
 }

@@ -13,22 +13,6 @@ import objects.Restriction;
 
 class ParserTest {
 
-	@BeforeAll
-	static void setUpBeforeClass() throws Exception {
-	}
-
-	@AfterAll
-	static void tearDownAfterClass() throws Exception {
-	}
-
-	@BeforeEach
-	void setUp() throws Exception {
-	}
-
-	@AfterEach
-	void tearDown() throws Exception {
-	}
-
 	@Test
 	void test() {
 		Parser x=new Parser();
@@ -48,8 +32,8 @@ class ParserTest {
 		x.addChosenAlgorithm(2, "algorithmName");
 		Restriction restriction=new Restriction("varName", "operation", "value");
 		x.addLimitations(restriction);
-		x.write_XML("problemName", "dir");
-		x.read_XML("C:\\Users\\Ruben\\git\\ES2-2018-LEI-PL-84\\ES2-2018-LEI-PL-84\\dir_problemName 2018-05-26 19-00-59.xml");
+		x.write_XML("problemName", "C:\\Users\\Sergio-PC\\Desktop");
+		x.read_XML("C:\\Users\\Sergio-PC\\Desktop\\_problemName 2018-05-27 04-13-41");
 		y.read_XML("dir");
 		assertEquals("email", x.getEmails().getFirstChild().getTextContent());
 		assertEquals("a",x.getName().getFirstChild().getTextContent());
